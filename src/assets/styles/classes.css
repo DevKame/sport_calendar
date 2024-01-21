@@ -7,6 +7,9 @@
 .bg-tert {
     background-color: var(--tert);
 }
+.bg-delete {
+    background-color: var(--delete);
+}
 
 
 .btn-tert {

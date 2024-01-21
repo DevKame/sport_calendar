@@ -17,6 +17,12 @@
                 <div class="loginBody p-2 w-100 border border-warning d-flex flex-column justify-content-start align-items-center">
                     <form @submit.prevent="console.log('submitted')" class="border border-danger w-100 d-flex flex-column justify-content-start align-items-center">
                         
+                        <div class="errorContainer w-100 display position-relative border border-danger">
+                            <error-alert>
+                                <p class="m-0">This email does not exist</p>
+                            </error-alert>
+                        </div>
+
                         <div class="inputWrapper w-100 d-flex flex-column justify-content-start align-items-start overflow-hidden">
                             <div class="w-100 border border-info d-flex justify-content-between align-items-center">
                                 <transition name="labels">
