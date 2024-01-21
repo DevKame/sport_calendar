@@ -1,0 +1,15 @@
+
+input[type="text"],
+input[type="mail"],
+input[type="password"] {
+    outline: none;
+    border: 2px solid var(--tert);
+    border-radius: 5px;
+    background-color: rgba(0,0,0,0);
+    transition: all .3s ease;
+}
+input[type="text"].focus_or_filled,
+input[type="mail"].focus_or_filled,
+input[type="password"].focus_or_filled {
+    background-color: var(--sec);
+}

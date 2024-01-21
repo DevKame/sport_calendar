@@ -1,6 +1,6 @@
 <template>
     <aside class="theKamedin px-2 d-flex justify-content-between align-items-center">
-        <p>powered by <a href="https://www.kamed.in" target="_blank">Kamedin Webdesign</a></p>
+        <p>powered by <a href="https://www.kamed.in" target="_blank" class="fw-bold">Kamedin Webdesign</a></p>
         <div class="techStack d-flex justify-content-end align-items-center">
             <p class="me-2">Tech Stack</p>
             <fa-icon icon="fasolid fa-microchip" size="sm" class="icon"></fa-icon>

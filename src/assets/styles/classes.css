@@ -7,3 +7,9 @@
 .bg-tert {
     background-color: var(--tert);
 }
+
+
+.btn-tert {
+    background-color: var(--tert);
+    color: black;
+}

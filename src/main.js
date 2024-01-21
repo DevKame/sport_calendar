@@ -4,10 +4,12 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap";
 import "./assets/styles/colors.css";
 import "./assets/styles/classes.css";
+import "./assets/styles/resets.css";
 
 // CUSTOM COMPS
 import TheKamedin from "./comps/TheKamedin.vue";
 import TheLogin from "./comps/login/TheLogin.vue";
+import InterfaceCard from "./comps/multi/InterfaceCard.vue";
 
 // FONTAWESOME
 import { library } from "@fortawesome/fontawesome-svg-core";
@@ -36,6 +38,7 @@ import App from './App.vue'
 
 const app = createApp(App);
 app.component("the-kamedin", TheKamedin);
+app.component("itf-card", InterfaceCard);
 app.component("fa-icon", FontAwesomeIcon);
 
 app.use(router);
