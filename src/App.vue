@@ -1,5 +1,5 @@
 <template>
-  <h1>Hi</h1>
+  <the-kamedin></the-kamedin>
 </template>
 
 <script>
