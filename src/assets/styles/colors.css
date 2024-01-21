@@ -1,0 +1,13 @@
+:root {
+    --prim: #d4dfef;
+    --sec: #6792b5;
+    --tert: #faa370;
+    
+    --weak: #777777;
+
+    --neutral: #7f7f7f;
+    --delete: #ff8989;
+    --edit: #ffc000;
+
+    --role-badge: #2e8254;
+}

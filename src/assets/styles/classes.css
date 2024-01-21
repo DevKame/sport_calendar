@@ -1,0 +1,9 @@
+.bg-prim {
+    background-color: var(--prim);
+}
+.bg-sec {
+    background-color: var(--sec);
+}
+.bg-tert {
+    background-color: var(--tert);
+}

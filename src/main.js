@@ -2,6 +2,8 @@
 // ASSETS
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap";
+import "./assets/styles/colors.css";
+import "./assets/styles/classes.css";
 
 // CUSTOM COMPS
 import TheKamedin from "./comps/TheKamedin.vue";
