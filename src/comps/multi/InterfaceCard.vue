@@ -1,3 +1,15 @@
+
+<!-- A WIDGET WITH A LIGHT BLUE HEADER AND CONTENT BODY MEANT PRIMARILY TO DISPLAY
+UI ELEMENTS FOR THE USER TO INTERACT
+
+SLOT NAME="HEADER":
+- CONTAINS MOSTLY JUST A <h5> ELEMENT AS A TITLE BUT FEW WIDGETS WILL ALSO HAVE
+  A CLOSING BUTTON
+
+SLOT NAME="BODY":
+- CAN CONTAINS ALL SORTS OF CONTENTS LIKE BUTTONS, INPUTS, ETC. -->
+
+
 <template>
     <div class="itfCard overflow-hidden border border-danger d-flex flex-column justify-content-start align-items-center rounded-3">
         <header class="p-2 itfHeader bg-sec border border-warning">
