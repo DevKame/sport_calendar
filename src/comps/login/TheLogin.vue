@@ -111,6 +111,9 @@
             </transition>
         </teleport>
     </main>
+    <footer class="mt-5 px-2">
+        <small>LOGO by: Majo statt Senf, Licence: https://creativecommons.org/licenses/by-sa/4.0/deed.de</small>
+    </footer>
 </template>
 
 
@@ -183,6 +186,10 @@ function toggleInfo() {
 
 
 <style scoped>
+footer small {
+    font-size: 11px;
+    color: var(--weak);
+}
 .infoWindow p {
     font-size: 14px;
 }
@@ -237,8 +244,10 @@ function toggleInfo() {
 .errorContainer {
     height: 35px;
 }
-.labels-enter-from {
-    transform: translate(0, 100%);
+.labels-enter-from,
+
+.labels-leave-to {
+    transform: translate(0, 100%)
 }
 .labels-enter-active,
 .labels-leave-active {
@@ -248,11 +257,8 @@ function toggleInfo() {
 .labels-leave-from {
     transform: translate(0, 0);
 }
-.labels-leave-to {
-    transform: translate(0, -100%);
-}
 .placeholders-enter-from {
-    transform: translate(0, 100%);
+    transform: translate(0, -100%);
 }
 .placeholders-enter-active,
 .placeholders-leave-active {
@@ -284,6 +290,9 @@ img {
 header.logoHeader,
 .itfCard {
     width: 250px;
+}
+.theLogin {
+    min-height: calc(100vh - 150px);
 }
 .theLogin,
 .privacyText {
