@@ -12,6 +12,9 @@ import TheKamedin from "./comps/TheKamedin.vue";
 import TheLogin from "./comps/login/TheLogin.vue";
 import InterfaceCard from "./comps/multi/InterfaceCard.vue";
 import ErrorAlert from "./comps/multi/ErrorAlert.vue";
+import TheDashboard from "./comps/dashboard/TheDashboard.vue";
+import TheEventOverview from "./comps/dashboard/events/TheEventOverview.vue";
+import TheTrainingOverview from "./comps/dashboard/trainings/TheTrainingOverview.vue";
 
 // FONTAWESOME
 import { library } from "@fortawesome/fontawesome-svg-core";
@@ -33,9 +36,28 @@ let router = createRouter({
             path: "/",
             name: "Start",
             component: TheLogin,
+        },
+        {
+            path: "/dashboard",
+            name: "Dashboard",
+            redirect: {name: "Events"},
+            component: TheDashboard,
+            children:
+            [
+                {
+                    path: "events",
+                    name: "Events",
+                    component: TheEventOverview,
+                },
+                {
+                    path: "trainings",
+                    name: "Trainings",
+                    component: TheTrainingOverview,
+                },
+            ]
         }
     ]
-})
+});
 
 import { createApp } from 'vue'
 import App from './App.vue'

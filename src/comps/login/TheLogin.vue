@@ -129,7 +129,15 @@
 
 <script setup>
 import {ref} from "vue";
+import { useRouter } from "vue-router";
+// ROUTE NAVIGATION - USED TO PROGRAMMATICLY CHANGE ROUTES
+const router = useRouter();
 
+/** LOGIN - CALLBACK FOR SUBMITTING LOGIN FORM
+    THERE ARE 3 POSSIBLE VALUES RETURNED FROM BACKEND FOR data.reason:
+    -- "email-doesnt-exist"     => EMAIL DOESNT EXIST
+    -- "wrong-pw"               => EMAIL EXISTS, BUT THE ENTERED PW IS WRONG
+    -- "connection-problems"    => THROUGHOUT THE PROCESS OF ACCESSING DATABASE THERE WAS A MISTAKE */
 async function try_login() {
     console.clear();
     let response = await fetch("http://localhost/Eskamedin/sport_calendar/vue_app/public/backend/auth/auth.php", {
@@ -153,6 +161,9 @@ async function try_login() {
                 passwordError.value = true;
                 break;
         }
+    }
+    else {
+        router.replace({name: "Dashboard"});
     }
 }
 

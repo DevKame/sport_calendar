@@ -1,24 +1,35 @@
 <?php
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
+//TODO: change session_name to KDNAPCKIE for production
+session_name("KDNAPCKIE-local");
+session_start();
 
 $res = [];
 $res["success"] = false;
+//################################################# CORS HEADERS:
 header("Access-Control-Allow-Origin: http://localhost:8080");
 header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type");
+//################################################# GENERAL HEADERS:
 header("Access-Control-Allow-Credentials: true");
 header("Content-Type: application/json");
+
+
+//################################################# HANDLES GET REQUESTS:
 if($_SERVER["REQUEST_METHOD"] === "GET")
 {
     $res["content"] = "GET Request hat wunderbar geklappt";
 }
+//################################################# HANDLES POST REQUESTS
+//################################################# DEPENDANT ON ITS TASK VALUE:
 else if($_SERVER["REQUEST_METHOD"] === "POST")
 {
     $req = json_decode(file_get_contents("php://input"));
     require("../database/db.php");
     switch($req->task)
     {
+        //################################################# USER TRIES TO LOGIN:
         case "try-login":
             $emailMatches = doesEmailExist($req->email);
             if(is_int($emailMatches))
@@ -30,7 +41,15 @@ else if($_SERVER["REQUEST_METHOD"] === "POST")
                     $passwordCorrect = isPasswordCorrect($req->password, $req->email);
                     if(is_bool($passwordCorrect)) {
                         if($passwordCorrect) {
-                            $res["success"] = true;
+                            $logged_user_id = getUserIDFromEmail($req->email);
+                            if(is_int($logged_user_id)) {
+                                $res["success"] = true;
+                                $res["id_of_logged_user"] = $logged_user_id;
+                                $_SESSION["kame-app-logged-user"] = $logged_user_id;
+                            } else {
+                                session_destroy();
+                                $res["reason"] = "connection-problems";
+                            }
                         } else {
                             $res["reason"] = "wrong-pw";
                         }
