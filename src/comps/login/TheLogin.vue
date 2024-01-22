@@ -15,12 +15,12 @@
 
             <template #body>
                 <div class="loginBody p-2 w-100 d-flex flex-column justify-content-start align-items-center">
-                    <form @submit.prevent="console.log('submitted')" class=" w-100 d-flex flex-column justify-content-start align-items-center">
+                    <form @submit.prevent="try_login" class=" w-100 d-flex flex-column justify-content-start align-items-center">
                         
                         <div class="errorContainer w-100 display position-relative">
                             <transition name="errors">
-                                <error-alert v-if="emailError">
-                                    <p class="m-0">This email does not exist</p>
+                                <error-alert v-if="emailError" @close-alert="emailError = false">
+                                    <p class="m-0 fw-bold">This email does not exist</p>
                                 </error-alert>
                             </transition>
                         </div>
@@ -33,6 +33,7 @@
                                     <label class="opacity-0 position-relative">EMAIL</label>
                             </div>
                             <div class="position-relative w-100 overflow-hidden">
+                                <!-- TODO: change Type to "email" for production -->
                                 <input @focus="inputStateAfterFocus" @blur="inputStateAfterBlur" type="mail" id="email-login" name="email-login" class="ps-2 w-100 position-relative" :class="{focus_or_filled: email_focus_filled}" v-model.trim="email_login" required/>
                                 <transition name="placeholders">
                                     <label v-if="!email_focus_filled" class="position-absolute placeholders fst-italic pe-none">EMAIL</label>
@@ -42,8 +43,8 @@
 
                         <div class="errorContainer mt-2 w-100 display position-relative">
                             <transition name="errors">
-                                <error-alert v-if="passwordError">
-                                    <p class="m-0">Wrong password</p>
+                                <error-alert v-if="passwordError" @close-alert="passwordError = false">
+                                    <p class="m-0 fw-bold">Wrong password</p>
                                 </error-alert>
                             </transition>
                         </div>
@@ -62,7 +63,16 @@
                                 </transition>
                             </div>
                         </div>
-                        <input type="submit" value="LOGIN" class="btn-tert border border-black rounded-2 px-3 ms-auto mt-5" />
+
+                        <div class="errorContainer mt-5 w-100 display position-relative">
+                            <transition name="errors">
+                                <error-alert v-if="connectionError" @close-alert="connectionError = false">
+                                    <p class="m-0 fw-bold">Some connection problems occured. Try later</p>
+                                </error-alert>
+                            </transition>
+                        </div>
+
+                        <input type="submit" value="LOGIN" class="btn-tert border border-black rounded-2 px-3 ms-auto mt-2" />
 
                     </form>
 
@@ -85,28 +95,28 @@
             </template>
         </itf-card>
         <teleport to="body">
-            <transition name="privacy">
+            <transition name="backdrop">
                 <div v-if="privacyOpen" @click="closePrivacy" class="backdrop position-fixed d-flex justify-content-center align-items-center">
-                    <itf-card>
-                        <template #header>
-                            <div class="w-100 h-100 border border-danger d-flex justify-content-between align-items-center">
-                                <h5 class="m-0">PRIVACY</h5>
-                                <div @click="closePrivacy" class="closeWrapper p-1 border border-dark rounded-circle d-flex justify-content-center align-items-center">
-                                    <fa-icon icon="fa-solid fa-close"></fa-icon>
+                        <itf-card>
+                            <template #header>
+                                <div class="w-100 h-100 border border-danger d-flex justify-content-between align-items-center">
+                                    <h5 class="m-0">PRIVACY</h5>
+                                    <div @click="closePrivacy" class="closeWrapper p-1 border border-dark rounded-circle d-flex justify-content-center align-items-center">
+                                        <fa-icon icon="fa-solid fa-close"></fa-icon>
+                                    </div>
                                 </div>
-                            </div>
-                        </template>
+                            </template>
 
-                        <template #body>
-                            <div class="privacyText p-2 d-flex flex-column justify-content-center w-100 bg-prim">
-                                <p>No data is sent to any third-party. Third party Resources like fonts, icons, etc are used locally.</p>
+                            <template #body>
+                                <div class="privacyText p-2 d-flex flex-column justify-content-center w-100 bg-prim">
+                                    <p>No data is sent to any third-party. Third party Resources like fonts, icons, etc are used locally.</p>
 
-                                <p>Using this application requires you logging in. For that purpose,  we use a cookie to ensure that you dont need to login every single time you visit this page.</p>
+                                    <p>Using this application requires you logging in. For that purpose,  we use a cookie to ensure that you dont need to login every single time you visit this page.</p>
 
-                                <p>By using and logging in you accept the storage of a cookie „KDNAPCKIE“</p>
-                            </div>
-                        </template>
-                    </itf-card>
+                                    <p>By using and logging in you accept the storage of the cookie „KDNAPCKIE“ within your browser</p>
+                                </div>
+                            </template>
+                        </itf-card>
                 </div>
             </transition>
         </teleport>
@@ -119,6 +129,32 @@
 
 <script setup>
 import {ref} from "vue";
+
+async function try_login() {
+    console.clear();
+    let response = await fetch("http://localhost/Eskamedin/sport_calendar/vue_app/public/backend/auth/auth.php", {
+        method: "post",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({email: email_login.value, password: password_login.value, task: "try-login"}),
+        credentials: "include",
+    });
+    let data = await response.json();
+    console.table(data);
+    if(!data.success) {
+        switch(data.reason)
+        {
+            case "email-doesnt-exist":
+                emailError.value = true;
+                break;
+            case "wrong-pw":
+                passwordError.value = true;
+                break;
+            case "connection-problems":
+                passwordError.value = true;
+                break;
+        }
+    }
+}
 
 ///////////// FOCUS AND BLUR FOR INPUT ELEMENTS
 const email_login = ref("");
@@ -137,9 +173,9 @@ function inputStateAfterBlur(e) {
     
 }
 function inputStateAfterFocus(e) {
+    resetErrors();
     if(e.target.id === "email-login") {
         email_focus_filled.value = true;
-
     }
     else
     {
@@ -153,16 +189,12 @@ const password_focus_filled = ref(false);
 ///////////// DISPLAY OF EMAIL/PASSWORD ERRORS
 const emailError = ref(false);
 const passwordError = ref(false);
-// function toggleError(which, val) {
-//     switch(which) {
-//         case "email":
-//             emailError.value = val;
-//             break;
-//         case "password":
-//             passwordError.value = val;
-//             break;
-//     }
-// }
+const connectionError = ref(false);
+function resetErrors() {
+emailError.value = false;
+passwordError.value = false;
+connectionError.value = false;
+}
 ///////////// DISPLAY OF EMAIL/PASSWORD ERRORS
 
 ///////////// TOGGLING PRIVACY WINDOW
@@ -186,29 +218,26 @@ function toggleInfo() {
 
 
 <style scoped>
+.backdrop-enter-from {
+    opacity: 0;
+}
+.backdrop-enter-active,
+.backdrop-leave-active {
+    transition: opacity .1s linear;
+}
+.backdrop-enter-to,
+.backdrop-leave-from {
+    opacity: 1;
+}
+.backdrop-leave-to {
+    opacity: 0;
+}
 footer small {
     font-size: 11px;
     color: var(--weak);
 }
 .infoWindow p {
     font-size: 14px;
-}
-.privacy-enter-from {
-    opacity: 0;
-    transform: scale(.7);
-}
-.privacy-enter-active,
-.privacy-leave-active {
-    transition: all .3s ease-out;
-}
-.privacy-enter-to,
-.privacy-leave-from {
-    opacity: 1;
-    transform: scale(1);
-}
-.privacy-leave-to {
-    opacity: 0;
-    transform: scale(.7);
 }
 .closeWrapper {
     width: 30px;
@@ -243,6 +272,7 @@ footer small {
 }
 .errorContainer {
     height: 35px;
+    /* font-family: "Raleway SBold 600"; */
 }
 .labels-enter-from,
 
