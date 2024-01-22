@@ -5,6 +5,7 @@ import "bootstrap";
 import "./assets/styles/colors.css";
 import "./assets/styles/classes.css";
 import "./assets/styles/resets.css";
+import "./assets/fonts/fonts.css";
 
 // CUSTOM COMPS
 import TheKamedin from "./comps/TheKamedin.vue";

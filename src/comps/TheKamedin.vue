@@ -23,6 +23,7 @@
     background-color: #152145;
     width: 100%;
     height: clamp(20px, 5vw, 30px);
+    font-family: "Ubuntu Med 500";
 }
 p {
     margin: 0;

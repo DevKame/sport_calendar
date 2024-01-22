@@ -1,6 +1,6 @@
 <template>
     <main class="theLogin pt-4 d-flex flex-column justify-content-start align-items-center">
-        <header class="logoHeader mb-5 d-flex flex-column justify-content-center align-items-center border border-danger">
+        <header class="logoHeader mb-5 d-flex flex-column justify-content-center align-items-center">
             <img src="@/assets/img/logos/kaizen-630.png" />
             <p>Placebo Kaizen Martial Arts</p>
             <p>Team Calendar</p>
@@ -14,10 +14,10 @@
             </template>
 
             <template #body>
-                <div class="loginBody p-2 w-100 border border-warning d-flex flex-column justify-content-start align-items-center">
-                    <form @submit.prevent="console.log('submitted')" class="border border-danger w-100 d-flex flex-column justify-content-start align-items-center">
+                <div class="loginBody p-2 w-100 d-flex flex-column justify-content-start align-items-center">
+                    <form @submit.prevent="console.log('submitted')" class=" w-100 d-flex flex-column justify-content-start align-items-center">
                         
-                        <div class="errorContainer w-100 display position-relative border border-danger">
+                        <div class="errorContainer w-100 display position-relative">
                             <transition name="errors">
                                 <error-alert v-if="emailError">
                                     <p class="m-0">This email does not exist</p>
@@ -26,7 +26,7 @@
                         </div>
 
                         <div class="inputWrapper w-100 d-flex flex-column justify-content-start align-items-start overflow-hidden">
-                            <div class="w-100 border border-info d-flex justify-content-between align-items-center">
+                            <div class="w-100 d-flex justify-content-between align-items-center">
                                 <transition name="labels">
                                     <label v-if="email_focus_filled" for="email-login">EMAIL</label>
                                 </transition>
@@ -40,7 +40,7 @@
                             </div>
                         </div>
 
-                        <div class="errorContainer mt-2 w-100 display position-relative border border-danger">
+                        <div class="errorContainer mt-2 w-100 display position-relative">
                             <transition name="errors">
                                 <error-alert v-if="passwordError">
                                     <p class="m-0">Wrong password</p>
@@ -49,7 +49,7 @@
                         </div>
                         
                         <div class="inputWrapper w-100 d-flex flex-column justify-content-start align-items-start overflow-hidden">
-                            <div class="w-100 border border-info d-flex justify-content-between align-items-center">
+                            <div class="w-100 d-flex justify-content-between align-items-center">
                                 <transition name="labels">
                                     <label v-if="password_focus_filled" for="password-login">PASSWORD</label>
                                 </transition>
@@ -98,7 +98,7 @@
                         </template>
 
                         <template #body>
-                            <div class="p-2 d-flex flex-column justify-content-center w-100 bg-prim">
+                            <div class="privacyText p-2 d-flex flex-column justify-content-center w-100 bg-prim">
                                 <p>No data is sent to any third-party. Third party Resources like fonts, icons, etc are used locally.</p>
 
                                 <p>Using this application requires you logging in. For that purpose,  we use a cookie to ensure that you dont need to login every single time you visit this page.</p>
@@ -218,6 +218,7 @@ function toggleInfo() {
     font-size: 10px;
     background-color: transparent;
     border: 1px solid var(--weak);
+    font-family: "Raleway Light 300";
 }
 .errors-enter-from {
     transform: translate(-100%, 0);
@@ -283,6 +284,10 @@ img {
 header.logoHeader,
 .itfCard {
     width: 250px;
+}
+.theLogin,
+.privacyText {
+    font-family: "Raleway Reg 400";
 }
 @media screen and (min-width: 576px) {
     header.logoHeader,

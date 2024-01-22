@@ -11,8 +11,8 @@ SLOT NAME="BODY":
 
 
 <template>
-    <div class="itfCard overflow-hidden border border-danger d-flex flex-column justify-content-start align-items-center rounded-3">
-        <header class="p-2 itfHeader bg-sec border border-warning">
+    <div class="itfCard overflow-hidden d-flex flex-column justify-content-start align-items-center rounded-3">
+        <header class="p-2 itfHeader bg-sec">
             <slot name="header"></slot>
         </header>
 
@@ -26,8 +26,12 @@ SLOT NAME="BODY":
 
 <!-- SLOT HEADER´S HEADLINE IS ALWAYS A <h4> ELEMENT !! -->
 <style scoped>
+.itfCard {
+    box-shadow: 0 0 10px 2px #777;
+}
 .itfHeader {
     width: 100%;
     box-shadow: 0 2px 10px 1px black;
+    font-family: "Raleway SBold 600";
 }
 </style>
