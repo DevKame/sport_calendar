@@ -59,6 +59,9 @@ let router = createRouter({
     ]
 });
 
+// STORE:
+import store from "./store/rootStore.js";
+
 import { createApp } from 'vue'
 import App from './App.vue'
 
@@ -68,5 +71,6 @@ app.component("itf-card", InterfaceCard);
 app.component("error-alert", ErrorAlert);
 app.component("fa-icon", FontAwesomeIcon);
 
+app.use(store);
 app.use(router);
 app.mount('#app')

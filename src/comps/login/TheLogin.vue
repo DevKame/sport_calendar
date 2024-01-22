@@ -130,8 +130,11 @@
 <script setup>
 import {ref} from "vue";
 import { useRouter } from "vue-router";
+import { useStore } from "vuex";
 // ROUTE NAVIGATION - USED TO PROGRAMMATICLY CHANGE ROUTES
 const router = useRouter();
+
+const store = useStore();
 
 /** LOGIN - CALLBACK FOR SUBMITTING LOGIN FORM
     THERE ARE 3 POSSIBLE VALUES RETURNED FROM BACKEND FOR data.reason:
@@ -140,14 +143,9 @@ const router = useRouter();
     -- "connection-problems"    => THROUGHOUT THE PROCESS OF ACCESSING DATABASE THERE WAS A MISTAKE */
 async function try_login() {
     console.clear();
-    let response = await fetch("http://localhost/Eskamedin/sport_calendar/vue_app/public/backend/auth/auth.php", {
-        method: "post",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({email: email_login.value, password: password_login.value, task: "try-login"}),
-        credentials: "include",
-    });
-    let data = await response.json();
-    console.table(data);
+    let data =
+    await store.dispatch("try_login", {email: email_login.value, password: password_login.value, task: "try-login"});
+
     if(!data.success) {
         switch(data.reason)
         {
