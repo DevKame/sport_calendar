@@ -36,12 +36,20 @@ let router = createRouter({
             path: "/",
             name: "Start",
             component: TheLogin,
+            meta:
+            {
+                loginRequired: false,
+            },
         },
         {
             path: "/dashboard",
             name: "Dashboard",
             redirect: {name: "Events"},
             component: TheDashboard,
+            meta:
+            {
+                loginRequired: true,
+            },
             children:
             [
                 {
@@ -58,13 +66,20 @@ let router = createRouter({
         }
     ],
 });
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
     // console.clear();
-    console.log(from.name);
-    console.log(to);
     console.log(from);
-    console.log(next);
-    next();
+    console.log(to);
+    let nextResult = true;
+    let result = await store.dispatch("loggedUserExistent");
+    if(to.meta.loginRequired && !result.logged_user_existent) {
+        nextResult = {name: "Start"};
+    }
+    else if(to.meta.loginRequired && result.logged_user_existent)
+    {
+        nextResult = true;
+    }
+    next(nextResult);
 });
 
 // STORE:

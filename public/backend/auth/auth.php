@@ -17,9 +17,15 @@ header("Content-Type: application/json");
 
 
 //################################################# HANDLES GET REQUESTS:
+// RETURNS Boolean INDICATING IF A USER IS LOGGED IN
 if($_SERVER["REQUEST_METHOD"] === "GET")
 {
-    $res["content"] = "GET Request hat wunderbar geklappt";
+    if(isset($_SESSION["kame-app-logged-user"])) {
+        $res["logged_user_existent"] = true;
+    } else {
+        $res["logged_user_existent"] = false;
+    }
+    unset($res["success"]);
 }
 //################################################# HANDLES POST REQUESTS
 //################################################# DEPENDANT ON ITS TASK VALUE:
@@ -29,7 +35,7 @@ else if($_SERVER["REQUEST_METHOD"] === "POST")
     require("../database/db.php");
     switch($req->task)
     {
-        //################################################# USER TRIES TO LOGIN:
+        //######################################## RETURNS USERDATA FROM USER ID:
         case "get-userdata-from-id":
             $userData = getUserDataFromID($req->id);
             if(is_string($userData)) {
@@ -40,6 +46,7 @@ else if($_SERVER["REQUEST_METHOD"] === "POST")
                 $res["logged_user"] = $userData;
             }
             break;
+        //################################################# USER TRIES TO LOGIN:
         case "try-login":
             $emailMatches = doesEmailExist($req->email);
             if(is_int($emailMatches))

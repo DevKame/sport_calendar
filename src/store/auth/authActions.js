@@ -1,6 +1,13 @@
 
 
 export default {
+    async loggedUserExistent(context) {
+        let response = await fetch(context.state.API_AUTH, {
+            credentials: "include",
+        });
+        let result = await response.json();
+        return result;
+    },
     async get_userdata_from_id(context, id) {
         let response = await fetch(context.state.API_AUTH, {
             method: "post",
