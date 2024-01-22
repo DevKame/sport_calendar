@@ -1,10 +1,18 @@
 
 
 export default {
+    async get_userdata_from_id(context, id) {
+        let response = await fetch(context.state.API_AUTH, {
+            method: "post",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({id: id, task: "get-userdata-from-id"}),
+            credentials: "include",
+        });
+        const userdata = await response.json();
+        console.log(context);
+        return userdata;
+    },
     async try_login(context, logindata) {
-        console.log(context.commit);
-        console.log(context.state);
-        console.log(context.rootState);
         
         let response = await fetch(context.state.API_AUTH, {
             method: "post",
@@ -12,7 +20,18 @@ export default {
             body: JSON.stringify(logindata),
             credentials: "include",
         });
-        return await response.json();
-        
+        let data = await response.json();
+        if(data.success) {
+            let userdata =
+            await context.dispatch("get_userdata_from_id", data.id_of_logged_user);
+            console.table(userdata);
+            //TODO: IRGENDWAS MIT NO VALID JSON
+            if(!userdata.success) {
+                context.commit("resetLoggedUser");
+            } else {
+                context.commit("setLoggedUser", userdata);
+            }
+            return userdata;
+        }
     }
 }

@@ -56,7 +56,15 @@ let router = createRouter({
                 },
             ]
         }
-    ]
+    ],
+});
+router.beforeEach((to, from, next) => {
+    // console.clear();
+    console.log(from.name);
+    console.log(to);
+    console.log(from);
+    console.log(next);
+    next();
 });
 
 // STORE:

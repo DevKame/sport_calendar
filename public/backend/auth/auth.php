@@ -30,6 +30,16 @@ else if($_SERVER["REQUEST_METHOD"] === "POST")
     switch($req->task)
     {
         //################################################# USER TRIES TO LOGIN:
+        case "get-userdata-from-id":
+            $userData = getUserDataFromID($req->id);
+            if(is_string($userData)) {
+                $res["reason"] = "connection-problems";
+            }
+            else {
+                $res["success"] = true;
+                $res["logged_user"] = $userData;
+            }
+            break;
         case "try-login":
             $emailMatches = doesEmailExist($req->email);
             if(is_int($emailMatches))

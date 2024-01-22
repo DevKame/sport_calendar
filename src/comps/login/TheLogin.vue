@@ -142,7 +142,7 @@ const store = useStore();
     -- "wrong-pw"               => EMAIL EXISTS, BUT THE ENTERED PW IS WRONG
     -- "connection-problems"    => THROUGHOUT THE PROCESS OF ACCESSING DATABASE THERE WAS A MISTAKE */
 async function try_login() {
-    console.clear();
+    // console.clear();
     let data =
     await store.dispatch("try_login", {email: email_login.value, password: password_login.value, task: "try-login"});
 

@@ -6,7 +6,36 @@ $user =     "Kamedin";
 $pw =       "12345";
 $db =       "kame_apps";
 
+function getUserDataFromID($id) {
+    $con = connect();
+    $userData = [];
+    $query =
+    "SELECT * FROM sport_cal_user
+    WHERE id = ?";
+    try {
+        $stmt = mysqli_prepare($con, $query);
+        mysqli_stmt_bind_param($stmt, "i", $id);
+        mysqli_stmt_execute($stmt);
+        mysqli_stmt_bind_result($stmt, $fID, $fEmail, $fFn, $fLn, $fRole, $fGroups, $fPw);
+        mysqli_stmt_store_result($stmt);
+        while(mysqli_stmt_fetch($stmt)) {
+            $userData["id"] = $fID;
+            $userData["email"] = $fEmail;
+            $userData["firstname"] = $fFn;
+            $userData["lastname"] = $fLn;
+            $userData["role"] = $fRole;
+            $userData["groups"] = $fGroups;
+        }
+    
+        mysqli_stmt_free_result($stmt);
+        mysqli_stmt_close($stmt);
+        return $userData;
+    }
+    catch(Exeption $e) {
+        return $e->getMessage();
+    }
 
+}
 /** FETCHES THE CORRESPONDING ID TO AN EMIAL
  *  args:
  *  {$email}            => String
