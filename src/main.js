@@ -47,6 +47,10 @@ let router = createRouter({
             name: "Dashboard",
             redirect: {name: "Events"},
             component: TheDashboard,
+            /** RIGHT BEFORE THIS NAV GUARD A GLOBAL NAV GUARD WAS INVOKED
+             *  TO CHECK IF A USER AT ALL IS LOGGED IN. IF IT CAME TO THIS
+             *  ROUTE, THAT MEANS THAT A USER IS LOGGED IN. THIS NAV GUARD
+             *  FETCHES THIS USER´S DATA AND SETS IT IN VUEX STATE */
             async beforeEnter() {
                 let userid = await store.dispatch("getUserIDFromSession");
                 userid = userid.session_id;
@@ -74,6 +78,10 @@ let router = createRouter({
         }
     ],
 });
+/** MAKES SURE TO ACCESS PORTECTED ROUTES ONLY IF LOGGED IN AND REDIRECTS
+ *  BACK TO "Start"-ROUTE IF NOT.
+ *  MAKES SURE TO ACCESS "Start"-ROUTE ONLY IF NOT LOGGED IN. REDIRECTS TO
+ *  "Dashboard" IF ALREADY LOGGED IN */
 router.beforeEach(async (to, _, next) => {
     let nextPara = true;
     let result = await store.dispatch("loggedUserExistent");

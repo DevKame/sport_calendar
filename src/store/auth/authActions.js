@@ -1,6 +1,10 @@
 
 
 export default {
+    /** FETCHES THE DATABASE-ID OF CURRENTLY LOGGED USER
+     * @param {store object} context    => VUEX STORE
+     * @returns {number}                => DATABASE-ID
+     */
     async getUserIDFromSession(context) {
         const req = {task: "get-userid-from-session"};
         let response = await fetch(context.state.API_AUTH, {
@@ -11,6 +15,9 @@ export default {
         });
         return await response.json();
     },
+    /** CHECKS IF A USER IS LOGGED IN
+     * @param {store object} context    => VUEX STORE 
+     * @returns {object.bool}           => result.logged_user_existent */
     async loggedUserExistent(context) {
         let response = await fetch(context.state.API_AUTH, {
             credentials: "include",
@@ -18,6 +25,11 @@ export default {
         let result = await response.json();
         return result;
     },
+    /** GETS USERDATA FROM A PROVIDED ID
+     * @param {store object} context    => VUEX STORE
+     * @param {number} id               => ID TO FETCH FROM DATABASE
+     * @returns {object.logged_user}    => {id: number, email: String, firstname/lastname/role: String, groups: JSON-String}
+     */
     async get_userdata_from_id(context, id) {
         let response = await fetch(context.state.API_AUTH, {
             method: "post",
@@ -27,8 +39,16 @@ export default {
         });
         return await response.json();
     },
+    /** TRYING TO LOGING WITH ENTERED LOGINDATA AND TASK: "try-login"
+     *  IF SUCCESS, FETCHES USERDATA FROM PROVIDED EMAIL
+     *  IF LOGIN/USERDATA FETCHES ARE UNSUCCESSFULL, RETURNS OBJECT FROM
+     *  LOGIN-TRY WITH THE REASON OF THE FAILED LOGIN, OTHERWISE RETURNS
+     *  USERDATA
+     * @param {store object} context        => VUEX STORE
+     * @param {object} logindata            => {email: String, password: String, task:String}
+     * @returns {object} USERDATA | REASON FOR FAILED LOGIN
+     */
     async try_login(context, logindata) {
-        
         let response = await fetch(context.state.API_AUTH, {
             method: "post",
             headers: {"Content-Type": "application/json"},
