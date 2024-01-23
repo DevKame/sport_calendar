@@ -11,7 +11,7 @@ SLOT NAME="BODY":
 
 
 <template>
-    <div class="itfCard overflow-hidden d-flex flex-column justify-content-start align-items-center rounded-3">
+    <div :class="{dashboard_card: props.dashboardCard}" class="itfCard overflow-hidden d-flex flex-column justify-content-start align-items-center rounded-3">
         <header class="p-2 itfHeader bg-sec">
             <slot name="header"></slot>
         </header>
@@ -22,6 +22,10 @@ SLOT NAME="BODY":
 </template>
 
 <script setup>
+import { defineProps } from "vue";
+let props = defineProps([
+    "dashboardCard",
+]);
 </script>
 
 <!-- SLOT HEADER´S HEADLINE IS ALWAYS A <h4> ELEMENT !! -->
