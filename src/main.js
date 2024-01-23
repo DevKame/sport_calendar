@@ -27,10 +27,18 @@ import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { faBarsStaggered } from "@fortawesome/free-solid-svg-icons";
 import { faMicrochip } from "@fortawesome/free-solid-svg-icons";
 import { faClose } from "@fortawesome/free-solid-svg-icons";
+import { faRectangleList } from "@fortawesome/free-regular-svg-icons";
+import { faDumbbell } from "@fortawesome/free-solid-svg-icons";
+import { faPersonChalkboard } from "@fortawesome/free-solid-svg-icons";
+import { faPeopleGroup } from "@fortawesome/free-solid-svg-icons";
 
 library.add(faMicrochip);
 library.add(faClose);
 library.add(faBarsStaggered);
+library.add(faRectangleList);
+library.add(faDumbbell);
+library.add(faPersonChalkboard);
+library.add(faPeopleGroup);
 
 // ROUTER
 import { createRouter, createWebHistory } from "vue-router";
@@ -94,12 +102,12 @@ let router = createRouter({
                 },
                 {
                     path: "students",
-                    name: "Studentss",
+                    name: "Students",
                     component: TheStudentOverview,
                 },
                 {
                     path: "groups",
-                    name: "Groupss",
+                    name: "Groups",
                     component: TheGroupOverview,
                 },
             ]

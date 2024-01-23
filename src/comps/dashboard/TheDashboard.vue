@@ -18,6 +18,46 @@
                 <div :class="{opened: navIsOpen}" class="navItemHolder nav-menu position-relative border border-black rounded-circle d-flex justify-content-center align-items-center">
                     <fa-icon icon="fa-solid fa-bars-staggered" size="xl" class="pe-none"></fa-icon>
                 </div>
+                <transition name="events">
+                    <div v-if="navIsOpen" class="navItemHolder bg-tert nav-events border border-black rounded-circle d-flex justify-content-center align-items-center">
+                        <router-link :to="{name: 'Events'}" class="d-flex flex-column justify-content-start align-items-center">
+                            <fa-icon icon="fa-regular fa-rectangle-list" class="pe-none"></fa-icon>
+                            <small>Events</small>
+                        </router-link>
+                    </div>
+                </transition>
+                <transition name="trainings">
+                    <div v-if="navIsOpen" class="navItemHolder bg-tert nav-trainings border border-black rounded-circle d-flex justify-content-center align-items-center">
+                        <router-link :to="{name: 'Trainings'}" class="d-flex flex-column justify-content-start align-items-center">
+                            <fa-icon icon="fa-solid fa-dumbbell" class="pe-none"></fa-icon>
+                            <small>Trainings</small>
+                        </router-link>
+                    </div>
+                </transition>
+                <transition name="trainers">
+                    <div v-if="navIsOpen" class="navItemHolder bg-tert nav-trainers border border-black rounded-circle d-flex justify-content-center align-items-center">
+                        <router-link :to="{name: 'Trainers'}" class="d-flex flex-column justify-content-start align-items-center">
+                            <fa-icon icon="fa-solid fa-person-chalkboard" class="pe-none"></fa-icon>
+                            <small>Trainers</small>
+                        </router-link>
+                    </div>
+                </transition>
+                <transition name="students">
+                    <div v-if="navIsOpen" class="navItemHolder bg-tert nav-students border border-black rounded-circle d-flex justify-content-center align-items-center">
+                        <router-link :to="{name: 'Students'}" class="d-flex flex-column justify-content-start align-items-center">
+                            <fa-icon icon="fa-solid fa-people-group" class="pe-none"></fa-icon>
+                            <small>Students</small>
+                        </router-link>
+                    </div>
+                </transition>
+                <transition name="groups">
+                    <div v-if="navIsOpen" class="navItemHolder bg-tert nav-groups border border-black rounded-circle d-flex justify-content-center align-items-center">
+                        <router-link :to="{name: 'Groups'}" class="d-flex flex-column justify-content-start align-items-center">
+                            <fa-icon icon="fa-solid fa-people-group" class="pe-none"></fa-icon>
+                            <small>Groups</small>
+                        </router-link>
+                    </div>
+                </transition>
             </div>
         </header>
         <router-view @empty-click="clickFromRouterView"></router-view>
@@ -59,6 +99,122 @@ const userRole = computed(() => {
 
 
 <style scoped>
+.navHolder a {
+    color: black;
+    text-decoration: none;
+}
+.nav-groups {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, 600%);
+}
+.nav-students {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, 475%);
+}
+.nav-trainers {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, 350%);
+}
+.nav-trainings {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, 225%);
+}
+.nav-events {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, 100%);
+}
+.groups-enter-from,
+.groups-leave-to {
+    opacity: 0;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+.groups-enter-to,
+.groups-leave-from {
+    opacity: 1;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, 600%);
+}
+.students-enter-from,
+.students-leave-to {
+    opacity: 0;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+.students-enter-to,
+.students-leave-from {
+    opacity: 1;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, 475%);
+}
+.trainers-enter-from,
+.trainers-leave-to {
+    opacity: 0;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+.trainers-enter-to,
+.trainers-leave-from {
+    opacity: 1;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, 350%);
+}
+.trainings-enter-from,
+.trainings-leave-to {
+    opacity: 0;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+.trainings-enter-to,
+.trainings-leave-from {
+    opacity: 1;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, 225%);
+}
+.events-enter-from,
+.events-leave-to {
+    opacity: 0;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+.events-enter-active,
+.trainings-enter-active,
+.trainers-enter-active,
+.students-enter-active,
+.groups-enter-active,
+.events-leave-active,
+.trainings-leave-active,
+.trainers-leave-active,
+.students-leave-active,
+.groups-leave-active {
+    transition: all .4s ease-out;
+}
+.events-enter-to,
+.events-leave-from {
+    opacity: 1;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, 100%);
+}
 .nav-menu::after {
     content: "";
     position: absolute;
@@ -115,9 +271,13 @@ const userRole = computed(() => {
         transform: translate(-50%, -50%) rotate(-360deg);
     }
 }
+.navItemHolder small {
+    font-size: 8px;
+}
 .navItemHolder {
     width: 60%;
     aspect-ratio: 1;
+    z-index: 10;
 }
 .navHolder {
     width: clamp(80px, 20%, 110px);
