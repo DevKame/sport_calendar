@@ -1,6 +1,16 @@
 
 
 export default {
+    async getUserIDFromSession(context) {
+        const req = {task: "get-userid-from-session"};
+        let response = await fetch(context.state.API_AUTH, {
+            method: "post",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify(req),
+            credentials: "include",
+        });
+        return await response.json();
+    },
     async loggedUserExistent(context) {
         let response = await fetch(context.state.API_AUTH, {
             credentials: "include",
@@ -33,7 +43,7 @@ export default {
             if(!userdata.success) {
                 context.commit("resetLoggedUser");
             } else {
-                context.commit("setLoggedUser", userdata);
+                context.commit("setLoggedUser", userdata.logged_user);
             }
             return userdata;
         }

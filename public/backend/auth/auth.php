@@ -35,6 +35,9 @@ else if($_SERVER["REQUEST_METHOD"] === "POST")
     require("../database/db.php");
     switch($req->task)
     {
+        case "get-userid-from-session":
+            $res["session_id"] = $_SESSION["kame-app-logged-user"];
+            break;
         //######################################## RETURNS USERDATA FROM USER ID:
         case "get-userdata-from-id":
             $userData = getUserDataFromID($req->id);
