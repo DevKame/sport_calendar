@@ -2,9 +2,11 @@
     <div>
         <header @click="reactToDashboardclick" class="dashboardHeader p-2 d-flex justify-content-start align-items-center bg-sec">
             
+            <transition appear>
             <div class="imageHolder border border-danger d-flex justify-content-center align-items-center">
                 <img src="@/assets/img/logos/kaizen-630.png" alt="Kaizen Logo"/>
             </div>
+            </transition>
 
             <div class="userHolder ms-2 border border-info d-flex flex-column justify-content-center align-items-start">
                 <h6 class="m-0 mb-1">Welcome, <span>{{ userFirstname }}</span> <span>{{ userLastname }}</span></h6>
@@ -60,7 +62,12 @@
                 </transition>
             </div>
         </header>
-        <router-view @empty-click="clickFromRouterView"></router-view>
+
+        <router-view v-slot="slotProps" @empty-click="clickFromRouterView">
+            <transition name="sub-routes" mode="out-in">
+                <component :is="slotProps.Component"></component>
+            </transition>
+        </router-view>
     </div>
 </template>
 
@@ -99,6 +106,29 @@ const userRole = computed(() => {
 
 
 <style scoped>
+.v-enter-from {
+    opacity: 0;
+}
+.v-enter-active {
+    transition: opacity 5s;
+}
+.v-enter-to {
+    opacity: 1;
+}
+.sub-routes-enter-from,
+.sub-routes-leave-to {
+    opacity: 0;
+    transform: scale(.9);
+}
+.sub-routes-enter-to,
+.sub-routes-leave-from {
+    opacity: 1;
+    transform: scale(1);
+}
+.sub-routes-enter-active,
+.sub-routes-leave-active {
+    transition: all .4s ease-in;
+}
 .navHolder a {
     color: black;
     text-decoration: none;
