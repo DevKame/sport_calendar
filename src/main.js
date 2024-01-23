@@ -50,9 +50,7 @@ let router = createRouter({
             async beforeEnter() {
                 let userid = await store.dispatch("getUserIDFromSession");
                 userid = userid.session_id;
-                console.log(userid);
                 let userdata = await store.dispatch("get_userdata_from_id", userid);
-                console.log(userdata);
                 store.commit("setLoggedUser", userdata.logged_user);
             },
             meta:
@@ -77,7 +75,6 @@ let router = createRouter({
     ],
 });
 router.beforeEach(async (to, _, next) => {
-    console.log("router.beforeEach !!!!!");
     let nextPara = true;
     let result = await store.dispatch("loggedUserExistent");
     if(to.meta.loginRequired && !result.logged_user_existent) {

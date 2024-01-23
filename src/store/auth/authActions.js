@@ -25,8 +25,7 @@ export default {
             body: JSON.stringify({id: id, task: "get-userdata-from-id"}),
             credentials: "include",
         });
-        const userdata = await response.json();
-        return userdata;
+        return await response.json();
     },
     async try_login(context, logindata) {
         
@@ -42,10 +41,14 @@ export default {
             await context.dispatch("get_userdata_from_id", data.id_of_logged_user);
             if(!userdata.success) {
                 context.commit("resetLoggedUser");
+                return data;
             } else {
                 context.commit("setLoggedUser", userdata.logged_user);
             }
             return userdata;
+        }
+        else {
+            return data;
         }
     }
 }
