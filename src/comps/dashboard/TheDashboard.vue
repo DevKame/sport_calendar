@@ -53,7 +53,7 @@
                 <transition name="groups">
                     <div v-if="navIsOpen" class="navItemHolder bg-tert nav-groups border border-black rounded-circle d-flex justify-content-center align-items-center">
                         <router-link :to="{name: 'Groups'}" class="d-flex flex-column justify-content-start align-items-center">
-                            <fa-icon icon="fa-solid fa-people-group" class="pe-none"></fa-icon>
+                            <fa-icon icon="fa-solid fa-table" class="pe-none"></fa-icon>
                             <small>Groups</small>
                         </router-link>
                     </div>

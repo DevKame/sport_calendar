@@ -31,6 +31,7 @@ import { faRectangleList } from "@fortawesome/free-regular-svg-icons";
 import { faDumbbell } from "@fortawesome/free-solid-svg-icons";
 import { faPersonChalkboard } from "@fortawesome/free-solid-svg-icons";
 import { faPeopleGroup } from "@fortawesome/free-solid-svg-icons";
+import { faTable } from "@fortawesome/free-solid-svg-icons";
 
 library.add(faMicrochip);
 library.add(faClose);
@@ -39,6 +40,7 @@ library.add(faRectangleList);
 library.add(faDumbbell);
 library.add(faPersonChalkboard);
 library.add(faPeopleGroup);
+library.add(faTable);
 
 // ROUTER
 import { createRouter, createWebHistory } from "vue-router";
