@@ -11,7 +11,6 @@ export default {
         state.logged_groups = null;
     },
     setLoggedUser(state, data) {
-        console.log(data);
         state.is_logged_in = true;
         state.logged_id = data.logged_user.id;
         state.logged_firstname = data.logged_user.firstname;

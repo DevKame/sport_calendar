@@ -16,7 +16,6 @@ export default {
             credentials: "include",
         });
         const userdata = await response.json();
-        console.log(context);
         return userdata;
     },
     async try_login(context, logindata) {
@@ -31,8 +30,6 @@ export default {
         if(data.success) {
             let userdata =
             await context.dispatch("get_userdata_from_id", data.id_of_logged_user);
-            console.table(userdata);
-            //TODO: IRGENDWAS MIT NO VALID JSON
             if(!userdata.success) {
                 context.commit("resetLoggedUser");
             } else {

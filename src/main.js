@@ -39,6 +39,7 @@ let router = createRouter({
             meta:
             {
                 loginRequired: false,
+                logoutRequired: true,
             },
         },
         {
@@ -49,6 +50,7 @@ let router = createRouter({
             meta:
             {
                 loginRequired: true,
+                logoutRequired: false,
             },
             children:
             [
@@ -66,20 +68,24 @@ let router = createRouter({
         }
     ],
 });
-router.beforeEach(async (to, from, next) => {
-    // console.clear();
-    console.log(from);
-    console.log(to);
-    let nextResult = true;
+router.beforeEach(async (to, _, next) => {
+    let nextPara = true;
     let result = await store.dispatch("loggedUserExistent");
     if(to.meta.loginRequired && !result.logged_user_existent) {
-        nextResult = {name: "Start"};
+        nextPara = {name: "Start"};
     }
     else if(to.meta.loginRequired && result.logged_user_existent)
     {
-        nextResult = true;
+        nextPara = true;
     }
-    next(nextResult);
+    else if(to.meta.logoutRequired) {
+        if(result.logged_user_existent) {
+            nextPara = {name: "Dashboard"};
+        } else {
+            nextPara = true;
+        }
+    }
+    next(nextPara);
 });
 
 // STORE:

@@ -17,7 +17,7 @@
                 <div class="loginBody p-2 w-100 d-flex flex-column justify-content-start align-items-center">
                     <form @submit.prevent="try_login" class=" w-100 d-flex flex-column justify-content-start align-items-center">
                         
-                        <div class="errorContainer w-100 display position-relative">
+                        <div class="errorContainer mt-3 w-100 display position-relative">
                             <transition name="errors">
                                 <error-alert v-if="emailError" @close-alert="emailError = false">
                                     <p class="m-0 fw-bold">This email does not exist</p>
@@ -64,7 +64,7 @@
                             </div>
                         </div>
 
-                        <div class="errorContainer mt-5 w-100 display position-relative">
+                        <div class="errorContainer mt-2 w-100 display position-relative">
                             <transition name="errors">
                                 <error-alert v-if="connectionError" @close-alert="connectionError = false">
                                     <p class="m-0 fw-bold">Some connection problems occured. Try later</p>
@@ -314,7 +314,7 @@ footer small {
     font-size: .7em;
 }
 .placeholders {
-    top: 2px;
+    top: 4px;
     left: 5px;
     color: var(--weak);
 }
