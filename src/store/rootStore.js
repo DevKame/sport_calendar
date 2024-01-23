@@ -6,10 +6,12 @@ import rootGetters from "./rootGetters.js";
 import rootMutations from "./rootMutations.js";
 
 import authStore from "./auth/authStore.js";
+import groupStore from "./groups/groupStore.js";
 
 const store = createStore({
     modules: {
         auth: authStore,
+        groups: groupStore,
     },
     state() {
         return {

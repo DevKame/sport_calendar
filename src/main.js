@@ -69,9 +69,9 @@ let router = createRouter({
              *  FETCHES THIS USER´S DATA AND SETS IT IN VUEX STATE */
             async beforeEnter(_, _2, next) {
                 try {
-                    let userid = await store.dispatch("getUserIDFromSession");
+                    let userid = await store.dispatch("auth/getUserIDFromSession");
                     userid = userid.session_id;
-                    let userdata = await store.dispatch("get_userdata_from_id", userid);
+                    let userdata = await store.dispatch("auth/get_userdata_from_id", userid);
                     store.commit("setLoggedUser", userdata.logged_user);
                     next(true);
                 }
@@ -127,7 +127,7 @@ let router = createRouter({
  *  "Dashboard" IF ALREADY LOGGED IN */
 router.beforeEach(async (to, _, next) => {
     let nextPara = true;
-    let result = await store.dispatch("loggedUserExistent");
+    let result = await store.dispatch("auth/loggedUserExistent");
     if(to.meta.loginRequired && !result.logged_user_existent) {
         nextPara = {name: "Start"};
     }

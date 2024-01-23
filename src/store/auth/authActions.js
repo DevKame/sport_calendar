@@ -60,10 +60,10 @@ export default {
             let userdata =
             await context.dispatch("get_userdata_from_id", data.id_of_logged_user);
             if(!userdata.success) {
-                context.commit("resetLoggedUser");
+                context.commit("resetLoggedUser", {root: true});
                 return data;
             } else {
-                context.commit("setLoggedUser", userdata.logged_user);
+                context.commit("setLoggedUser", userdata.logged_user, {root: true});
             }
             return userdata;
         }

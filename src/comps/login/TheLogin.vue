@@ -144,7 +144,7 @@ const store = useStore();
 async function try_login() {
     // console.clear();
     let data =
-    await store.dispatch("try_login", {email: email_login.value, password: password_login.value, task: "try-login"});
+    await store.dispatch("auth/try_login", {email: email_login.value, password: password_login.value, task: "try-login"});
 
     if(!data.success) {
         switch(data.reason)
