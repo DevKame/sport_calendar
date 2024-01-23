@@ -16,3 +16,7 @@
     background-color: var(--tert);
     color: black;
 }
+.btn-positive {
+    background-color: var(--create);
+    color: black;
+}

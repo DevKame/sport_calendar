@@ -8,13 +8,17 @@ import "./assets/styles/resets.css";
 import "./assets/fonts/fonts.css";
 
 // CUSTOM COMPS
-import TheKamedin from "./comps/TheKamedin.vue";
-import TheLogin from "./comps/login/TheLogin.vue";
-import InterfaceCard from "./comps/multi/InterfaceCard.vue";
-import ErrorAlert from "./comps/multi/ErrorAlert.vue";
-import TheDashboard from "./comps/dashboard/TheDashboard.vue";
-import TheEventOverview from "./comps/dashboard/events/TheEventOverview.vue";
-import TheTrainingOverview from "./comps/dashboard/trainings/TheTrainingOverview.vue";
+import TheKamedin           from "./comps/TheKamedin.vue";
+import TheLogin             from "./comps/login/TheLogin.vue";
+import InterfaceCard        from "./comps/multi/InterfaceCard.vue";
+import ErrorAlert           from "./comps/multi/ErrorAlert.vue";
+import TheDashboard         from "./comps/dashboard/TheDashboard.vue";
+import TheEventOverview     from "./comps/dashboard/events/TheEventOverview.vue";
+import TheTrainingOverview  from "./comps/dashboard/trainings/TheTrainingOverview.vue";
+import TheTrainerOverview   from "./comps/dashboard/trainers/TheTrainerOverview.vue";
+import TheStudentOverview   from "./comps/dashboard/students/TheStudentOverview.vue";
+import TheGroupOverview     from "./comps/dashboard/groups/TheGroupOverview.vue";
+import TheError             from "./comps/error/TheError.vue";
 
 // FONTAWESOME
 import { library } from "@fortawesome/fontawesome-svg-core";
@@ -45,17 +49,24 @@ let router = createRouter({
         {
             path: "/dashboard",
             name: "Dashboard",
-            redirect: {name: "Events"},
+            redirect: {name: "Trainings"},
             component: TheDashboard,
             /** RIGHT BEFORE THIS NAV GUARD A GLOBAL NAV GUARD WAS INVOKED
              *  TO CHECK IF A USER AT ALL IS LOGGED IN. IF IT CAME TO THIS
              *  ROUTE, THAT MEANS THAT A USER IS LOGGED IN. THIS NAV GUARD
              *  FETCHES THIS USER´S DATA AND SETS IT IN VUEX STATE */
-            async beforeEnter() {
-                let userid = await store.dispatch("getUserIDFromSession");
-                userid = userid.session_id;
-                let userdata = await store.dispatch("get_userdata_from_id", userid);
-                store.commit("setLoggedUser", userdata.logged_user);
+            async beforeEnter(_, _2, next) {
+                try {
+                    let userid = await store.dispatch("getUserIDFromSession");
+                    userid = userid.session_id;
+                    let userdata = await store.dispatch("get_userdata_from_id", userid);
+                    store.commit("setLoggedUser", userdata.logged_user);
+                    next(true);
+                }
+                catch(error) {
+                    console.table(error);
+                    next({name: "Error"});
+                }
             },
             meta:
             {
@@ -74,7 +85,27 @@ let router = createRouter({
                     name: "Trainings",
                     component: TheTrainingOverview,
                 },
+                {
+                    path: "trainers",
+                    name: "Trainers",
+                    component: TheTrainerOverview,
+                },
+                {
+                    path: "students",
+                    name: "Studentss",
+                    component: TheStudentOverview,
+                },
+                {
+                    path: "groups",
+                    name: "Groupss",
+                    component: TheGroupOverview,
+                },
             ]
+        },
+        {
+            path: "/error",
+            name: "Error",
+            component: TheError,
         }
     ],
 });
