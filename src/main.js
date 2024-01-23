@@ -24,11 +24,13 @@ import TheError             from "./comps/error/TheError.vue";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
+import { faBarsStaggered } from "@fortawesome/free-solid-svg-icons";
 import { faMicrochip } from "@fortawesome/free-solid-svg-icons";
 import { faClose } from "@fortawesome/free-solid-svg-icons";
 
 library.add(faMicrochip);
 library.add(faClose);
+library.add(faBarsStaggered);
 
 // ROUTER
 import { createRouter, createWebHistory } from "vue-router";
