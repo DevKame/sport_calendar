@@ -58,6 +58,14 @@
                         </router-link>
                     </div>
                 </transition>
+                <transition name="logout">
+                    <div @click="try_logout" v-if="navIsOpen" class="navItemHolder bg-delete nav-logout border border-black rounded-circle d-flex justify-content-center align-items-center">
+                        <span class="d-flex flex-column justify-content-start align-items-center">
+                            <fa-icon icon="fa-solid fa-table" class="pe-none"></fa-icon>
+                            <small>Logout</small>
+                        </span>
+                    </div>
+                </transition>
             </div>
         </header>
 
@@ -71,9 +79,11 @@
 
 <script setup>
 import { computed, ref } from "vue";
+import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 
 const store = useStore();
+const router = useRouter();
 
 function reactToDashboardclick(e) {
     if(e.target.classList.contains("navHolder") || e.target.classList.contains("nav-menu"))
@@ -100,6 +110,13 @@ const userLastname = computed(() => {
 const userRole = computed(() => {
     return store.getters.getLoggedUserRole;
 });
+
+
+async function try_logout() {
+    console.log("Dahboard.vue try_logout:");
+    await store.dispatch("auth/try_logout");
+    router.replace({name: "Start"});
+}
 </script>
 
 
@@ -118,9 +135,16 @@ const userRole = computed(() => {
 .sub-routes-leave-active {
     transition: all .2s ease-in;
 }
-.navHolder a {
+.navHolder a,
+.navHolder span {
     color: black;
     text-decoration: none;
+}
+.nav-logout {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, 725%);
 }
 .nav-groups {
     position: absolute;
@@ -151,6 +175,20 @@ const userRole = computed(() => {
     top: 50%;
     left: 50%;
     transform: translate(-50%, 100%);
+}
+.logout-enter-from,
+.logout-leave-to {
+    opacity: 0;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+.logout-enter-to,
+.logout-leave-from {
+    opacity: 1;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, 725%);
 }
 .groups-enter-from,
 .groups-leave-to {
@@ -220,11 +258,13 @@ const userRole = computed(() => {
 .trainers-enter-active,
 .students-enter-active,
 .groups-enter-active,
+.logout-enter-active,
 .events-leave-active,
 .trainings-leave-active,
 .trainers-leave-active,
 .students-leave-active,
-.groups-leave-active {
+.groups-leave-active,
+.logout-leave-active {
     transition: all .4s ease-out;
 }
 .events-enter-to,

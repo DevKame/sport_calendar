@@ -20,7 +20,7 @@ header("Content-Type: application/json");
 // RETURNS Boolean INDICATING IF A USER IS LOGGED IN
 if($_SERVER["REQUEST_METHOD"] === "GET")
 {
-    if(isset($_SESSION["kame-app-logged-user"])) {
+    if(isset($_SESSION["kame-sportcal-logged-user"])) {
         $res["logged_user_existent"] = true;
     } else {
         $res["logged_user_existent"] = false;
@@ -35,8 +35,16 @@ else if($_SERVER["REQUEST_METHOD"] === "POST")
     require("../database/db.php");
     switch($req->task)
     {
+        //############# FETCHES USER ID OUT OF $_SESSION["kame-sportcal-logged-user"]:
+        case "try-logout":
+            // var_dump($_SESSION["kame-sportcal-logged-user"]);
+            session_unset();
+            session_destroy();
+            // var_dump($_SESSION["kame-sportcal-logged-user"]);
+            break;
+        //############# FETCHES USER ID OUT OF $_SESSION["kame-sportcal-logged-user"]:
         case "get-userid-from-session":
-            $res["session_id"] = $_SESSION["kame-app-logged-user"];
+            $res["session_id"] = $_SESSION["kame-sportcal-logged-user"];
             break;
         //######################################## RETURNS USERDATA FROM USER ID:
         case "get-userdata-from-id":
@@ -65,7 +73,7 @@ else if($_SERVER["REQUEST_METHOD"] === "POST")
                             if(is_int($logged_user_id)) {
                                 $res["success"] = true;
                                 $res["id_of_logged_user"] = $logged_user_id;
-                                $_SESSION["kame-app-logged-user"] = $logged_user_id;
+                                $_SESSION["kame-sportcal-logged-user"] = $logged_user_id;
                             } else {
                                 session_destroy();
                                 $res["reason"] = "connection-problems";

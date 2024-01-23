@@ -1,6 +1,16 @@
 
 
 export default {
+    async try_logout(context) {
+        console.log("auth/try_logout:");
+        await fetch(context.state.API_AUTH, {
+            method: "post",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({task: "try-logout"}),
+            credentials: "include",
+        });
+
+    },
     /** FETCHES THE DATABASE-ID OF CURRENTLY LOGGED USER
      * @param {store object} context    => VUEX STORE
      * @returns {number}                => DATABASE-ID
