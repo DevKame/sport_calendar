@@ -7,11 +7,13 @@ import rootMutations from "./rootMutations.js";
 
 import authStore from "./auth/authStore.js";
 import groupStore from "./groups/groupStore.js";
+import studentStore from "./students/studentStore.js";
 
 const store = createStore({
     modules: {
         auth: authStore,
         groups: groupStore,
+        students: studentStore,
     },
     state() {
         return {

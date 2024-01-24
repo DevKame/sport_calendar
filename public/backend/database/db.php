@@ -7,7 +7,51 @@ $pw =       "12345";
 $db =       "kame_apps";
 
 
+////////////////////////////////////    STUDENT QUERIES  [start]  //////////////////////////////////////
+/** FETCHES ALL EXISTENT STUDENTS
+ *  returns
+ * {$groups | Exeption->getMessage()} => Array | String */
+function getAllStudents() {
+    $con = connect();
+    $students = [];
+    $query =
+    "SELECT * FROM sport_cal_students";
+    $stmt = mysqli_prepare($con, $query);
+    try {
+        mysqli_execute($stmt);
+        mysqli_stmt_bind_result($stmt, $id, $email, $firstname, $lastname, $role, $groups,);
+        mysqli_stmt_store_result($stmt);
+        $totalStudents = mysqli_stmt_num_rows($stmt);
+        if($totalStudents === 0) {
+            mysqli_stmt_free_result($stmt);
+            mysqli_stmt_close($stmt);
+        }
+        else {
+            while(mysqli_stmt_fetch($stmt)) {
+                $students[] =
+                [
+                    "id" => $id,
+                    "email" => $email,
+                    "firstname" => $firstname,
+                    "lastname" => $lastname,
+                    "role" => $role,
+                    "groups" => $groups,
+                ];
+            }
+            mysqli_stmt_free_result($stmt);
+            mysqli_stmt_close($stmt);
+        }
+        mysqli_close($con);
+        return $students;
+    }
+    catch(Exeption $e) {
+        mysqli_close($con);
+        return $e->getMessage();
+    }
 
+}
+////////////////////////////////////    STUDENT QUERIES  [end]  //////////////////////////////////////
+////////////////////////////////////    GROUP QUERIES  [start]  //////////////////////////////////////
 /** RENAMES A GROUP
  *  returns
  * {$affected | Exeption->getMessage()} => int | String */
@@ -145,6 +189,7 @@ function getAllGroups() {
     }
 
 }
+////////////////////////////////////    GROUP QUERIES  [end]  //////////////////////////////////////
 /** USES A USER-ID TO FETCH THIS USERS DATA
  *  args:
  *  {$id}                               => int

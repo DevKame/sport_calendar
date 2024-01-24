@@ -9,8 +9,8 @@ export default {
         });
         return await response.json();
     },
-    async getAllGroups(context) {
-        const response = await fetch(context.state.API_GROUPS);
+    async getAllStudents(context) {
+        const response = await fetch(context.state.API_STUDENTS);
         return await response.json();
     },
 }
