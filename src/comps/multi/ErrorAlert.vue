@@ -5,7 +5,9 @@ HANDLE THIS ALERTS TOGGLING -->
 
 <template>
     <div class="errorAlert rounded-2 px-1 py-1 d-flex justify-content-between align-items-center bg-delete">
-        <slot></slot>
+        <span class="alertContent d-flex justify-content-start align-items-center">
+            <slot></slot>
+        </span>
         <div @click="sendCloseEmit" class="d-flex justify-content-center align-items-center rounded-circle">
             <fa-icon icon="fa-solid fa-close" size="xl"></fa-icon>
         </div>
@@ -24,6 +26,11 @@ function sendCloseEmit() {
 
 
 <style scoped>
+.alertContent {
+    height: 100%;
+    flex: 1;
+    flex-wrap: wrap;
+}
 .errorAlert > div {
     border: 1px solid var(--delete-dark);
     width: 20px;

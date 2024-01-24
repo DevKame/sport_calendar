@@ -37,59 +37,44 @@ else if($_SERVER["REQUEST_METHOD"] === "POST")
     $req = json_decode(file_get_contents("php://input"));
     switch($req->task)
     {
-        //############# FETCHES USER ID OUT OF $_SESSION["kame-sportcal-logged-user"]:
-        case "try-logout":
-            // var_dump($_SESSION["kame-sportcal-logged-user"]);
-            session_unset();
-            session_destroy();
-            // var_dump($_SESSION["kame-sportcal-logged-user"]);
-            break;
-        //############# FETCHES USER ID OUT OF $_SESSION["kame-sportcal-logged-user"]:
-        case "get-userid-from-session":
-            $res["session_id"] = $_SESSION["kame-sportcal-logged-user"];
-            break;
-        //######################################## RETURNS USERDATA FROM USER ID:
-        case "get-userdata-from-id":
-            $userData = getUserDataFromID($req->id);
-            if(is_string($userData)) {
-                $res["reason"] = "connection-problems";
-            }
-            else {
-                $res["success"] = true;
-                $res["logged_user"] = $userData;
-            }
-            break;
-        //################################################# USER TRIES TO LOGIN:
-        case "try-login":
-            $emailMatches = doesEmailExist($req->email);
-            if(is_int($emailMatches))
+        //################### VALIDATES AN INTENDED GROUP NAME:
+        case "create-group":
+            if(!is_string(createGroup($req->name)))
             {
-                if($emailMatches === 0) {
-                    $res["reason"] = "email-doesnt-exist";
-                }
-                else {
-                    $passwordCorrect = isPasswordCorrect($req->password, $req->email);
-                    if(is_bool($passwordCorrect)) {
-                        if($passwordCorrect) {
-                            $logged_user_id = getUserIDFromEmail($req->email);
-                            if(is_int($logged_user_id)) {
-                                $res["success"] = true;
-                                $res["id_of_logged_user"] = $logged_user_id;
-                                $_SESSION["kame-sportcal-logged-user"] = $logged_user_id;
-                            } else {
-                                session_destroy();
-                                $res["reason"] = "connection-problems";
-                            }
-                        } else {
-                            $res["reason"] = "wrong-pw";
-                        }
-                    } else {
-                        $res["reason"] = "connection-problems";
-                    }
+                $res["success"] = true;
+            } else {
+                $res["reason"] = "connection-problems";
+            }
+            break;
+        //################### VALIDATES AN INTENDED GROUP NAME:
+        case "validate-group":
+            // FIRST CHECK IF THE VALUE IS VALID:
+            $trimmedName = trim($req->name);
+            if($trimmedName === "")
+            {
+                $res["reason"] = "invalid-value";
+                break;
+            }
+            // FIRST CHECK IF THE VALUE IS LONGER THAN 25 CHARACTERS:
+            if(strlen($req->name) > 25)
+            {
+                $res["reason"] = "too-long";
+                break;
+            }
+            // FIRST CHECK IF THE VALUE ALREADY EXISTS:
+            $allGroups = getAllGroups();
+            $doubles = 0;
+            foreach($allGroups as $group) {
+                if(strtolower($group["name"]) === strtolower($req->name))
+                {
+                    $doubles++;
+                    break;
                 }
             }
-            else {
-                $res["reason"] = "connection-problems";
+            if($doubles > 0) {
+                $res["reason"] = "found-double";
+            } else {
+                $res["success"] = true;
             }
             break;
     }

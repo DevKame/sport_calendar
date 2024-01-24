@@ -1,5 +1,5 @@
 <template>
-    <form @click="clickHandler" class="px-2 border border-danger d-flex flex-column justify-content-start align-items-center">
+    <form @submit.prevent="create_group" @click="clickHandler" class="px-2 border border-danger d-flex flex-column justify-content-start align-items-center">
         <h1 class="me-auto">Create a new group</h1>
         
         <div class="inputWrapper border border-danger d-flex flex-column justify-cotnent-start align-items-center">
@@ -8,13 +8,19 @@
                 <label for="createName">Name</label>
             </div>
 
-            <input type="text" id="createName" name="createName" v-model.trim="createName" />
+            <input @click="resetErrors" type="text" id="createName" name="createName" v-model.trim="createName" />
 
             <small>Max. 25 characters</small>
             <div class="alertHolder my-2">
-                <transition name="error">
+                <transition name="error" mode="out-in">
                     <error-alert v-if="nameError" @close-alert="nameError = false">
                         <p class="m-0 fw-bold">Enter a none-empty value below 26 characters</p>
+                    </error-alert>
+                    <error-alert v-else-if="doubleError" @close-alert="doubleError = false">
+                        <p class="m-0 fw-bold">Group {{ createName }} already exists</p>
+                    </error-alert>
+                    <error-alert v-else-if="connectionError" @close-alert="connectionError = false">
+                        <p class="m-0 fw-bold">We have issues connecting to our data. Try again later. We have issues connecting to our data. Try again later.</p>
                     </error-alert>
                 </transition>
             </div>
@@ -29,6 +35,11 @@
 
 <script setup>
 import { defineEmits, ref } from 'vue';
+import { useStore } from 'vuex';
+import { useRouter } from 'vue-router';
+
+const store = useStore();
+const router = useRouter();
 
 const emits = defineEmits([
     "empty-click",
@@ -39,7 +50,42 @@ function clickHandler() {
 }
 
 const createName = ref("");
+
 const nameError = ref(false);
+const doubleError = ref(false);
+const connectionError = ref(false);
+
+function resetErrors() {
+    nameError.value = false;
+    doubleError.value = false;
+    connectionError.value = false;
+}
+
+async function create_group() {
+    resetErrors();
+    let valiresponse = await store.dispatch("groups/validateGroupname", createName.value);
+    if(!valiresponse.success)
+    {
+        switch(valiresponse.reason) {
+            case "invalid-value":
+            case "too-long":
+                nameError.value = true;
+                break;
+            case "found-double":
+                doubleError.value = true;
+                break;
+        }
+    }
+    else
+    {
+        let createresponse = await store.dispatch("groups/createGroup", createName.value);
+        if(createresponse.success) {
+            router.replace({name: "Groups"});
+        } else {
+            connectionError.value = true;
+        }
+    }
+}
 </script>
 
 <style scoped>

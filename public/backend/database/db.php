@@ -7,6 +7,28 @@ $pw =       "12345";
 $db =       "kame_apps";
 
 
+function createGroup($name) {
+    $con = connect();
+    $query =
+    "INSERT INTO sport_cal_groups
+    (name)
+    VALUES (?)";
+    try {
+        $stmt = mysqli_prepare($con, $query);
+        mysqli_stmt_bind_param($stmt, "s", $name);
+        mysqli_stmt_execute($stmt);
+        mysqli_stmt_close($stmt);
+        mysqli_close($con);
+        return true;
+    }
+    catch(Exeption $e) {
+        return $e.getMessage();
+    }
+}
+/** FETCHES ALL EXISTENT GROUPS
+ *  returns
+ * {$groups | Exeption->getMessage()} => Array | String
+ */
 function getAllGroups() {
     $con = connect();
     $groups = [];
@@ -164,10 +186,10 @@ function doesEmailExist($email) {
         mysqli_stmt_bind_param($stmt, "s", $email);
         mysqli_stmt_execute($stmt);
         mysqli_stmt_store_result($stmt);
+        $result = mysqli_stmt_num_rows($stmt);
         mysqli_stmt_free_result($stmt);
         mysqli_stmt_close($stmt);
         mysqli_close($con);
-        $result = mysqli_stmt_num_rows($stmt);
     }
     catch(Exeption $e) {
         mysqli_close($con);
