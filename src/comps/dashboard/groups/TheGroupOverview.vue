@@ -72,7 +72,7 @@ function editGroup(id, name) {
     store.commit("groups/setGroupDataForEdit", {name: name, id: id});
     router.push({name: "Edit-Group"});
 }
-
+//TODO: When deleting group, update all users groups
 async function deleteGroup(index, id) {
     const deletereq =
     {
