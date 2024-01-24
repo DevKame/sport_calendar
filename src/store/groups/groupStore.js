@@ -9,6 +9,8 @@ export default {
     state() {
         return {
             API_GROUPS: "http://localhost/Eskamedin/sport_calendar/vue_app/public/backend/groups/groups.php",
+            groupname_edit: null,
+            groupID_edit: null,
         };
     },
     actions: groupActions,

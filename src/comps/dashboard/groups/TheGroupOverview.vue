@@ -25,7 +25,8 @@
                     v-for="(group, idx) in groupArray"
                     :key="group.id"
                     :name="group.name"
-                    @delete-item="deleteGroup(idx, group.id)"></group-item>
+                    @delete-item="deleteGroup(idx, group.id)"
+                    @edit-item="editGroup(group.id, group.name)"></group-item>
                 </transition-group>
             </div>
     </div>
@@ -66,6 +67,11 @@ onMounted(async () => {
         groupArray.value = [...groupdata.groups];
     }
 });
+
+function editGroup(id, name) {
+    store.commit("groups/setGroupDataForEdit", {name: name, id: id});
+    router.push({name: "Edit-Group"});
+}
 
 async function deleteGroup(index, id) {
     const deletereq =

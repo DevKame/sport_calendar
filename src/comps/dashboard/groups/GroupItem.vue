@@ -1,9 +1,9 @@
 <template>
     <li class="groupItem my-2 d-flex justify-content-start align-items-center">
-        <div @click="menuOn = !menuOn" class="toggleOptions position-relative rounded-circle d-flex justify-content-center align-items-center">
+        <div @click="toggleMenu" class="toggleOptions position-relative rounded-circle d-flex justify-content-center align-items-center">
             <fa-icon icon="fa-solid fa-gear"></fa-icon>
 
-                <button v-if="menuOn" class="position-absolute edit-option btn-edit border border-black d-flex justify-content-start align-items-center rounded-pill">
+                <button v-if="menuOn" @click="editItem" class="position-absolute edit-option btn-edit border border-black d-flex justify-content-start align-items-center rounded-pill">
                     <fa-icon icon="fa-solid fa-pencil" class="me-2"></fa-icon>
                     EDIT
                 </button>
@@ -23,18 +23,36 @@
 
 <script setup>
 import { defineProps, defineEmits, ref } from 'vue';
+import { useStore } from 'vuex';
+
+const store = useStore();
+
 
 let props = defineProps([
     "name",
 ]);
 let emits = defineEmits([
     "delete-item",
+    "edit-item",
 ]);
 
 const menuOn = ref(false);
 
 function deleteItem() {
+    resetEditGroup();
     emits("delete-item");
+}
+function editItem() {
+    emits("edit-item");
+}
+function toggleMenu() {
+    menuOn.value = !menuOn.value;
+    if(!menuOn.value) {
+        resetEditGroup();
+    }
+}
+function resetEditGroup() {
+    store.commit["groups/resetGroupDataForEdit"];
 }
 </script>
 

@@ -8,6 +8,59 @@ $db =       "kame_apps";
 
 
 
+/** RENAMES A GROUP
+ *  returns
+ * {$affected | Exeption->getMessage()} => int | String */
+function editGroup($id, $name) {
+    $con = connect();
+    $query =
+    "UPDATE sport_cal_groups
+    SET
+    name = ?
+    WHERE id = ?";
+    try {
+        $stmt = mysqli_prepare($con, $query);
+        mysqli_stmt_bind_param($stmt, "si", $name, $id);
+        mysqli_stmt_execute($stmt);
+        $affected = mysqli_stmt_affected_rows($stmt);
+        mysqli_stmt_close($stmt);
+        mysqli_close($con);
+        return $affected;
+    }
+    catch(Exeption $e) {
+        mysqli_close($con);
+        return $e->getMessage();
+    }
+}
+/** VALIDATES AN INTENDED NEW GROUPNAME FOR EDITING THIS GROUP
+ *  SKIPS ITS OWN NAME
+ *  returns
+ * {$matches | Exeption->getMessage()} => Array | String */
+function doubleCheckForEdit($id) {
+    $con = connect();
+    $query =
+    "SELECT name FROM sport_cal_groups
+    WHERE NOT id = ?";
+    try {
+        $stmt = mysqli_prepare($con, $query);
+        mysqli_stmt_bind_param($stmt, "i", $id);
+        mysqli_stmt_execute($stmt);
+        mysqli_stmt_store_result($stmt);
+        mysqli_stmt_bind_result($stmt, $fName);
+        $matches = [];
+        while(mysqli_stmt_fetch($stmt)) {
+            $matches[] = $fName;
+        }
+        mysqli_stmt_free_result($stmt);
+        mysqli_stmt_close($stmt);
+        mysqli_close($con);
+        return $matches;
+    }
+    catch(Exeption $e) {
+        mysqli_close($con);
+        return $e->getMessage();
+    }
+}
 /** DELETES A GROUP BASED ON ITS ID
  *  returns
  * {true | Exeption->getMessage()} => Bool | String */

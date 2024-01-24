@@ -37,6 +37,61 @@ else if($_SERVER["REQUEST_METHOD"] === "POST")
     $req = json_decode(file_get_contents("php://input"));
     switch($req->task)
     {
+        //################### RENAMES A GROUP BASED ON ITS ID:
+        case "edit-group":
+            $affectedRows = editGroup($req->id, $req->name);
+            if(is_int($affectedRows))
+            {
+                if($affectedRows === 1)
+                {
+                    $res["success"] = true;
+                } else {
+                    $res["reason"] = "connection-problems";
+                }
+            }
+            else {
+                $res["reason"] = "connection-problems";
+            }
+            break;
+        //###### VALIDATES AN INTENDED GROUP NAME BUT IGNORES THE GROUP ITSELF:
+        case "validate-group-edit":
+            // CHECK IF THE VALUE IS VALID:
+            $trimmedName = trim($req->name);
+            if($trimmedName === "")
+            {
+                $res["reason"] = "invalid-value";
+                break;
+            }
+            // CHECK IF THE VALUE IS LONGER THAN 25 CHARACTERS:
+            if(strlen($req->name) > 25)
+            {
+                $res["reason"] = "too-long";
+                break;
+            }
+            // CHECK IF THE VALUE ALREADY EXISTS:
+            $doubles = 0;
+            $matches = doubleCheckForEdit($req->id, $req->name);
+            if(is_string($matches))
+            {
+                $res["reason"] = "connection-problems";
+            }
+            else {
+                foreach($matches as $name)
+                {
+                    if(strtolower($name) === strtolower($req->name))
+                    {
+                        $doubles++;
+                        break;
+                    }
+                }
+                if($doubles === 0)
+                {
+                    $res["success"] = true;
+                } else {
+                    $res["reason"] = "found-double";
+                }
+            }
+            break;
         //################### DELETES A GROUP BASED ON ITS ID:
         case "delete-group":
             $result = deleteGroup($req->id);
