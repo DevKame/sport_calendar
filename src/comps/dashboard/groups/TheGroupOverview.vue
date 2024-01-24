@@ -73,10 +73,7 @@ async function deleteGroup(index, id) {
         task: "delete-group",
         id: id,
     };
-    console.log(index);
-    console.log(id);
     const deletedata = await store.dispatch("groups/post", deletereq);
-    console.table(deletedata);
     if(deletedata.success) {
         groupArray.value.splice(index, 1);
         if(groupArray.value.length === 0)

@@ -8,7 +8,13 @@
                 <label for="createName">Name</label>
             </div>
 
-            <input @click="resetErrors" type="text" id="createName" name="createName" v-model.trim="createName" />
+            <input
+            @click="resetErrors"
+            type="text"
+            id="createName"
+            name="createName"
+            v-model.trim="createName"
+            ref="groupNameInput" />
 
             <small>Max. 25 characters</small>
             <div class="alertHolder my-2">
@@ -22,6 +28,9 @@
                     <error-alert v-else-if="connectionError" @close-alert="connectionError = false">
                         <p class="m-0 fw-bold">We have issues connecting to our data. Try again later. We have issues connecting to our data. Try again later.</p>
                     </error-alert>
+                    <success-alert v-else-if="creationSuccess" @close-alert="creationSuccess = false">
+                        <p class="m-0 fw-bold">Group succefully created</p>
+                    </success-alert>
                 </transition>
             </div>
         </div>
@@ -37,10 +46,8 @@
 <script setup>
 import { defineEmits, ref } from 'vue';
 import { useStore } from 'vuex';
-import { useRouter } from 'vue-router';
 
 const store = useStore();
-const router = useRouter();
 
 const emits = defineEmits([
     "empty-click",
@@ -55,11 +62,15 @@ const createName = ref("");
 const nameError = ref(false);
 const doubleError = ref(false);
 const connectionError = ref(false);
+const creationSuccess = ref(false);
+
+const groupNameInput = ref();
 
 function resetErrors() {
     nameError.value = false;
     doubleError.value = false;
     connectionError.value = false;
+    creationSuccess.value = false;
 }
 
 const submitInProgress = ref(false);
@@ -94,7 +105,9 @@ async function create_group() {
         };
         let createresponse = await store.dispatch("groups/post", createreq);
         if(createresponse.success) {
-            router.replace({name: "Groups"});
+            creationSuccess.value = true;
+            createName.value = "";
+            groupNameInput.value.focus();
         } else {
             connectionError.value = true;
         }

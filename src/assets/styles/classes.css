@@ -10,6 +10,9 @@
 .bg-delete {
     background-color: var(--delete);
 }
+.bg-create {
+    background-color: var(--create);
+}
 
 
 .btn-sec {
