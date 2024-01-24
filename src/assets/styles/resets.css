@@ -27,4 +27,5 @@ input[type="password"].focus_or_filled {
 }
 .dashboard_card button {
     font-size: 12px;
+    font-family: "Raleway Reg 400";
 }

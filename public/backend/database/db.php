@@ -6,6 +6,44 @@ $user =     "Kamedin";
 $pw =       "12345";
 $db =       "kame_apps";
 
+
+function getAllGroups() {
+    $con = connect();
+    $groups = [];
+    $query =
+    "SELECT * FROM sport_cal_groups";
+    $stmt = mysqli_prepare($con, $query);
+    try {
+        mysqli_execute($stmt);
+        mysqli_stmt_bind_result($stmt, $id, $name);
+        mysqli_stmt_store_result($stmt);
+        $totalGroups = mysqli_stmt_num_rows($stmt);
+        if($totalGroups === 0) {
+            mysqli_stmt_free_result($stmt);
+            mysqli_stmt_close($stmt);
+        }
+        else {
+            while(mysqli_stmt_fetch($stmt)) {
+                $groups[] = ["id" => $id, "name" => $name];
+            }
+            mysqli_stmt_free_result($stmt);
+            mysqli_stmt_close($stmt);
+        }
+        mysqli_close($con);
+        return $groups;
+    }
+    catch(Exeption $e) {
+        mysqli_close($con);
+        return $e->getMessage();
+    }
+
+}
+/** USES A USER-ID TO FETCH THIS USERS DATA
+ *  args:
+ *  {$id}                               => int
+ *  returns
+ * {$userData | Exeption->getMessage()} => assoz. Array | String
+ */
 function getUserDataFromID($id) {
     $con = connect();
     $userData = [];
@@ -29,9 +67,11 @@ function getUserDataFromID($id) {
     
         mysqli_stmt_free_result($stmt);
         mysqli_stmt_close($stmt);
+        mysqli_close($con);
         return $userData;
     }
     catch(Exeption $e) {
+        mysqli_close($con);
         return $e->getMessage();
     }
 
@@ -58,10 +98,14 @@ function getUserIDFromEmail($email) {
             $id = $fetchedID;
         }
         $result = $fetchedID;
+        mysqli_stmt_free_result($stmt);
+        mysqli_stmt_close($stmt);
+        mysqli_close($con);
 
         return (int)$result;
     }
     catch(Exeption $e) {
+        mysqli_close($con);
         $error = $e->getMessage();
         return $e-getMessage();
     }
@@ -89,10 +133,14 @@ function isPasswordCorrect($pw, $email) {
             $password = $fetchedPassword;
         }
         $result = $pw === $fetchedPassword;
+        mysqli_stmt_free_result($stmt);
+        mysqli_stmt_close($stmt);
+        mysqli_close($con);
 
         return $result;
     }
     catch(Exeption $e) {
+        mysqli_close($con);
         $error = $e->getMessage();
         return $e-getMessage();
     }
@@ -116,9 +164,13 @@ function doesEmailExist($email) {
         mysqli_stmt_bind_param($stmt, "s", $email);
         mysqli_stmt_execute($stmt);
         mysqli_stmt_store_result($stmt);
+        mysqli_stmt_free_result($stmt);
+        mysqli_stmt_close($stmt);
+        mysqli_close($con);
         $result = mysqli_stmt_num_rows($stmt);
     }
     catch(Exeption $e) {
+        mysqli_close($con);
         $error = $e->getMessage();
     }
 
