@@ -86,8 +86,13 @@
                         <label class="fst-italic">optional</label>
                     </div>
 
-                    <div class="checkBoxes d-flex flex-column justify-content-start align-items-center">
-
+                    <div class="checkBoxes border border-info d-flex flex-column justify-content-start align-items-start">
+                        <group-checkboxes
+                        v-for="group in groupArray"
+                        :key="group.id"
+                        :id="group.id"
+                        :name="group.name"
+                        @box-clicked="updateChosenGroups(group.id)"></group-checkboxes>
                     </div>
                     
                     <div class="alertHolder my-2">
@@ -106,7 +111,7 @@
 
         <div class="w-100 mt-3 d-flex justify-content-end align-items-center">
             <form-loading v-if="submitInProgress" class="me-5"></form-loading>
-            <router-link :to="{name:'Groups'}" type="button" class="rounded-2 me-2 px-2">BACK</router-link>
+            <router-link :to="{name:'Students'}" type="button" class="rounded-2 me-2 px-2">BACK</router-link>
             <input type="submit" value="CREATE" class="btn-sec border border-black rounded-2">
         </div>
     </form>
@@ -117,6 +122,8 @@
 import { defineEmits, ref, onMounted } from 'vue';
 import { useStore } from 'vuex';
 
+import GroupCheckboxes from "../shared/GroupCheckboxes.vue";
+
 const store = useStore();
 
 const emits = defineEmits([
@@ -126,7 +133,10 @@ function clickHandler() {
     emits("empty-click");
 }
 
+const loadingGroups = ref(false);
+
 onMounted(async () => {
+    loadingGroups.value = true;
     const groupdata = await store.dispatch("groups/getAllGroups");
     loadingGroups.value = false;
     groupArray.value = [...groupdata.groups];
@@ -136,6 +146,7 @@ onMounted(async () => {
 const createEmail = ref("");
 const createFirstname = ref("");
 const createLastname = ref("");
+const chosenGroups = ref("[]");
 
 const emailError = ref(false);
 const firstnameError = ref(false);
@@ -149,7 +160,25 @@ const studentFirstnameInput = ref();
 const studentLastnameInput = ref();
 
 
-const loadingGroups = ref(false);
+function updateChosenGroups(id) {
+    const oldGroups = JSON.parse(chosenGroups.value);
+    if(oldGroups.includes(id))
+    {
+        oldGroups.splice(oldGroups.indexOf(id), 1);
+    } else {
+        oldGroups.push(id);
+    }
+    chosenGroups.value = JSON.stringify(oldGroups);
+    showData();
+}
+
+function showData() {
+    console.clear();
+    console.log("Email:", createEmail.value);
+    console.log("Firstname:", createFirstname.value);
+    console.log("Lastname:", createLastname.value);
+    console.log("chosenGroups:", chosenGroups.value);
+}
 
 function resetErrors() {
     emailError.value = false;
@@ -168,20 +197,33 @@ async function create_student() {
     submitInProgress.value = true;
     const valireq =
     {
-        task: "validate-group",
-        name: createEmail.value,
+        task: "validate-student",
+        email: createEmail.value,
+        firstname: createFirstname.value,
+        lastname: createLastname.value,
+        chosengroups: chosenGroups.value,
     };
     resetErrors();
-    let valiresponse = await store.dispatch("groups/post", valireq);
+    let valiresponse = await store.dispatch("students/post", valireq);
+    console.clear();
+    console.table(valiresponse);
     if(!valiresponse.success)
     {
         switch(valiresponse.reason) {
-            case "invalid-value":
-            case "too-long":
+            case "invalid-email-value":
+            case "email-too-long":
                 emailError.value = true;
                 break;
             case "found-double":
                 doubleError.value = true;
+                break;
+            case "invalid-firstname-value":
+            case "firstname-too-long":
+                firstnameError.value = true;
+                break;
+            case "invalid-lastname-value":
+            case "lastname-too-long":
+                lastnameError.value = true;
                 break;
         }
     }
@@ -189,13 +231,22 @@ async function create_student() {
     {
         const createreq =
         {
-            task: "create-group",
-            name: createEmail.value,
+            task: "create-student",
+            email: createEmail.value,
+            firstname: createFirstname.value,
+            lastname: createLastname.value,
+            chosengroups: chosenGroups.value,
         };
-        let createresponse = await store.dispatch("groups/post", createreq);
+        let createresponse = await store.dispatch("students/post", createreq);
         if(createresponse.success) {
-            creationSuccess.value = true;
+            document.querySelectorAll("input[type='checkbox']").forEach(box => {
+                box.checked = false;
+            });
             createEmail.value = "";
+            createFirstname.value = "";
+            createLastname.value = "";
+            chosenGroups.value = "[]";
+            creationSuccess.value = true;
             studentEmailInput.value.focus();
         } else {
             connectionError.value = true;

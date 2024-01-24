@@ -8,6 +8,55 @@ $db =       "kame_apps";
 
 
 ////////////////////////////////////    STUDENT QUERIES  [start]  //////////////////////////////////////
+/** CREATES A NEW STUDENT
+ *  returns
+ * {true | Exeption->getMessage()} => Bool | String */
+function createStudent($email, $firstname, $lastname, $groups) {
+    $con = connect();
+    $query =
+    "INSERT INTO sport_cal_user
+    (email, firstname, lastname, role, groups, password)
+    VALUES (?,?,?, 'STUDENT', ?, '12345')";
+    try {
+        $stmt = mysqli_prepare($con, $query);
+        mysqli_stmt_bind_param($stmt, "ssss", $email, $firstname, $lastname, $groups);
+        mysqli_stmt_execute($stmt);
+        mysqli_stmt_close($stmt);
+        mysqli_close($con);
+        return true;
+    }
+    catch(Exeption $e) {
+        return $e.getMessage();
+    }
+}
+/** FETCHES ALL EXISTENT EMAILS AND RETURNS THEIR TOTAL
+ *  returns
+ * {$totalEmails | Exeption->getMessage()} => int | String */
+function getAllEmails($email) {
+    $con = connect();
+    $students = [];
+    $query =
+    "SELECT email
+    FROM sport_cal_user
+    WHERE email = ?";
+    $stmt = mysqli_prepare($con, $query);
+    try {
+        mysqli_stmt_bind_param($stmt, "s", $email);
+        mysqli_execute($stmt);
+        mysqli_stmt_store_result($stmt);
+        $totalEmails = mysqli_stmt_num_rows($stmt);
+        mysqli_stmt_free_result($stmt);
+        mysqli_stmt_close($stmt);
+        
+        mysqli_close($con);
+        return $totalEmails;
+    }
+    catch(Exeption $e) {
+        mysqli_close($con);
+        return $e->getMessage();
+    }
+
+}
 /** FETCHES ALL EXISTENT STUDENTS
  *  returns
  * {$groups | Exeption->getMessage()} => Array | String */
@@ -27,7 +76,7 @@ function getAllStudents() {
     $stmt = mysqli_prepare($con, $query);
     try {
         mysqli_execute($stmt);
-        mysqli_stmt_bind_result($stmt, $id, $email, $firstname, $lastname, $role, $groups,);
+        mysqli_stmt_bind_result($stmt, $id, $email, $firstname, $lastname, $role, $groups);
         mysqli_stmt_store_result($stmt);
         $totalStudents = mysqli_stmt_num_rows($stmt);
         if($totalStudents === 0) {

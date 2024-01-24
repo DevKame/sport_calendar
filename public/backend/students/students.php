@@ -106,8 +106,8 @@ else if($_SERVER["REQUEST_METHOD"] === "POST")
             }
             break;
         //################### CREATES A NEW GROUP:
-        case "create-group":
-            if(!is_string(createGroup($req->name)))
+        case "create-student":
+            if(!is_string(createStudent($req->email,$req->firstname,$req->lastname,$req->chosengroups)))
             {
                 $res["success"] = true;
             } else {
@@ -115,35 +115,61 @@ else if($_SERVER["REQUEST_METHOD"] === "POST")
             }
             break;
         //################### VALIDATES AN INTENDED GROUP NAME:
-        case "validate-group":
-            // FIRST CHECK IF THE VALUE IS VALID:
-            $trimmedName = trim($req->name);
-            if($trimmedName === "")
+        case "validate-student":
+            // VALIDATION OF EMAIL
+            $trimmedEmail = trim($req->email);
+            if($trimmedEmail === "")
             {
-                $res["reason"] = "invalid-value";
+                $res["reason"] = "invalid-email-value";
                 break;
             }
-            // FIRST CHECK IF THE VALUE IS LONGER THAN 25 CHARACTERS:
-            if(strlen($req->name) > 25)
+            if(strlen($req->email) > 40)
             {
-                $res["reason"] = "too-long";
+                $res["reason"] = "email-too-long";
                 break;
             }
-            // FIRST CHECK IF THE VALUE ALREADY EXISTS:
-            $allGroups = getAllGroups();
-            $doubles = 0;
-            foreach($allGroups as $group) {
-                if(strtolower($group["name"]) === strtolower($req->name))
-                {
-                    $doubles++;
+            if(!filter_var($req->email, FILTER_VALIDATE_EMAIL))
+            {
+                $res["reason"] = "invalid-email-value";
+                break;
+            }
+            $allEmails = getallEmails($req->email);
+            if(is_string($allEmails))
+            {
+                $res["reason"] = "connection-problems";
+                break;
+            }
+            else {
+                if($allEmails > 0) {
+                    $res["reason"] = "found-double";
                     break;
                 }
             }
-            if($doubles > 0) {
-                $res["reason"] = "found-double";
-            } else {
-                $res["success"] = true;
+            // VALIDATION OF FIRSTNAME
+            $trimmedFirstname = trim($req->firstname);
+            if($trimmedFirstname === "")
+            {
+                $res["reason"] = "invalid-firstname-value";
+                break;
             }
+            if(strlen($req->firstname) > 16)
+            {
+                $res["reason"] = "firstname-too-long";
+                break;
+            }
+            // VALIDATION OF LASTNAME
+            $trimmedLastname = trim($req->lastname);
+            if($trimmedLastname === "")
+            {
+                $res["reason"] = "invalid-lastname-value";
+                break;
+            }
+            if(strlen($req->lastname) > 32)
+            {
+                $res["reason"] = "lastname-too-long";
+                break;
+            }
+            $res["success"] = true;
             break;
     }
 }

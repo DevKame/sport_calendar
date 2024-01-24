@@ -20,6 +20,10 @@ input[type="password"]:focus {
 }
 
 
+a {
+    text-decoration: none;
+    font-family: "Raleway Reg 400";
+  }
 .dashboard_card {
     width: 95%;
     height: 80px;

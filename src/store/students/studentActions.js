@@ -2,7 +2,7 @@
 
 export default {
     async post(context, payload) {
-        const response = await fetch(context.state.API_GROUPS, {
+        const response = await fetch(context.state.API_STUDENTS, {
             method: "post",
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify(payload),
