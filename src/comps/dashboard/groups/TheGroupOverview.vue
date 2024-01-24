@@ -8,7 +8,9 @@
 
                 <template #body>
                     <div class="w-100 h-100 d-flex justify-content-around align-items-center py-2 bg-prim">
-                        <button class="btn-positive border border-black rounded-2 ">New Group</button>
+                        <router-link :to="{name: 'New-Group'}" class="btn-positive border border-black rounded-2 ">
+                            New Group
+                        </router-link>
                     </div>
                 </template>
             </itf-card>

@@ -10,6 +10,10 @@ export default {
 </script>
 
 <style>
+a {
+  text-decoration: none;
+  font-family: "Raleway Reg 400";
+}
 .allOverviews {
     padding-top: 20px;
 }

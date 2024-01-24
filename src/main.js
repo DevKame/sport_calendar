@@ -20,6 +20,7 @@ import TheStudentOverview   from "./comps/dashboard/students/TheStudentOverview.
 import TheGroupOverview     from "./comps/dashboard/groups/TheGroupOverview.vue";
 import TheError             from "./comps/error/TheError.vue";
 import OverviewLoading      from "./comps/multi/OverviewLoading.vue";
+import NewGroup             from "./comps/dashboard/groups/NewGroup.vue";
 
 // FONTAWESOME
 import { library } from "@fortawesome/fontawesome-svg-core";
@@ -118,6 +119,11 @@ let router = createRouter({
                     path: "groups",
                     name: "Groups",
                     component: TheGroupOverview,
+                },
+                {
+                    path: "newgroup",
+                    name: "New-Group",
+                    component: NewGroup,
                 },
             ]
         },

@@ -12,6 +12,10 @@
 }
 
 
+.btn-sec {
+    background-color: var(--sec);
+    color: black;
+}
 .btn-tert {
     background-color: var(--tert);
     color: black;

@@ -13,6 +13,11 @@ input[type="mail"].focus_or_filled,
 input[type="password"].focus_or_filled {
     background-color: var(--sec);
 }
+input[type="text"]:focus,
+input[type="mail"]:focus,
+input[type="password"]:focus {
+    background-color: var(--sec);
+}
 
 
 .dashboard_card {
