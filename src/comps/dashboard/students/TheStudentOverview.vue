@@ -21,12 +21,15 @@
             </transition>
             <div v-if="!noStudentsAvailable" class="listHolder w-100">
                 <transition-group tag="ul" name="content-list" class="studentList p-0" mode="out-in">
-                    <group-item
-                    v-for="(group, idx) in studentArray"
-                    :key="group.id"
-                    :name="group.name"
-                    @delete-item="deleteGroup(idx, group.id)"
-                    @edit-item="editGroup(group.id, group.name)"></group-item>
+                    <student-item
+                    v-for="(student, idx) in studentArray"
+                    :key="student.id"
+                    :firstname="student.firstname"
+                    :lastname="student.lastname"
+                    :email="student.email"
+                    :groups="filteredGroups(student.id)"
+                    @delete-item="deleteGroup(idx, student.id)"
+                    @edit-item="editGroup(student.id, student.name)"></student-item>
                 </transition-group>
             </div>
     </div>
@@ -37,7 +40,7 @@ import { defineEmits, onMounted, ref } from 'vue';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 
-import GroupItem from "../groups/GroupItem.vue";
+import StudentItem from "./StudentItem.vue";
 
 const router = useRouter();
 const store = useStore();
@@ -45,6 +48,7 @@ const store = useStore();
 const noStudentsAvailable = ref(false);
 const loadingContent = ref(false);
 
+const groupArray = ref([]);
 const studentArray = ref([]);
 
 
@@ -57,6 +61,14 @@ function overviewClickHandler() {
 
 onMounted(async () => {
     loadingContent.value = true;
+
+
+    const groupdata = await store.dispatch("groups/getAllGroups");
+    loadingContent.value = false;
+    groupArray.value = [...groupdata.groups];
+    console.table(groupArray.value);
+
+
     const studentdata = await store.dispatch("students/getAllStudents");
     loadingContent.value = false;
     if(studentdata.students.length === 0)
@@ -67,6 +79,20 @@ onMounted(async () => {
         studentArray.value = [...studentdata.students];
     }
 });
+
+function filteredGroups(id) {
+    let student = studentArray.value.find(curr => curr.id === id);
+    const studentGroups = JSON.parse(student.groups);
+    const namedGroups = [];
+    for(let group of groupArray.value)
+    {
+        if(studentGroups.includes(group.id))
+        {
+            namedGroups.push(group.name);
+        }
+    }
+    return namedGroups;
+}
 
 function editGroup(id, name) {
     store.commit("groups/setGroupDataForEdit", {name: name, id: id});

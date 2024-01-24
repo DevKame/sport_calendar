@@ -13,6 +13,9 @@
 .bg-create {
     background-color: var(--create);
 }
+.bg-neutral {
+    background-color: var(--neutral);
+}
 
 
 .btn-sec {

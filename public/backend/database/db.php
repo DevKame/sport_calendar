@@ -15,7 +15,15 @@ function getAllStudents() {
     $con = connect();
     $students = [];
     $query =
-    "SELECT * FROM sport_cal_students";
+    "SELECT
+    id,
+    email,
+    firstname,
+    lastname,
+    role,
+    groups
+    FROM sport_cal_user
+    WHERE role = 'STUDENT'";
     $stmt = mysqli_prepare($con, $query);
     try {
         mysqli_execute($stmt);
