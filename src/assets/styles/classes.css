@@ -20,3 +20,11 @@
     background-color: var(--create);
     color: black;
 }
+.btn-delete {
+    background-color: var(--delete);
+    color: black;
+}
+.btn-edit {
+    background-color: var(--edit);
+    color: black;
+}
