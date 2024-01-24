@@ -205,8 +205,6 @@ async function create_student() {
     };
     resetErrors();
     let valiresponse = await store.dispatch("students/post", valireq);
-    console.clear();
-    console.table(valiresponse);
     if(!valiresponse.success)
     {
         switch(valiresponse.reason) {
