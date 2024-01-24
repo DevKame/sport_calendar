@@ -20,6 +20,7 @@ import TheStudentOverview   from "./comps/dashboard/students/TheStudentOverview.
 import TheGroupOverview     from "./comps/dashboard/groups/TheGroupOverview.vue";
 import TheError             from "./comps/error/TheError.vue";
 import OverviewLoading      from "./comps/multi/OverviewLoading.vue";
+import FormLoading          from "./comps/multi/FormLoading.vue";
 import NewGroup             from "./comps/dashboard/groups/NewGroup.vue";
 
 // FONTAWESOME
@@ -169,6 +170,7 @@ app.component("the-kamedin", TheKamedin);
 app.component("itf-card", InterfaceCard);
 app.component("error-alert", ErrorAlert);
 app.component("ov-load", OverviewLoading);
+app.component("form-loading", FormLoading);
 app.component("fa-icon", FontAwesomeIcon);
 
 app.use(store);

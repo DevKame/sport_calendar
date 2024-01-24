@@ -1,5 +1,5 @@
 <template>
-    <form @submit.prevent="create_group" @click="clickHandler" class="px-2 border border-danger d-flex flex-column justify-content-start align-items-center">
+    <form @submit.prevent="create_group" @click="clickHandler" :class="{not_clickable: submitInProgress}" class="px-2 border border-danger d-flex flex-column justify-content-start align-items-center">
         <h1 class="me-auto">Create a new group</h1>
         
         <div class="inputWrapper border border-danger d-flex flex-column justify-cotnent-start align-items-center">
@@ -26,6 +26,7 @@
             </div>
         </div>
         <div class="w-100 mt-3 d-flex justify-content-end align-items-center">
+            <form-loading v-if="submitInProgress" class="me-5"></form-loading>
             <router-link :to="{name:'Groups'}" type="button" class="rounded-2 me-2 px-2">BACK</router-link>
             <input type="submit" value="CREATE" class="btn-sec border border-black rounded-2">
         </div>
@@ -61,9 +62,17 @@ function resetErrors() {
     connectionError.value = false;
 }
 
+const submitInProgress = ref(false);
+
 async function create_group() {
+    submitInProgress.value = true;
+    const valireq =
+    {
+        task: "validate-group",
+        name: createName.value,
+    };
     resetErrors();
-    let valiresponse = await store.dispatch("groups/validateGroupname", createName.value);
+    let valiresponse = await store.dispatch("groups/post", valireq);
     if(!valiresponse.success)
     {
         switch(valiresponse.reason) {
@@ -78,17 +87,27 @@ async function create_group() {
     }
     else
     {
-        let createresponse = await store.dispatch("groups/createGroup", createName.value);
+        const createreq =
+        {
+            task: "create-group",
+            name: createName.value,
+        };
+        let createresponse = await store.dispatch("groups/post", createreq);
         if(createresponse.success) {
             router.replace({name: "Groups"});
         } else {
             connectionError.value = true;
         }
     }
+    submitInProgress.value = false;
+
 }
 </script>
 
 <style scoped>
+.not_clickable {
+    pointer-events: none;
+}
 a[type="button"] {
     background-color: transparent;
     border: 2px solid var(--sec);

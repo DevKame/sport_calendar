@@ -37,7 +37,20 @@ else if($_SERVER["REQUEST_METHOD"] === "POST")
     $req = json_decode(file_get_contents("php://input"));
     switch($req->task)
     {
-        //################### VALIDATES AN INTENDED GROUP NAME:
+        //################### DELETES A GROUP BASED ON ITS ID:
+        case "delete-group":
+            $result = deleteGroup($req->id);
+            if(is_bool($result)) {
+                if($result) {
+                    $res["success"] = true;
+                } else {
+                    $res["reason"] = "connection-problems";
+                }
+            } else {
+                $res["reason"] = "connection-problems";
+            }
+            break;
+        //################### CREATES A NEW GROUP:
         case "create-group":
             if(!is_string(createGroup($req->name)))
             {

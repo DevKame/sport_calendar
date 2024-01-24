@@ -15,16 +15,17 @@
                 </template>
             </itf-card>
 
-            <ov-load v-if="loadingContent"></ov-load>
+            <ov-load v-if="loadingContent" class="mt-3"></ov-load>
             <transition name="no-content">
-                <h6 class="noContentHeadline text-center" v-if="noGroupsAvailable">There are no groups existent. Click "New Group to create one"</h6>
+                <h6 class="noContentHeadline text-center mt-3" v-if="noGroupsAvailable">There are no groups existent. Click "New Group to create one"</h6>
             </transition>
             <div v-if="!noGroupsAvailable" class="listHolder w-100">
                 <transition-group tag="ul" name="content-list" class="groupList p-0" mode="out-in">
                     <group-item
-                    v-for="group in groupArray"
+                    v-for="(group, idx) in groupArray"
                     :key="group.id"
-                    :name="group.name"></group-item>
+                    :name="group.name"
+                    @delete-item="deleteGroup(idx, group.id)"></group-item>
                 </transition-group>
             </div>
     </div>
@@ -33,14 +34,18 @@
 <script setup>
 import { defineEmits, onMounted, ref } from 'vue';
 import { useStore } from 'vuex';
+import { useRouter } from 'vue-router';
 
 import GroupItem from "./GroupItem.vue";
+
+const router = useRouter();
 const store = useStore();
 
 const noGroupsAvailable = ref(false);
 const loadingContent = ref(false);
 
 const groupArray = ref([]);
+
 
 let emits = defineEmits([
     "empty-click",
@@ -61,6 +66,28 @@ onMounted(async () => {
         groupArray.value = [...groupdata.groups];
     }
 });
+
+async function deleteGroup(index, id) {
+    const deletereq =
+    {
+        task: "delete-group",
+        id: id,
+    };
+    console.log(index);
+    console.log(id);
+    const deletedata = await store.dispatch("groups/post", deletereq);
+    console.table(deletedata);
+    if(deletedata.success) {
+        groupArray.value.splice(index, 1);
+        if(groupArray.value.length === 0)
+        {
+            noGroupsAvailable.value = true;
+        }
+    }
+    else {
+        router.replace({name:"Error"});
+    }
+}
 </script>
 
 <style scoped>

@@ -7,6 +7,39 @@ $pw =       "12345";
 $db =       "kame_apps";
 
 
+
+/** DELETES A GROUP BASED ON ITS ID
+ *  returns
+ * {true | Exeption->getMessage()} => Bool | String */
+function deleteGroup($id) {
+    $con = connect();
+    $query =
+    "DELETE FROM sport_cal_groups
+    WHERE id = ?";
+    try {
+        $stmt = mysqli_prepare($con, $query);
+        mysqli_stmt_bind_param($stmt, "i", $id);
+        mysqli_stmt_execute($stmt);
+        $affected = mysqli_stmt_affected_rows($stmt);
+        mysqli_stmt_free_result($stmt);
+        mysqli_stmt_close($stmt);
+        mysqli_close($con);
+        if($affected === 0)
+        {
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+    catch(Exeption $e) {
+        mysqli_close($con);
+        return $e->getMessage();
+    }
+}
+/** CREATES A NEW GROUP
+ *  returns
+ * {true | Exeption->getMessage()} => Bool | String */
 function createGroup($name) {
     $con = connect();
     $query =
@@ -27,8 +60,7 @@ function createGroup($name) {
 }
 /** FETCHES ALL EXISTENT GROUPS
  *  returns
- * {$groups | Exeption->getMessage()} => Array | String
- */
+ * {$groups | Exeption->getMessage()} => Array | String */
 function getAllGroups() {
     $con = connect();
     $groups = [];
@@ -64,8 +96,7 @@ function getAllGroups() {
  *  args:
  *  {$id}                               => int
  *  returns
- * {$userData | Exeption->getMessage()} => assoz. Array | String
- */
+ * {$userData | Exeption->getMessage()} => assoz. Array | String */
 function getUserDataFromID($id) {
     $con = connect();
     $userData = [];

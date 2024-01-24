@@ -8,7 +8,7 @@
                     EDIT
                 </button>
 
-                <button v-if="menuOn" class="position-absolute delete-option btn-delete border border-black d-flex justify-content-start align-items-center rounded-pill">
+                <button v-if="menuOn" @click="deleteItem" class="position-absolute delete-option btn-delete border border-black d-flex justify-content-start align-items-center rounded-pill">
                     <fa-icon icon="fa-solid fa-ban" class="me-2"></fa-icon>
                     DELETE
                 </button>
@@ -22,22 +22,29 @@
 </template>
 
 <script setup>
-import { defineProps, ref } from 'vue';
+import { defineProps, defineEmits, ref } from 'vue';
 
 let props = defineProps([
     "name",
 ]);
+let emits = defineEmits([
+    "delete-item",
+]);
 
 const menuOn = ref(false);
+
+function deleteItem() {
+    emits("delete-item");
+}
 </script>
 
 
 <style scoped>
 .delete-option {
-    left: 400%;
+    left: 450%;
 }
 .edit-option {
-    left: 150%;
+    left: 200%;
 }
 .edit-option,
 .delete-option {
@@ -59,15 +66,6 @@ button {
     background-color: var(--sec);
     width: 30px;
     aspect-ratio: 1;
-}
-.edit-enter-from {
-    opacity: 0;
-}
-.edit-enter-active {
-    transition: all .4s ease;
-}
-.edit-enter-to {
-    opacity: 0;
 }
 </style>
 

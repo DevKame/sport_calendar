@@ -1,8 +1,29 @@
 
 
 export default {
+    async post(context, payload) {
+        const response = await fetch(context.state.API_GROUPS, {
+            method: "post",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify(payload),
+        });
+        return await response.json();
+    },
+    async deleteGroup(context, id) {
+        const deletereq =
+        {
+            task: "delete-group",
+            id: id,
+        };
+        const response = await fetch(context.state.API_GROUPS, {
+            method: "post",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify(deletereq),
+        });
+        return await response.json();
+    },
     async createGroup(context, name) {
-        const create =
+        const createreq =
         {
             task: "create-group",
             name: name,
@@ -10,7 +31,7 @@ export default {
         const response = await fetch(context.state.API_GROUPS, {
             method: "post",
             headers: {"Content-Type": "application/json"},
-            body: JSON.stringify(create),
+            body: JSON.stringify(createreq),
         });
         return await response.json();
     },
