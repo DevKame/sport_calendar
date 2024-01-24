@@ -8,7 +8,7 @@
 
                 <template #body>
                     <div class="w-100 h-100 d-flex justify-content-around align-items-center py-2 bg-prim">
-                        <router-link :to="{name: 'New-Group'}" class="px-1 btn-positive border border-black rounded-2 ">
+                        <router-link :to="{name: 'New-Student'}" class="px-1 btn-positive border border-black rounded-2 ">
                             New Student
                         </router-link>
                     </div>
