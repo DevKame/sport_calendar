@@ -32,11 +32,16 @@
                     @edit-item="editTrainer(trainer.id, trainer.email, trainer.firstname, trainer.lastname, trainer.role)"></trainer-item>
                 </transition-group>
             </div>
+            <teleport to="body">
+                <transition name="info-box">
+                    <info-box @close-infobox="accessInfoActive = false" v-if="accessInfoActive"></info-box>
+                </transition>
+            </teleport>
     </div>
 </template>
 
 <script setup>
-import { defineEmits, onMounted, ref } from 'vue';
+import { defineEmits, onMounted, ref, computed } from 'vue';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 
@@ -57,6 +62,12 @@ function overviewClickHandler() {
 // IF THE CONTENT IS CURRENTLY LOADING
 const noTrainersAvailable = ref(false);
 const loadingContent = ref(false);
+
+// MANAGES THE USER ROLE AND THE PRIVILEGES
+const userRole = computed(() => {
+    return store.getters["auth/userRole"];
+});
+const accessInfoActive = ref(false);
 
 // FETCHED TRAINERS ARE SAVED WITHIN HERE
 const trainerArray = ref([]);
@@ -81,27 +92,38 @@ onMounted(async () => {
  * @param {number} id   => ID OF THE TO-BE-EDITED Trainer 
  * @param {String} name => NAME OF THE TO-BE-EDITED Trainer */
 function editTrainer(id, email, fn, ln, role) {
-    store.commit("trainers/prepareTrainerForEdit", {email: email, id: id, firstname: fn, lastname: ln, role});
-    router.push({name: "Edit-Trainer"});
+    if(userRole.value !== "ADMIN" && userRole.value !== "SENIOR-TRAINER") {
+        accessInfoActive.value = true;
+    }
+    else {
+        store.commit("trainers/prepareTrainerForEdit", {email: email, id: id, firstname: fn, lastname: ln, role});
+        router.push({name: "Edit-Trainer"});
+    }
 }
 
 async function deleteTrainer(index, id) {
-    const deletereq =
-    {
-        task: "delete-trainer",
-        id: id,
-    };
-    const deletedata = await store.dispatch("trainers/post", deletereq);
-    if(deletedata.success) {
-        trainerArray.value.splice(index, 1);
-        if(trainerArray.value.length === 0)
-        {
-            noTrainersAvailable.value = true;
-        }
-        //TODO: needs to update all trainings where this trainer was signed in
+    if(userRole.value !== "ADMIN") {
+        accessInfoActive.value = true;
     }
-    else {
-        router.replace({name:"Error"});
+    else
+    {
+        const deletereq =
+        {
+            task: "delete-trainer",
+            id: id,
+        };
+        const deletedata = await store.dispatch("trainers/post", deletereq);
+        if(deletedata.success) {
+            trainerArray.value.splice(index, 1);
+            if(trainerArray.value.length === 0)
+            {
+                noTrainersAvailable.value = true;
+            }
+            //TODO: needs to update all trainings where this trainer was signed in
+        }
+        else {
+            router.replace({name:"Error"});
+        }
     }
 }
 </script>

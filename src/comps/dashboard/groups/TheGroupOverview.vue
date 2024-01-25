@@ -29,11 +29,16 @@
                     @edit-item="editGroup(group.id, group.name)"></group-item>
                 </transition-group>
             </div>
+            <teleport to="body">
+                <transition name="info-box">
+                    <info-box @close-infobox="accessInfoActive = false" v-if="accessInfoActive"></info-box>
+                </transition>
+            </teleport>
     </div>
 </template>
 
 <script setup>
-import { defineEmits, onMounted, ref } from 'vue';
+import { defineEmits, onMounted, ref, computed } from 'vue';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 
@@ -54,6 +59,12 @@ function overviewClickHandler() {
 // IF THE CONTENT IS CURRENTLY LOADING
 const noGroupsAvailable = ref(false);
 const loadingContent = ref(false);
+
+// MANAGES THE USER ROLE AND THE PRIVILEGES
+const userRole = computed(() => {
+    return store.getters["auth/userRole"];
+});
+const accessInfoActive = ref(false);
 
 // FETCHED GROUPS ARE SAVED WITHIN HERE
 const groupArray = ref([]);
@@ -76,8 +87,13 @@ onMounted(async () => {
  * @param {number} id   => ID OF THE TO-BE-EDITED GROUP 
  * @param {String} name => NAME OF THE TO-BE-EDITED GROUP */
 function editGroup(id, name) {
-    store.commit("groups/setGroupDataForEdit", {name: name, id: id});
-    router.push({name: "Edit-Group"});
+    if(userRole.value !== "ADMIN" && userRole.value !== "SENIOR-TRAINER") {
+        accessInfoActive.value = true;
+    }
+    else {
+        store.commit("groups/setGroupDataForEdit", {name: name, id: id});
+        router.push({name: "Edit-Group"});
+    }
 }
 //TODO: When deleting group, update TRAININGS and EVENTS too
 /** INVOKES THE ACTION TO DELETE A GROUP. USES INDEX AFTER
@@ -85,31 +101,37 @@ function editGroup(id, name) {
  * @param {number} index    => INDEX OF THIS GROUP WITHIN groupArray 
  * @param {number} id       => ID OF THE TO-BE-DELETED GROUP */
 async function deleteGroup(index, id) {
-    const deletereq =
+    if(userRole.value !== "ADMIN") {
+        accessInfoActive.value = true;
+    }
+    else
     {
-        task: "delete-group",
-        id: id,
-    };
-    const deletedata = await store.dispatch("groups/post", deletereq);
-    if(deletedata.success) {
-        groupArray.value.splice(index, 1);
-        if(groupArray.value.length === 0)
+        const deletereq =
         {
-            noGroupsAvailable.value = true;
-        }
-        const updateuserreq =
-        {
-            task: "update-user-groups",
+            task: "delete-group",
             id: id,
         };
-        const updatedata = await store.dispatch("groups/post", updateuserreq);
-        if(!updatedata.success)
-        {
-            router.push({name: "Error"});
+        const deletedata = await store.dispatch("groups/post", deletereq);
+        if(deletedata.success) {
+            groupArray.value.splice(index, 1);
+            if(groupArray.value.length === 0)
+            {
+                noGroupsAvailable.value = true;
+            }
+            const updateuserreq =
+            {
+                task: "update-user-groups",
+                id: id,
+            };
+            const updatedata = await store.dispatch("groups/post", updateuserreq);
+            if(!updatedata.success)
+            {
+                router.push({name: "Error"});
+            }
         }
-    }
-    else {
-        router.replace({name:"Error"});
+        else {
+            router.replace({name:"Error"});
+        }
     }
 }
 </script>

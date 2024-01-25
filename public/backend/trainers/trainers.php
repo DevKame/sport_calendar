@@ -59,7 +59,7 @@ else if($_SERVER["REQUEST_METHOD"] === "POST")
     $req = json_decode(file_get_contents("php://input"));
     switch($req->task)
     {
-        //################### CHANGES DATA OF A STUDENT:
+        //################### CHANGES DATA OF A TRAINER:
         case "edit-trainer":
             $affectedRows = editTrainer($req->id, $req->email,$req->firstname, $req->lastname, $req->role, $req->chosengroups);
             if(is_int($affectedRows))

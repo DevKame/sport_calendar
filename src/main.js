@@ -22,6 +22,7 @@ import TheGroupOverview     from "./comps/dashboard/groups/TheGroupOverview.vue"
 import TheError             from "./comps/error/TheError.vue";
 import OverviewLoading      from "./comps/multi/OverviewLoading.vue";
 import FormLoading          from "./comps/multi/FormLoading.vue";
+import InfoBox              from "./comps/dashboard/shared/InfoBox.vue";
 
 import NewGroup             from "./comps/dashboard/groups/NewGroup.vue";
 import EditGroup            from "./comps/dashboard/groups/EditGroup.vue";
@@ -206,6 +207,7 @@ app.component("error-alert", ErrorAlert);
 app.component("success-alert", SuccessAlert);
 app.component("ov-load", OverviewLoading);
 app.component("form-loading", FormLoading);
+app.component("info-box", InfoBox);
 app.component("fa-icon", FontAwesomeIcon);
 
 app.use(store);

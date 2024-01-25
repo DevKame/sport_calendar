@@ -32,11 +32,16 @@
                     @edit-item="editStudent(student.id, student.email, student.firstname, student.lastname, filteredGroups(student.id))"></student-item>
                 </transition-group>
             </div>
+            <teleport to="body">
+                <transition name="info-box">
+                    <info-box @close-infobox="accessInfoActive = false" v-if="accessInfoActive"></info-box>
+                </transition>
+            </teleport>
     </div>
 </template>
 
 <script setup>
-import { defineEmits, onMounted, ref } from 'vue';
+import { defineEmits, onMounted, ref, computed } from 'vue';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 
@@ -57,6 +62,12 @@ function overviewClickHandler() {
 // IF THE CONTENT IS CURRENTLY LOADING
 const noStudentsAvailable = ref(false);
 const loadingContent = ref(false);
+
+// MANAGES THE USER ROLE AND THE PRIVILEGES
+const userRole = computed(() => {
+    return store.getters["auth/userRole"];
+});
+const accessInfoActive = ref(false);
 
 // FETCHED GROUPS AND STUDENTS ARE SAVED WITHIN HERE
 const groupArray = ref([]);
@@ -106,26 +117,36 @@ function filteredGroups(id) {
  * @param {number} id   => ID OF THE TO-BE-EDITED STUDENT 
  * @param {String} name => NAME OF THE TO-BE-EDITED STUDENT */
 function editStudent(id, email, fn, ln, groups) {
-    store.commit("students/prepareStudentForEdit", {email: email, id: id, firstname: fn, lastname: ln, groups: groups});
-    router.push({name: "Edit-Student"});
+    if(userRole.value !== "ADMIN" && userRole.value !== "SENIOR-TRAINER") {
+        accessInfoActive.value = true;
+    }
+    else {
+        store.commit("students/prepareStudentForEdit", {email: email, id: id, firstname: fn, lastname: ln, groups: groups});
+        router.push({name: "Edit-Student"});
+    }
 }
 
 async function deleteStudent(index, id) {
-    const deletereq =
-    {
-        task: "delete-student",
-        id: id,
-    };
-    const deletedata = await store.dispatch("students/post", deletereq);
-    if(deletedata.success) {
-        studentArray.value.splice(index, 1);
-        if(studentArray.value.length === 0)
-        {
-            noStudentsAvailable.value = true;
-        }
+    if(userRole.value !== "ADMIN") {
+        accessInfoActive.value = true;
     }
     else {
-        router.replace({name:"Error"});
+        const deletereq =
+        {
+            task: "delete-student",
+            id: id,
+        };
+        const deletedata = await store.dispatch("students/post", deletereq);
+        if(deletedata.success) {
+            studentArray.value.splice(index, 1);
+            if(studentArray.value.length === 0)
+            {
+                noStudentsAvailable.value = true;
+            }
+        }
+        else {
+            router.replace({name:"Error"});
+        }
     }
 }
 </script>
