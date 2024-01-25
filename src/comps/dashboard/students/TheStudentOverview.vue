@@ -29,7 +29,7 @@
                     :email="student.email"
                     :groups="filteredGroups(student.id)"
                     @delete-item="deleteStudent(idx, student.id)"
-                    @edit-item="editGroup(student.id, student.name)"></student-item>
+                    @edit-item="editStudent(student.id, student.email, student.firstname, student.lastname, filteredGroups(student.id))"></student-item>
                 </transition-group>
             </div>
     </div>
@@ -101,9 +101,13 @@ function filteredGroups(id) {
     return namedGroups;
 }
 
-function editGroup(id, name) {
-    store.commit("groups/setGroupDataForEdit", {name: name, id: id});
-    router.push({name: "Edit-Group"});
+/** PREPARES STATE WITH NAME AND ID OF TO-BE-EDITED STUDENT AND SWITCHES
+ *  TO Edit-Student ROUTE TO ENABLE THE ACTUAL EDITING
+ * @param {number} id   => ID OF THE TO-BE-EDITED STUDENT 
+ * @param {String} name => NAME OF THE TO-BE-EDITED STUDENT */
+function editStudent(id, email, fn, ln, groups) {
+    store.commit("students/prepareStudentForEdit", {email: email, id: id, firstname: fn, lastname: ln, groups: groups});
+    router.push({name: "Edit-Student"});
 }
 
 async function deleteStudent(index, id) {

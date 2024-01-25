@@ -6,14 +6,22 @@
 </template>
 
 <script setup>
-import { defineProps, defineEmits, ref } from 'vue';
+import { defineProps, defineEmits, ref, onMounted } from 'vue';
 let props = defineProps([
     "id",
     "name",
+    "checked",
 ]);
 let emits = defineEmits([
     "box-clicked",
 ]);
+
+onMounted(() => {
+    if(props.checked)
+    {
+        cbox.value.click();
+    }
+})
 
 const cbox = ref();
 

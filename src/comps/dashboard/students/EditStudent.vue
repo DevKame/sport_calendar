@@ -1,18 +1,19 @@
 <template>
-    <form @submit.prevent="create_student" @click="clickHandler" :class="{not_clickable: submitInProgress}" class="px-2 border border-danger d-flex flex-column justify-content-start align-items-center">
-        <h1 class="me-auto">Create a new student</h1>
+    <ov-load v-if="loadingRoute" class="mt-5"></ov-load>
+    <form v-else @submit.prevent="create_student" @click="clickHandler" :class="{not_clickable: submitInProgress}" class="px-2 border border-danger d-flex flex-column justify-content-start align-items-center">
+        <h1 class="me-auto">Edit student</h1>
         
         <div class="inputWrapper border border-danger d-flex flex-column justify-cotnent-start align-items-center">
 
             <div class="d-flex justify-content-between align-items-center">
-                <label for="createEmail">Email</label>
+                <label for="editEmail">Email</label>
             </div>
             <input
             @click="resetErrors"
             type="mail"
-            id="createEmail"
-            name="createEmail"
-            v-model.trim="createEmail"
+            id="editEmail"
+            name="editEmail"
+            v-model.trim="editEmail"
             ref="studentEmailInput" />
 
             <small>Max. 40 characters</small>
@@ -22,7 +23,7 @@
                         <p class="m-0 fw-bold">Enter a none-empty value below 41 characters</p>
                     </error-alert>
                     <error-alert v-else-if="doubleError" @close-alert="doubleError = false">
-                        <p class="m-0 fw-bold">Email {{ createEmail }} already exists</p>
+                        <p class="m-0 fw-bold">Email {{ editEmail }} already exists</p>
                     </error-alert>
                 </transition>
             </div>
@@ -30,14 +31,14 @@
         <div class="inputWrapper border border-danger d-flex flex-column justify-cotnent-start align-items-center">
 
             <div class="d-flex justify-content-between align-items-center">
-                <label for="createFirstname">Firstname</label>
+                <label for="editFirstname">Firstname</label>
             </div>
             <input
             @click="resetErrors"
             type="text"
-            id="createFirstname"
-            name="createFirstname"
-            v-model.trim="createFirstname"
+            id="editFirstname"
+            name="editFirstname"
+            v-model.trim="editFirstname"
             ref="studentFirstnameInput" />
 
             <small>Max. 16 characters</small>
@@ -52,14 +53,14 @@
         <div class="inputWrapper border border-danger d-flex flex-column justify-cotnent-start align-items-center">
 
             <div class="d-flex justify-content-between align-items-center">
-                <label for="createLastname">Lastname</label>
+                <label for="editLastname">Lastname</label>
             </div>
             <input
             @click="resetErrors"
             type="text"
-            id="createLastname"
-            name="createLastname"
-            v-model.trim="createLastname"
+            id="editLastname"
+            name="editLastname"
+            v-model.trim="editLastname"
             ref="studentLastnameInput" />
 
             <small>Max. 32 characters</small>
@@ -72,34 +73,32 @@
             </div>
         </div>
         
-        <ov-load v-if="loadingGroups"></ov-load>
-        <div v-else class="w-100">
-                <div v-if="groupArray.length > 0" class="inputWrapper groupWrapper border border-danger d-flex flex-column justify-cotnent-start align-items-center">
-                    <div class="d-flex justify-content-between align-items-center pe-2">
-                        <label>Limit to particular group(s)</label>
-                        <label class="fst-italic">optional</label>
-                    </div>
+        <div v-if="groupArray.length > 0" class="inputWrapper groupWrapper border border-danger d-flex flex-column justify-cotnent-start align-items-center">
+            <div class="d-flex justify-content-between align-items-center pe-2">
+                <label>Limit to particular group(s)</label>
+                <label class="fst-italic">optional</label>
+            </div>
 
-                    <div class="checkBoxes border border-info d-flex flex-column justify-content-start align-items-start">
-                        <group-checkboxes
-                        v-for="group in groupArray"
-                        :key="group.id"
-                        :id="group.id"
-                        :name="group.name"
-                        @box-clicked="updateChosenGroups(group.id)"></group-checkboxes>
-                    </div>
-                    
-                    <div class="alertHolder my-2">
-                        <transition name="error" mode="out-in">
-                            <error-alert v-if="connectionError" @close-alert="connectionError = false">
-                                <p class="m-0 fw-bold">We have issues connecting to our data. Try again later. We have issues connecting to our data. Try again later.</p>
-                            </error-alert>
-                            <success-alert v-else-if="creationSuccess" @close-alert="creationSuccess = false">
-                                <p class="m-0 fw-bold">Group succefully created</p>
-                            </success-alert>
-                        </transition>
-                    </div>
-                </div>
+            <div class="checkBoxes border border-info d-flex flex-column justify-content-start align-items-start">
+                <group-checkboxes
+                v-for="group in groupArray"
+                :key="group.id"
+                :id="group.id"
+                :name="group.name"
+                :checked="group.checked"
+                @box-clicked="updateChosenGroups(group.id)"></group-checkboxes>
+            </div>
+            
+            <div class="alertHolder my-2">
+                <transition name="error" mode="out-in">
+                    <error-alert v-if="connectionError" @close-alert="connectionError = false">
+                        <p class="m-0 fw-bold">We have issues connecting to our data. Try again later. We have issues connecting to our data. Try again later.</p>
+                    </error-alert>
+                    <success-alert v-else-if="creationSuccess" @close-alert="creationSuccess = false">
+                        <p class="m-0 fw-bold">Group succefully created</p>
+                    </success-alert>
+                </transition>
+            </div>
         </div>
         
 
@@ -113,7 +112,7 @@
 
 
 <script setup>
-import { defineEmits, ref, onMounted } from 'vue';
+import { defineEmits, ref, onMounted, reactive } from 'vue';
 import { useStore } from 'vuex';
 
 import GroupCheckboxes from "../shared/GroupCheckboxes.vue";
@@ -128,23 +127,45 @@ function clickHandler() {
     emits("empty-click");
 }
 
-// REPRESENTS THE LOADING OF POSSIBLE GROUPS TO CHOOSE
-const loadingGroups = ref(false);
+// REPRESENTS THE LOADING OF COMPLETE ROUTE
+const loadingRoute = ref(true);
 
+let preparedStudent = reactive({});
 // ALL FETCHED GROUPS ARE BEEING SAVE HERE
 const groupArray = ref([]);
 // FETCHES ALL GROUPS TO RENDER AS CHECKBOXES
 onMounted(async () => {
-    loadingGroups.value = true;
+    console.clear();
+    preparedStudent = {...store.getters["students/preparedStudentForEdit"]};
+    editEmail.value = preparedStudent.email;
+    editFirstname.value = preparedStudent.firstname;
+    editLastname.value = preparedStudent.lastname;
     const groupdata = await store.dispatch("groups/getAllGroups");
-    loadingGroups.value = false;
-    groupArray.value = [...groupdata.groups];
-    console.table(groupArray.value);
+
+    let groupsAsArray = [...groupdata.groups];
+
+    let checkedGroups =
+    groupsAsArray.filter(curr => preparedStudent.groups.includes(curr.name));
+
+    groupArray.value = selectBoxes(groupsAsArray, checkedGroups);
+
+    loadingRoute.value = false;
 });
+
+function selectBoxes(groups, sgroups) {
+    for(let grp of groups)
+    {
+        if(sgroups.find(curr => curr.id === grp.id))
+        {
+            grp.checked = true;
+        }
+    }
+    return groups;
+}
 // VALUES BIND TO INPUT ELEMENTS WITH V-MODEL
-const createEmail = ref("");
-const createFirstname = ref("");
-const createLastname = ref("");
+const editEmail = ref("");
+const editFirstname = ref("");
+const editLastname = ref("");
 const chosenGroups = ref("[]");
 // INDICATORS IF AND WHAT INPUT FIELD HAS AN ERROR
 const emailError = ref(false);
@@ -176,9 +197,9 @@ function updateChosenGroups(id) {
 //DEV: SHOWING THE COMPLETE FORM
 function showData() {
     console.clear();
-    console.log("Email:", createEmail.value);
-    console.log("Firstname:", createFirstname.value);
-    console.log("Lastname:", createLastname.value);
+    console.log("Email:", editEmail.value);
+    console.log("Firstname:", editFirstname.value);
+    console.log("Lastname:", editLastname.value);
     console.log("chosenGroups:", chosenGroups.value);
 }
 // UN-DISPLAYS POTENTIAL ERRORS
@@ -200,9 +221,9 @@ async function create_student() {
     const valireq =
     {
         task: "validate-student",
-        email: createEmail.value,
-        firstname: createFirstname.value,
-        lastname: createLastname.value,
+        email: editEmail.value,
+        firstname: editFirstname.value,
+        lastname: editLastname.value,
         chosengroups: chosenGroups.value,
     };
     resetErrors();
@@ -232,9 +253,9 @@ async function create_student() {
         const createreq =
         {
             task: "create-student",
-            email: createEmail.value,
-            firstname: createFirstname.value,
-            lastname: createLastname.value,
+            email: editEmail.value,
+            firstname: editFirstname.value,
+            lastname: editLastname.value,
             chosengroups: chosenGroups.value,
         };
         let createresponse = await store.dispatch("students/post", createreq);
@@ -242,9 +263,9 @@ async function create_student() {
             document.querySelectorAll("input[type='checkbox']").forEach(box => {
                 box.checked = false;
             });
-            createEmail.value = "";
-            createFirstname.value = "";
-            createLastname.value = "";
+            editEmail.value = "";
+            editFirstname.value = "";
+            editLastname.value = "";
             chosenGroups.value = "[]";
             creationSuccess.value = true;
             studentEmailInput.value.focus();

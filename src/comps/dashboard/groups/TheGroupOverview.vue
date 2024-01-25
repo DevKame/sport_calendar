@@ -71,11 +71,10 @@ onMounted(async () => {
         groupArray.value = [...groupdata.groups];
     }
 });
-/** SETS STATE TO NAME AND IF OF TO-BE-EDITED GROUP AND SWITCHES
+/** PREPARES STATE WITH NAME AND ID OF TO-BE-EDITED GROUP AND SWITCHES
  *  TO Edit-Group ROUTE TO ENABLE THE ACTUAL EDITING
  * @param {number} id   => ID OF THE TO-BE-EDITED GROUP 
- * @param {String} name => NAME OF THE TO-BE-EDITED GROUP
- */
+ * @param {String} name => NAME OF THE TO-BE-EDITED GROUP */
 function editGroup(id, name) {
     store.commit("groups/setGroupDataForEdit", {name: name, id: id});
     router.push({name: "Edit-Group"});
