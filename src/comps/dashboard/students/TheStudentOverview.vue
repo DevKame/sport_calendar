@@ -28,7 +28,7 @@
                     :lastname="student.lastname"
                     :email="student.email"
                     :groups="filteredGroups(student.id)"
-                    @delete-item="deleteGroup(idx, student.id)"
+                    @delete-item="deleteStudent(idx, student.id)"
                     @edit-item="editGroup(student.id, student.name)"></student-item>
                 </transition-group>
             </div>
@@ -106,13 +106,13 @@ function editGroup(id, name) {
     router.push({name: "Edit-Group"});
 }
 
-async function deleteGroup(index, id) {
+async function deleteStudent(index, id) {
     const deletereq =
     {
-        task: "delete-group",
+        task: "delete-student",
         id: id,
     };
-    const deletedata = await store.dispatch("groups/post", deletereq);
+    const deletedata = await store.dispatch("students/post", deletereq);
     if(deletedata.success) {
         studentArray.value.splice(index, 1);
         if(studentArray.value.length === 0)

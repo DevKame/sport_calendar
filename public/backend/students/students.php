@@ -93,8 +93,8 @@ else if($_SERVER["REQUEST_METHOD"] === "POST")
             }
             break;
         //################### DELETES A GROUP BASED ON ITS ID:
-        case "delete-group":
-            $result = deleteGroup($req->id);
+        case "delete-student":
+            $result = deleteStudent($req->id);
             if(is_bool($result)) {
                 if($result) {
                     $res["success"] = true;
