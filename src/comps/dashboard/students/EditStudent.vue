@@ -1,6 +1,6 @@
 <template>
     <ov-load v-if="loadingRoute" class="mt-5"></ov-load>
-    <form v-else @submit.prevent="create_student" @click="clickHandler" :class="{not_clickable: submitInProgress}" class="px-2 border border-danger d-flex flex-column justify-content-start align-items-center">
+    <form v-else @submit.prevent="change_student" @click="clickHandler" :class="{not_clickable: submitInProgress}" class="px-2 border border-danger d-flex flex-column justify-content-start align-items-center">
         <h1 class="me-auto">Edit student</h1>
         
         <div class="inputWrapper border border-danger d-flex flex-column justify-cotnent-start align-items-center">
@@ -79,7 +79,7 @@
                 <label class="fst-italic">optional</label>
             </div>
 
-            <div class="checkBoxes border border-info d-flex flex-column justify-content-start align-items-start">
+            <div class="checkBoxes px-1 d-flex flex-column justify-content-start align-items-start">
                 <group-checkboxes
                 v-for="group in groupArray"
                 :key="group.id"
@@ -95,7 +95,7 @@
                         <p class="m-0 fw-bold">We have issues connecting to our data. Try again later. We have issues connecting to our data. Try again later.</p>
                     </error-alert>
                     <success-alert v-else-if="creationSuccess" @close-alert="creationSuccess = false">
-                        <p class="m-0 fw-bold">Group succefully created</p>
+                        <p class="m-0 fw-bold">Student succefully changed</p>
                     </success-alert>
                 </transition>
             </div>
@@ -105,7 +105,7 @@
         <div class="w-100 mt-3 d-flex justify-content-end align-items-center">
             <form-loading v-if="submitInProgress" class="me-5"></form-loading>
             <router-link :to="{name:'Students'}" type="button" class="rounded-2 me-2 px-2">BACK</router-link>
-            <input type="submit" value="CREATE" class="btn-sec border border-black rounded-2">
+            <input type="submit" value="SAVE" class="btn-sec border border-black rounded-2">
         </div>
     </form>
 </template>
@@ -134,6 +134,8 @@ let preparedStudent = reactive({});
 // ALL FETCHED GROUPS ARE BEEING SAVE HERE
 const groupArray = ref([]);
 // FETCHES ALL GROUPS TO RENDER AS CHECKBOXES
+// MAKES SURE TO ALREADY SELECT THE BOXES THAT FIT
+// THE STUDENTS GROUPS
 onMounted(async () => {
     console.clear();
     preparedStudent = {...store.getters["students/preparedStudentForEdit"]};
@@ -151,7 +153,13 @@ onMounted(async () => {
 
     loadingRoute.value = false;
 });
-
+/** ADDS A CHECKED VALUE (Bool) TO EVERY GROUP THAT THE STUDENT
+ *  ALSO HAVE TO MAKE SURE TO AUTOMATICLY SELECT THE CORRESPONDING
+ *  CHECKBOXES
+ * @param {Array} groups        => ALL GROUPS THAT WILL BE groupArray.value LATER
+ * @param {Array} sgroups       => ALL GROUPS OF THE STUDENT
+ * 
+ * @returns {Array}             => MODIFIED groups WITH "CHECKED" VALUES */
 function selectBoxes(groups, sgroups) {
     for(let grp of groups)
     {
@@ -216,11 +224,12 @@ function resetErrors() {
 // REPRESENTS THAT SUBMITTING IS IN PROGRESS
 const submitInProgress = ref(false);
 /** SUBMITTING PROCESS OF CREATING A STUDENT */
-async function create_student() {
+async function change_student() {
     submitInProgress.value = true;
     const valireq =
     {
-        task: "validate-student",
+        task: "validate-student-edit",
+        id: preparedStudent.id,
         email: editEmail.value,
         firstname: editFirstname.value,
         lastname: editLastname.value,
@@ -228,6 +237,7 @@ async function create_student() {
     };
     resetErrors();
     let valiresponse = await store.dispatch("students/post", valireq);
+    console.table(valiresponse);
     if(!valiresponse.success)
     {
         switch(valiresponse.reason) {
@@ -250,25 +260,21 @@ async function create_student() {
     }
     else
     {
-        const createreq =
+        const changereq =
         {
-            task: "create-student",
+            task: "edit-student",
+            id: preparedStudent.id,
             email: editEmail.value,
             firstname: editFirstname.value,
             lastname: editLastname.value,
             chosengroups: chosenGroups.value,
         };
-        let createresponse = await store.dispatch("students/post", createreq);
+        let createresponse = await store.dispatch("students/post", changereq);
         if(createresponse.success) {
             document.querySelectorAll("input[type='checkbox']").forEach(box => {
                 box.checked = false;
             });
-            editEmail.value = "";
-            editFirstname.value = "";
-            editLastname.value = "";
-            chosenGroups.value = "[]";
             creationSuccess.value = true;
-            studentEmailInput.value.focus();
         } else {
             connectionError.value = true;
         }
@@ -279,6 +285,10 @@ async function create_student() {
 </script>
 
 <style scoped>
+.checkBoxes {
+    border: 2px solid var(--tert);
+    border-radius: 15px;
+}
 .groupWrapper label:last-child {
     font-size: 12px;
 }

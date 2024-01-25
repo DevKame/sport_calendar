@@ -8,6 +8,62 @@ $db =       "kame_apps";
 
 
 ////////////////////////////////////    STUDENT QUERIES  [start]  //////////////////////////////////////
+/** CHANGES A STUDENT
+ *  returns
+ * {$affected | Exeption->getMessage()} => int | String */
+function editStudent($id, $email, $fn, $ln, $groups) {
+    $con = connect();
+    $query =
+    "UPDATE sport_cal_user
+    SET
+    email = ?,
+    firstname = ?,
+    lastname = ?,
+    groups = ?
+    WHERE id = ?";
+    try {
+        $stmt = mysqli_prepare($con, $query);
+        mysqli_stmt_bind_param($stmt, "ssssi", $email, $fn, $ln, $groups, $id);
+        mysqli_stmt_execute($stmt);
+        $affected = mysqli_stmt_affected_rows($stmt);
+        mysqli_stmt_close($stmt);
+        mysqli_close($con);
+        return $affected;
+    }
+    catch(Exeption $e) {
+        mysqli_close($con);
+        return $e->getMessage();
+    }
+}
+/** CHECKS IF THERE IS A DOUBLICAT EMAIL DESPITE THE ONE CONNECTED TO THE PROVIDED ID
+ *  returns
+ * {$totalEmails | Exeption->getMessage()} => int | String */
+function getEmailsExeptOwn($email, $id) {
+    $con = connect();
+    $students = [];
+    $query =
+    "SELECT email
+    FROM sport_cal_user
+    WHERE email = ?
+    AND NOT id = ?";
+    $stmt = mysqli_prepare($con, $query);
+    try {
+        mysqli_stmt_bind_param($stmt, "si", $email, $id);
+        mysqli_execute($stmt);
+        mysqli_stmt_store_result($stmt);
+        $totalEmails = mysqli_stmt_num_rows($stmt);
+        mysqli_stmt_free_result($stmt);
+        mysqli_stmt_close($stmt);
+        
+        mysqli_close($con);
+        return $totalEmails;
+    }
+    catch(Exeption $e) {
+        mysqli_close($con);
+        return $e->getMessage();
+    }
+
+}
 /** DELETES A STUDENT BASED ON ITS ID
  *  returns
  * {true | Exeption->getMessage()} => Bool | String */

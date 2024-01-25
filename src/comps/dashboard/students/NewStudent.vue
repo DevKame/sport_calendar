@@ -80,7 +80,7 @@
                         <label class="fst-italic">optional</label>
                     </div>
 
-                    <div class="checkBoxes border border-info d-flex flex-column justify-content-start align-items-start">
+                    <div class="checkBoxes px-1 d-flex flex-column justify-content-start align-items-start">
                         <group-checkboxes
                         v-for="group in groupArray"
                         :key="group.id"
@@ -258,6 +258,10 @@ async function create_student() {
 </script>
 
 <style scoped>
+.checkBoxes {
+    border: 2px solid var(--tert);
+    border-radius: 15px;
+}
 .groupWrapper label:last-child {
     font-size: 12px;
 }

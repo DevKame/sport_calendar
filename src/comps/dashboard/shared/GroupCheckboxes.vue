@@ -1,5 +1,5 @@
 <template>
-    <div @click="clickBox" class="cbHolder my-1 px-2 position-relative border border-danger d-flex justify-content-between align-items-center">
+    <div @click="clickBox" class="cbHolder my-1 px-2 position-relative d-flex justify-content-between align-items-center">
         <input @input="emitChange" ref="cbox" type="checkbox" :name="props.id" :id="props.id" class="position-absolute rounded-pill">
         <label :for="props.id" class="position-relative">{{ name }}</label>
     </div>

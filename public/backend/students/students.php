@@ -38,8 +38,8 @@ else if($_SERVER["REQUEST_METHOD"] === "POST")
     switch($req->task)
     {
         //################### RENAMES A GROUP BASED ON ITS ID:
-        case "edit-group":
-            $affectedRows = editGroup($req->id, $req->name);
+        case "edit-student":
+            $affectedRows = editStudent($req->id, $req->email,$req->firstname, $req->lastname, $req->chosengroups);
             if(is_int($affectedRows))
             {
                 if($affectedRows === 1)
@@ -53,44 +53,62 @@ else if($_SERVER["REQUEST_METHOD"] === "POST")
                 $res["reason"] = "connection-problems";
             }
             break;
-        //###### VALIDATES AN INTENDED GROUP NAME BUT IGNORES THE GROUP ITSELF:
-        case "validate-group-edit":
-            // CHECK IF THE VALUE IS VALID:
-            $trimmedName = trim($req->name);
-            if($trimmedName === "")
+            //################### VALIDATES AN INTENDED GROUP NAME:
+        case "validate-student-edit":
+            // VALIDATION OF EMAIL
+            $trimmedEmail = trim($req->email);
+            if($trimmedEmail === "")
             {
-                $res["reason"] = "invalid-value";
+                $res["reason"] = "invalid-email-value";
                 break;
             }
-            // CHECK IF THE VALUE IS LONGER THAN 25 CHARACTERS:
-            if(strlen($req->name) > 25)
+            if(strlen($req->email) > 40)
             {
-                $res["reason"] = "too-long";
+                $res["reason"] = "email-too-long";
                 break;
             }
-            // CHECK IF THE VALUE ALREADY EXISTS:
-            $doubles = 0;
-            $matches = doubleCheckForEdit($req->id, $req->name);
-            if(is_string($matches))
+            if(!filter_var($req->email, FILTER_VALIDATE_EMAIL))
+            {
+                $res["reason"] = "invalid-email-value";
+                break;
+            }
+            $allEmails = getEmailsExeptOwn($req->email, $req->id);
+            if(is_string($allEmails))
             {
                 $res["reason"] = "connection-problems";
+                break;
             }
             else {
-                foreach($matches as $name)
-                {
-                    if(strtolower($name) === strtolower($req->name))
-                    {
-                        $doubles++;
-                        break;
-                    }
-                }
-                if($doubles === 0)
-                {
-                    $res["success"] = true;
-                } else {
+                if($allEmails > 0) {
                     $res["reason"] = "found-double";
+                    break;
                 }
             }
+            // VALIDATION OF FIRSTNAME
+            $trimmedFirstname = trim($req->firstname);
+            if($trimmedFirstname === "")
+            {
+                $res["reason"] = "invalid-firstname-value";
+                break;
+            }
+            if(strlen($req->firstname) > 16)
+            {
+                $res["reason"] = "firstname-too-long";
+                break;
+            }
+            // VALIDATION OF LASTNAME
+            $trimmedLastname = trim($req->lastname);
+            if($trimmedLastname === "")
+            {
+                $res["reason"] = "invalid-lastname-value";
+                break;
+            }
+            if(strlen($req->lastname) > 32)
+            {
+                $res["reason"] = "lastname-too-long";
+                break;
+            }
+            $res["success"] = true;
             break;
         //################### DELETES A GROUP BASED ON ITS ID:
         case "delete-student":
