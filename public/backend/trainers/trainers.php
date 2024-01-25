@@ -23,6 +23,7 @@ require("../database/db.php");
  *          creates Events
  *          creates groups
  *          creates Trainings
+ *          creates Trainers
  *          signs for training an event
  *          editing event info
  *  SENIOR-TRAINER
@@ -31,21 +32,24 @@ require("../database/db.php");
  *          edits Events
  *          edits groups
  *          edits Trainings
+ *          edits Trainers
  *  ADMIN
  *          (everything)
  */
 
-//################################################# HANDLES GET REQUESTS:
+
+
+ //################################################# HANDLES GET REQUESTS:
 // RETURNS Boolean INDICATING IF A USER IS LOGGED IN
 if($_SERVER["REQUEST_METHOD"] === "GET")
 {
-    $students = getAllTrainers();
-    if(is_string($students)) {
+    $trainers = getAllTrainers();
+    if(is_string($trainers)) {
         $res["reason"] = "connection-problems";
     }
     else {
         $res["success"] = true;
-        $res["students"] = $students;
+        $res["trainers"] = $trainers;
     }
 }
 //################################################# HANDLES POST REQUESTS
@@ -141,17 +145,17 @@ else if($_SERVER["REQUEST_METHOD"] === "POST")
                 $res["reason"] = "connection-problems";
             }
             break;
-        //################### CREATES A NEW STUDENT:
-        case "create-student":
-            if(!is_string(createStudent($req->email,$req->firstname,$req->lastname,$req->chosengroups)))
+        //################### CREATES A NEW TRAINER:
+        case "create-trainer":
+            if(!is_string(createTrainer($req->email, $req->firstname, $req->lastname, $req->role, $req->chosengroups)))
             {
                 $res["success"] = true;
             } else {
                 $res["reason"] = "connection-problems";
             }
             break;
-        //################### VALIDATES DATA FOR CREATING A NEW STUDENT:
-        case "validate-student":
+        //################### VALIDATES DATA FOR CREATING A NEW TRAINER:
+        case "validate-trainer":
             // VALIDATION OF EMAIL
             $trimmedEmail = trim($req->email);
             if($trimmedEmail === "")
@@ -203,6 +207,11 @@ else if($_SERVER["REQUEST_METHOD"] === "POST")
             if(strlen($req->lastname) > 32)
             {
                 $res["reason"] = "lastname-too-long";
+                break;
+            }
+            if($req->role !== "ADMIN" && $req->role !== "TRAINER" && $req->role !== "SENIOR-TRAINER")
+            {
+                $res["reason"] = "invalid-role";
                 break;
             }
             $res["success"] = true;

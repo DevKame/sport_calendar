@@ -8,7 +8,7 @@ import rootMutations from "./rootMutations.js";
 import authStore from "./auth/authStore.js";
 import groupStore from "./groups/groupStore.js";
 import studentStore from "./students/studentStore.js";
-import trainerStore from "./students/studentStore.js";
+import trainerStore from "./trainers/trainerStore.js";
 
 const store = createStore({
     modules: {

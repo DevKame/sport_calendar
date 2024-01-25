@@ -8,7 +8,7 @@
 
                 <template #body>
                     <div class="w-100 h-100 d-flex justify-content-around align-items-center py-2 bg-prim">
-                        <router-link :to="{name: 'New-Student'}" class="px-1 btn-positive border border-black rounded-2 ">
+                        <router-link :to="{name: 'New-Trainer'}" class="px-1 btn-positive border border-black rounded-2 ">
                             New Trainer
                         </router-link>
                     </div>
@@ -21,15 +21,15 @@
             </transition>
             <div v-if="!noTrainersAvailable" class="listHolder w-100">
                 <transition-group tag="ul" name="content-list" class="trainerList p-0" mode="out-in">
-                    <student-item
-                    v-for="(student, idx) in studentArray"
-                    :key="student.id"
-                    :firstname="student.firstname"
-                    :lastname="student.lastname"
-                    :email="student.email"
-                    :groups="filteredGroups(student.id)"
+                    <trainer-item
+                    v-for="(trainer, idx) in trainerArray"
+                    :key="trainer.id"
+                    :firstname="trainer.firstname"
+                    :lastname="trainer.lastname"
+                    :email="trainer.email"
+                    :role="trainer.role"
                     @delete-item="deleteStudent(idx, student.id)"
-                    @edit-item="editStudent(student.id, student.email, student.firstname, student.lastname, filteredGroups(student.id))"></student-item>
+                    @edit-item="editStudent(student.id, student.email, student.firstname, student.lastname, filteredGroups(student.id))"></trainer-item>
                 </transition-group>
             </div>
     </div>
@@ -40,7 +40,7 @@ import { defineEmits, onMounted, ref } from 'vue';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 
-import StudentItem from "../students/StudentItem.vue";
+import TrainerItem from "./TrainerItem.vue";
 
 const router = useRouter();
 const store = useStore();
@@ -58,48 +58,23 @@ function overviewClickHandler() {
 const noTrainersAvailable = ref(false);
 const loadingContent = ref(false);
 
-// FETCHED GROUPS AND STUDENTS ARE SAVED WITHIN HERE
-const groupArray = ref([]);
-const studentArray = ref([]);
+// FETCHED TRAINERS ARE SAVED WITHIN HERE
+const trainerArray = ref([]);
 
-// INITIAL FETCHING OF GROUPS AND STUDENTS TO BE ABLE TO DISPLAY THEM
+// INITIAL FETCHING OF TRAINERS TO BE ABLE TO DISPLAY THEM
 onMounted(async () => {
     loadingContent.value = true;
 
-
-    const groupdata = await store.dispatch("groups/getAllGroups");
+    const trainerdata = await store.dispatch("trainers/getAllTrainers");
     loadingContent.value = false;
-    groupArray.value = [...groupdata.groups];
-
-
-    const studentdata = await store.dispatch("students/getAllStudents");
-    loadingContent.value = false;
-    if(studentdata.students.length === 0)
+    if(trainerdata.trainers.length === 0)
     {
         noTrainersAvailable.value = true;
     }
     else {
-        studentArray.value = [...studentdata.students];
+        trainerArray.value = [...trainerdata.trainers];
     }
 });
-/** APPLIES THE ACTUAL GROUP NAMES OF ALL GROUPS THE
- *  STUDENT HAS TO HIS LISTITEM
- * @param {number} id           => ID OF THE STUDENT
- * returns {Array} namedGroups  => ACTUAL GROUPNAMES THAT FIT TO THE STUDENT
- */
-function filteredGroups(id) {
-    let student = studentArray.value.find(curr => curr.id === id);
-    const studentGroups = JSON.parse(student.groups);
-    const namedGroups = [];
-    for(let group of groupArray.value)
-    {
-        if(studentGroups.includes(group.id))
-        {
-            namedGroups.push(group.name);
-        }
-    }
-    return namedGroups;
-}
 
 /** PREPARES STATE WITH NAME AND ID OF TO-BE-EDITED STUDENT AND SWITCHES
  *  TO Edit-Student ROUTE TO ENABLE THE ACTUAL EDITING
@@ -118,8 +93,8 @@ async function deleteStudent(index, id) {
     };
     const deletedata = await store.dispatch("students/post", deletereq);
     if(deletedata.success) {
-        studentArray.value.splice(index, 1);
-        if(studentArray.value.length === 0)
+        trainerArray.value.splice(index, 1);
+        if(trainerArray.value.length === 0)
         {
             noTrainersAvailable.value = true;
         }

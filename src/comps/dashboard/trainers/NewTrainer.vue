@@ -1,6 +1,7 @@
 <template>
-    <form @submit.prevent="create_student" @click="clickHandler" :class="{not_clickable: submitInProgress}" class="px-2 border border-danger d-flex flex-column justify-content-start align-items-center">
-        <h1 class="me-auto">New student</h1>
+    <ov-load v-if="contentLoading" class="mt-5"></ov-load>
+    <form v-else @submit.prevent="create_trainer" @click="clickHandler" :class="{not_clickable: submitInProgress}" class="px-2 border border-danger d-flex flex-column justify-content-start align-items-center">
+        <h1 class="me-auto">New trainer</h1>
         
         <div class="inputWrapper border border-danger d-flex flex-column justify-cotnent-start align-items-center">
 
@@ -13,7 +14,7 @@
             id="createEmail"
             name="createEmail"
             v-model.trim="createEmail"
-            ref="studentEmailInput" />
+            ref="trainerEmailInput" />
 
             <small>Max. 40 characters</small>
             <div class="alertHolder my-2">
@@ -38,7 +39,7 @@
             id="createFirstname"
             name="createFirstname"
             v-model.trim="createFirstname"
-            ref="studentFirstnameInput" />
+            ref="trainerFirstnameInput" />
 
             <small>Max. 16 characters</small>
             <div class="alertHolder my-2">
@@ -60,7 +61,7 @@
             id="createLastname"
             name="createLastname"
             v-model.trim="createLastname"
-            ref="studentLastnameInput" />
+            ref="trainerLastnameInput" />
 
             <small>Max. 32 characters</small>
             <div class="alertHolder my-2">
@@ -72,40 +73,49 @@
             </div>
         </div>
         
-        <ov-load v-if="loadingGroups"></ov-load>
-        <div v-else class="w-100">
-                <div v-if="groupArray.length > 0" class="inputWrapper groupWrapper border border-danger d-flex flex-column justify-cotnent-start align-items-center">
-                    <div class="d-flex justify-content-between align-items-center pe-2">
-                        <label>Limit to particular group(s)</label>
-                        <label class="fst-italic">optional</label>
-                    </div>
+        <div class="inputWrapper border border-danger d-flex flex-column justify-cotnent-start align-items-center">
 
-                    <div class="checkBoxes px-1 d-flex flex-column justify-content-start align-items-start">
-                        <group-checkboxes
-                        v-for="group in groupArray"
-                        :key="group.id"
-                        :id="group.id"
-                        :name="group.name"
-                        @box-clicked="updateChosenGroups(group.id)"></group-checkboxes>
-                    </div>
-                    
-                    <div class="alertHolder my-2">
-                        <transition name="error" mode="out-in">
-                            <error-alert v-if="connectionError" @close-alert="connectionError = false">
-                                <p class="m-0 fw-bold">We have issues connecting to our data. Try again later. We have issues connecting to our data. Try again later.</p>
-                            </error-alert>
-                            <success-alert v-else-if="creationSuccess" @close-alert="creationSuccess = false">
-                                <p class="m-0 fw-bold">Group succefully created</p>
-                            </success-alert>
-                        </transition>
-                    </div>
-                </div>
+            <div class="d-flex justify-content-between align-items-center">
+                <label for="createRole">Role</label>
+            </div>
+            <div class="selectHolder border border-success w-100 position-relative">
+                <select
+                @click="resetErrors"
+                id="createRole"
+                name="createRole"
+                v-model.trim="createRole"
+                ref="trainerRoleInput"
+                class="position-absolute"
+                value="TRAINER">
+                    <option value="TRAINER" selected>Trainer</option>
+                    <option v-if="userRole === 'ADMIN'" value="SENIOR-TRAINER">Senior trainer</option>
+                    <option v-if="userRole === 'ADMIN'" value="ADMIN">Admin</option>
+                </select>
+            </div>
+            
+            <div class="alertHolder my-2">
+                <transition name="error" mode="out-in">
+                    <error-alert v-if="roleError" @close-alert="roleError = false">
+                        <p class="m-0 fw-bold">Enter a valid role</p>
+                    </error-alert>
+                </transition>
+            </div>
         </div>
         
+        <div class="alertHolder w-100 my-2">
+            <transition name="error" mode="out-in">
+                <error-alert v-if="connectionError" @close-alert="connectionError = false">
+                    <p class="m-0 fw-bold">We have issues connecting to our data. Try again later. We have issues connecting to our data. Try again later.</p>
+                </error-alert>
+                <success-alert v-else-if="creationSuccess" @close-alert="creationSuccess = false">
+                    <p class="m-0 fw-bold">Group succefully created</p>
+                </success-alert>
+            </transition>
+        </div>
 
         <div class="w-100 mt-3 d-flex justify-content-end align-items-center">
             <form-loading v-if="submitInProgress" class="me-5"></form-loading>
-            <router-link :to="{name:'Students'}" type="button" class="rounded-2 me-2 px-2">BACK</router-link>
+            <router-link :to="{name:'Trainers'}" type="button" class="rounded-2 me-2 px-2">BACK</router-link>
             <input type="submit" value="CREATE" class="btn-sec border border-black rounded-2">
         </div>
     </form>
@@ -113,10 +123,8 @@
 
 
 <script setup>
-import { defineEmits, ref, onMounted } from 'vue';
+import { defineEmits, ref, computed, onMounted } from 'vue';
 import { useStore } from 'vuex';
-
-import GroupCheckboxes from "../shared/GroupCheckboxes.vue";
 
 const store = useStore();
 
@@ -127,66 +135,40 @@ const emits = defineEmits([
 function clickHandler() {
     emits("empty-click");
 }
-
-// REPRESENTS THE LOADING OF POSSIBLE GROUPS TO CHOOSE
-const loadingGroups = ref(false);
-
-// ALL FETCHED GROUPS ARE BEEING SAVE HERE
-const groupArray = ref([]);
-// FETCHES ALL GROUPS TO RENDER AS CHECKBOXES
-onMounted(async () => {
-    loadingGroups.value = true;
-    const groupdata = await store.dispatch("groups/getAllGroups");
-    loadingGroups.value = false;
-    groupArray.value = [...groupdata.groups];
-    console.table(groupArray.value);
+const userRole = computed(() => {
+    return store.getters["auth/userRole"];
 });
+
+const contentLoading = ref(true);
+onMounted(() => {
+    contentLoading.value = false;
+});
+
 // VALUES BIND TO INPUT ELEMENTS WITH V-MODEL
 const createEmail = ref("");
 const createFirstname = ref("");
 const createLastname = ref("");
-const chosenGroups = ref("[]");
+const createRole = ref("");
 // INDICATORS IF AND WHAT INPUT FIELD HAS AN ERROR
 const emailError = ref(false);
 const firstnameError = ref(false);
 const lastnameError = ref(false);
+const roleError = ref(false);
 const doubleError = ref(false);
 const connectionError = ref(false);
 const creationSuccess = ref(false);
 // REFERENCE TO DOM ELEMENTS TO RESET AFTER SUCCESSFULL CREATION
-const studentEmailInput = ref();
-const studentFirstnameInput = ref();
-const studentLastnameInput = ref();
-
-/** CALLBACK FOR CLICKING ON A GROUP CHECKBOX
- *  UPDATES THE chosenGroups JSON STRING BASED ON IF
- *  YOU CHECKED OR UN-CHECKED A GROUP
- * @param {number} id   => ID OF THE CLICKED GROUP */
-function updateChosenGroups(id) {
-    const oldGroups = JSON.parse(chosenGroups.value);
-    if(oldGroups.includes(id))
-    {
-        oldGroups.splice(oldGroups.indexOf(id), 1);
-    } else {
-        oldGroups.push(id);
-    }
-    chosenGroups.value = JSON.stringify(oldGroups);
-    showData();
-}
-//DEV: SHOWING THE COMPLETE FORM
-function showData() {
-    console.clear();
-    console.log("Email:", createEmail.value);
-    console.log("Firstname:", createFirstname.value);
-    console.log("Lastname:", createLastname.value);
-    console.log("chosenGroups:", chosenGroups.value);
-}
+const trainerEmailInput = ref();
+const trainerFirstnameInput = ref();
+const trainerLastnameInput = ref();
+const trainerRoleInput = ref();
 // UN-DISPLAYS POTENTIAL ERRORS
 function resetErrors() {
     emailError.value = false;
     firstnameError.value = false;
     lastnameError.value = false;
     doubleError.value = false;
+    roleError.value = false;
     connectionError.value = false;
     creationSuccess.value = false;
 }
@@ -195,18 +177,19 @@ function resetErrors() {
 // REPRESENTS THAT SUBMITTING IS IN PROGRESS
 const submitInProgress = ref(false);
 /** SUBMITTING PROCESS OF CREATING A STUDENT */
-async function create_student() {
+async function create_trainer() {
     submitInProgress.value = true;
     const valireq =
     {
-        task: "validate-student",
+        task: "validate-trainer",
         email: createEmail.value,
         firstname: createFirstname.value,
         lastname: createLastname.value,
-        chosengroups: chosenGroups.value,
+        role: createRole.value,
     };
     resetErrors();
-    let valiresponse = await store.dispatch("students/post", valireq);
+    let valiresponse = await store.dispatch("trainers/post", valireq);
+    console.table(valiresponse);
     if(!valiresponse.success)
     {
         switch(valiresponse.reason) {
@@ -225,29 +208,33 @@ async function create_student() {
             case "lastname-too-long":
                 lastnameError.value = true;
                 break;
+            case "invalid-role":
+                roleError.value = true;
+                break;
+            case "connection-problems":
+                connectionError.value = true;
+                break;
         }
     }
     else
     {
         const createreq =
         {
-            task: "create-student",
+            task: "create-trainer",
             email: createEmail.value,
             firstname: createFirstname.value,
             lastname: createLastname.value,
-            chosengroups: chosenGroups.value,
+            role: createRole.value,
+            chosengroups: "[]",
         };
-        let createresponse = await store.dispatch("students/post", createreq);
+        let createresponse = await store.dispatch("trainers/post", createreq);
         if(createresponse.success) {
-            document.querySelectorAll("input[type='checkbox']").forEach(box => {
-                box.checked = false;
-            });
             createEmail.value = "";
             createFirstname.value = "";
             createLastname.value = "";
-            chosenGroups.value = "[]";
+            createRole.value = "";
             creationSuccess.value = true;
-            studentEmailInput.value.focus();
+            trainerEmailInput.value.focus();
         } else {
             connectionError.value = true;
         }
@@ -258,9 +245,16 @@ async function create_student() {
 </script>
 
 <style scoped>
-.checkBoxes {
+.selectHolder {
+    min-height: 30px;
+}
+select {
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: transparent;
     border: 2px solid var(--tert);
-    border-radius: 15px;
 }
 .groupWrapper label:last-child {
     font-size: 12px;

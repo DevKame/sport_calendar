@@ -16,6 +16,9 @@
 .bg-neutral {
     background-color: var(--neutral);
 }
+.bg-role-badge {
+    background-color: var(--role-badge);
+}
 
 
 .btn-sec {

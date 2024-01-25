@@ -29,6 +29,8 @@ import EditGroup            from "./comps/dashboard/groups/EditGroup.vue";
 import NewStudent           from "./comps/dashboard/students/NewStudent.vue";
 import EditStudent          from "./comps/dashboard/students/EditStudent.vue";
 
+import NewTrainer           from "./comps/dashboard/trainers/NewTrainer.vue";
+
 // FONTAWESOME
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
@@ -116,6 +118,11 @@ let router = createRouter({
                     path: "trainers",
                     name: "Trainers",
                     component: TheTrainerOverview,
+                },
+                {
+                    path: "newtrainer",
+                    name: "New-Trainer",
+                    component: NewTrainer,
                 },
                 {
                     path: "students",
