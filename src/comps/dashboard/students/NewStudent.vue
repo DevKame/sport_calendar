@@ -126,6 +126,7 @@ import GroupCheckboxes from "../shared/GroupCheckboxes.vue";
 
 const store = useStore();
 
+// HANDLING CLICKS FOR DASHBOARD TO KNOW WHEN TO COLLAPSE NAV
 const emits = defineEmits([
     "empty-click",
 ]);
@@ -133,8 +134,12 @@ function clickHandler() {
     emits("empty-click");
 }
 
+// REPRESENTS THE LOADING OF POSSIBLE GROUPS TO CHOOSE
 const loadingGroups = ref(false);
 
+// ALL FETCHED GROUPS ARE BEEING SAVE HERE
+const groupArray = ref([]);
+// FETCHES ALL GROUPS TO RENDER AS CHECKBOXES
 onMounted(async () => {
     loadingGroups.value = true;
     const groupdata = await store.dispatch("groups/getAllGroups");
@@ -142,24 +147,27 @@ onMounted(async () => {
     groupArray.value = [...groupdata.groups];
     console.table(groupArray.value);
 });
-
+// VALUES BIND TO INPUT ELEMENTS WITH V-MODEL
 const createEmail = ref("");
 const createFirstname = ref("");
 const createLastname = ref("");
 const chosenGroups = ref("[]");
-
+// INDICATORS IF AND WHAT INPUT FIELD HAS AN ERROR
 const emailError = ref(false);
 const firstnameError = ref(false);
 const lastnameError = ref(false);
 const doubleError = ref(false);
 const connectionError = ref(false);
 const creationSuccess = ref(false);
-
+// REFERENCE TO DOM ELEMENTS TO RESET AFTER SUCCESSFULL CREATION
 const studentEmailInput = ref();
 const studentFirstnameInput = ref();
 const studentLastnameInput = ref();
 
-
+/** CALLBACK FOR CLICKING ON A GROUP CHECKBOX
+ *  UPDATES THE chosenGroups JSON STRING BASED ON IF
+ *  YOU CHECKED OR UN-CHECKED A GROUP
+ * @param {number} id   => ID OF THE CLICKED GROUP */
 function updateChosenGroups(id) {
     const oldGroups = JSON.parse(chosenGroups.value);
     if(oldGroups.includes(id))
@@ -171,7 +179,7 @@ function updateChosenGroups(id) {
     chosenGroups.value = JSON.stringify(oldGroups);
     showData();
 }
-
+//DEV: SHOWING THE COMPLETE FORM
 function showData() {
     console.clear();
     console.log("Email:", createEmail.value);
@@ -179,7 +187,7 @@ function showData() {
     console.log("Lastname:", createLastname.value);
     console.log("chosenGroups:", chosenGroups.value);
 }
-
+// UN-DISPLAYS POTENTIAL ERRORS
 function resetErrors() {
     emailError.value = false;
     firstnameError.value = false;
@@ -189,10 +197,10 @@ function resetErrors() {
     creationSuccess.value = false;
 }
 
+
+// REPRESENTS THAT SUBMITTING IS IN PROGRESS
 const submitInProgress = ref(false);
-
-const groupArray = ref([]);
-
+/** SUBMITTING PROCESS OF CREATING A STUDENT */
 async function create_student() {
     submitInProgress.value = true;
     const valireq =

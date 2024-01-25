@@ -49,23 +49,25 @@ import { useStore } from 'vuex';
 
 const store = useStore();
 
+// HANDLING CLICKS FOR DASHBOARD TO KNOW WHEN TO COLLAPSE NAV
 const emits = defineEmits([
     "empty-click",
 ]);
-
 function clickHandler() {
     emits("empty-click");
 }
 
+// VALUES BIND TO INPUT ELEMENTS WITH V-MODEL
 const createName = ref("");
-
+// INDICATORS IF AND WHAT INPUT FIELD HAS AN ERROR
 const nameError = ref(false);
 const doubleError = ref(false);
 const connectionError = ref(false);
 const creationSuccess = ref(false);
-
+// REFERENCE TO DOM ELEMENTS TO RESET AFTER SUCCESSFULL CREATION
 const groupNameInput = ref();
 
+// UN-DISPLAYS POTENTIAL ERRORS
 function resetErrors() {
     nameError.value = false;
     doubleError.value = false;
@@ -73,8 +75,9 @@ function resetErrors() {
     creationSuccess.value = false;
 }
 
+// REPRESENTS THAT SUBMITTING IS IN PROGRESS
 const submitInProgress = ref(false);
-
+/** SUBMITTING PROCESS OF CREATING A GROUP */
 async function create_group() {
     submitInProgress.value = true;
     const valireq =

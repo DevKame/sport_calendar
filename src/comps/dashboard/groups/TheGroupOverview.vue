@@ -42,12 +42,7 @@ import GroupItem from "./GroupItem.vue";
 const router = useRouter();
 const store = useStore();
 
-const noGroupsAvailable = ref(false);
-const loadingContent = ref(false);
-
-const groupArray = ref([]);
-
-
+// HANDLING CLICKS FOR DASHBOARD TO KNOW WHEN TO COLLAPSE NAV
 let emits = defineEmits([
     "empty-click",
 ]);
@@ -55,6 +50,15 @@ function overviewClickHandler() {
     emits("empty-click");
 }
 
+// VALUES REPRESENT IF NO GROUP IS EXISTENT AND
+// IF THE CONTENT IS CURRENTLY LOADING
+const noGroupsAvailable = ref(false);
+const loadingContent = ref(false);
+
+// FETCHED GROUPS ARE SAVED WITHIN HERE
+const groupArray = ref([]);
+
+// INITIAL FETCHING OF GROUPS TO BE ABLE TO DISPLAY THEM
 onMounted(async () => {
     loadingContent.value = true;
     const groupdata = await store.dispatch("groups/getAllGroups");
@@ -67,12 +71,20 @@ onMounted(async () => {
         groupArray.value = [...groupdata.groups];
     }
 });
-
+/** SETS STATE TO NAME AND IF OF TO-BE-EDITED GROUP AND SWITCHES
+ *  TO Edit-Group ROUTE TO ENABLE THE ACTUAL EDITING
+ * @param {number} id   => ID OF THE TO-BE-EDITED GROUP 
+ * @param {String} name => NAME OF THE TO-BE-EDITED GROUP
+ */
 function editGroup(id, name) {
     store.commit("groups/setGroupDataForEdit", {name: name, id: id});
     router.push({name: "Edit-Group"});
 }
 //TODO: When deleting group, update all users groups
+/** INVOKES THE ACTION TO DELETE A GROUP. USES INDEX AFTER
+ *  SUCCESS TO DELETE THE GROUP OUT OF groupArray
+ * @param {number} index    => INDEX OF THIS GROUP WITHIN groupArray 
+ * @param {number} id       => ID OF THE TO-BE-DELETED GROUP */
 async function deleteGroup(index, id) {
     const deletereq =
     {

@@ -45,14 +45,7 @@ import StudentItem from "./StudentItem.vue";
 const router = useRouter();
 const store = useStore();
 
-const noStudentsAvailable = ref(false);
-const loadingContent = ref(false);
-
-const groupArray = ref([]);
-const studentArray = ref([]);
-
-
-
+// HANDLING CLICKS FOR DASHBOARD TO KNOW WHEN TO COLLAPSE NAV
 let emits = defineEmits([
     "empty-click",
 ]);
@@ -60,6 +53,16 @@ function overviewClickHandler() {
     emits("empty-click");
 }
 
+// VALUES REPRESENT IF NO STUDENT IS EXISTENT AND
+// IF THE CONTENT IS CURRENTLY LOADING
+const noStudentsAvailable = ref(false);
+const loadingContent = ref(false);
+
+// FETCHED GROUPS AND STUDENTS ARE SAVED WITHIN HERE
+const groupArray = ref([]);
+const studentArray = ref([]);
+
+// INITIAL FETCHING OF GROUPS AND STUDENTS TO BE ABLE TO DISPLAY THEM
 onMounted(async () => {
     loadingContent.value = true;
 
@@ -67,7 +70,6 @@ onMounted(async () => {
     const groupdata = await store.dispatch("groups/getAllGroups");
     loadingContent.value = false;
     groupArray.value = [...groupdata.groups];
-    console.table(groupArray.value);
 
 
     const studentdata = await store.dispatch("students/getAllStudents");
@@ -80,7 +82,11 @@ onMounted(async () => {
         studentArray.value = [...studentdata.students];
     }
 });
-
+/** APPLIES THE ACTUAL GROUP NAMES OF ALL GROUPS THE
+ *  STUDENT HAS TO HIS LISTITEM
+ * @param {number} id           => ID OF THE STUDENT
+ * returns {Array} namedGroups  => ACTUAL GROUPNAMES THAT FIT TO THE STUDENT
+ */
 function filteredGroups(id) {
     let student = studentArray.value.find(curr => curr.id === id);
     const studentGroups = JSON.parse(student.groups);

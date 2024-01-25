@@ -42,7 +42,7 @@ import { useStore } from 'vuex';
 
 const store = useStore();
 
-
+// DISPLAYED VALUES ARE PROVIDED FROM <TheStudentOverview>
 let props = defineProps([
     "email",
     "firstname",
@@ -53,8 +53,15 @@ let emits = defineEmits([
     "delete-item",
     "edit-item",
 ]);
-
+// INDICATES IF THE EDIT MENU IS ON OR OFF
 const menuOn = ref(false);
+// TOGGLES THE VISIBILITY OF THE EDIT MENU
+function toggleMenu() {
+    menuOn.value = !menuOn.value;
+    if(!menuOn.value) {
+        resetEditGroup();
+    }
+}
 
 function deleteItem() {
     resetEditGroup();
@@ -62,12 +69,6 @@ function deleteItem() {
 }
 function editItem() {
     emits("edit-item");
-}
-function toggleMenu() {
-    menuOn.value = !menuOn.value;
-    if(!menuOn.value) {
-        resetEditGroup();
-    }
 }
 function resetEditGroup() {
     store.commit["groups/resetGroupDataForEdit"];

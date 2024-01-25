@@ -46,12 +46,10 @@
 <script setup>
 import { defineEmits, ref, onMounted } from 'vue';
 import { useStore } from 'vuex';
-onMounted(() => {
-    editName.value = store.getters["groups/editGroupname"];
-    editID.value = store.getters["groups/editGroupID"];
-});
+
 const store = useStore();
 
+// HANDLING CLICKS FOR DASHBOARD TO KNOW WHEN TO COLLAPSE NAV
 const emits = defineEmits([
     "empty-click",
 ]);
@@ -59,26 +57,33 @@ const emits = defineEmits([
 function clickHandler() {
     emits("empty-click");
 }
-
+// VALUES THAT TELL THE BACKEND WHAT TO EDIT
 const editName = ref("");
 const editID = ref(0);
+// SETS THE VALUES OUT OF STATE
+onMounted(() => {
+    editName.value = store.getters["groups/editGroupname"];
+    editID.value = store.getters["groups/editGroupID"];
+});
 
+// INDICATORS IF AND WHAT INPUT FIELD HAS AN ERROR
 const nameError = ref(false);
 const doubleError = ref(false);
 const connectionError = ref(false);
 const editionSuccess = ref(false);
 
+// REFERENCE TO DOM ELEMENTS TO RESET AFTER SUCCESSFULL CREATION
 const groupNameInput = ref();
-
+// UN-DISPLAYS POTENTIAL ERRORS
 function resetErrors() {
     nameError.value = false;
     doubleError.value = false;
     connectionError.value = false;
     editionSuccess.value = false;
 }
-
+// REPRESENTS THAT SUBMITTING IS IN PROGRESS
 const submitInProgress = ref(false);
-
+/** SUBMITTING PROCESS OF EDITING THE GROUP */
 async function edit_group() {
     submitInProgress.value = true;
     const valireq =

@@ -27,17 +27,24 @@ import { useStore } from 'vuex';
 
 const store = useStore();
 
-
-let props = defineProps([
-    "name",
-]);
 let emits = defineEmits([
     "delete-item",
     "edit-item",
 ]);
+// VALUE TO BE DISPLAYED
+let props = defineProps([
+    "name",
+]);
 
+// INDICATES IF THE EDIT MENU IS ON OR OFF
 const menuOn = ref(false);
-
+// TOGGLES THE VISIBILITY OF THE EDIT MENU
+function toggleMenu() {
+    menuOn.value = !menuOn.value;
+    if(!menuOn.value) {
+        resetEditGroup();
+    }
+}
 function deleteItem() {
     resetEditGroup();
     emits("delete-item");
@@ -45,12 +52,7 @@ function deleteItem() {
 function editItem() {
     emits("edit-item");
 }
-function toggleMenu() {
-    menuOn.value = !menuOn.value;
-    if(!menuOn.value) {
-        resetEditGroup();
-    }
-}
+// SETS THE TO-BE-EDITED VALUES FOR THE GROUP WITHIN THE STATE TO null
 function resetEditGroup() {
     store.commit["groups/resetGroupDataForEdit"];
 }
