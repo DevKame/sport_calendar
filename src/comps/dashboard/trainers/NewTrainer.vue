@@ -87,7 +87,7 @@
                 ref="trainerRoleInput"
                 class="position-absolute"
                 value="TRAINER">
-                    <option value="TRAINER" selected>Trainer</option>
+                    <option value="TRAINER">Trainer</option>
                     <option v-if="userRole === 'ADMIN'" value="SENIOR-TRAINER">Senior trainer</option>
                     <option v-if="userRole === 'ADMIN'" value="ADMIN">Admin</option>
                 </select>
@@ -148,7 +148,7 @@ onMounted(() => {
 const createEmail = ref("");
 const createFirstname = ref("");
 const createLastname = ref("");
-const createRole = ref("");
+const createRole = ref("TRAINER");
 // INDICATORS IF AND WHAT INPUT FIELD HAS AN ERROR
 const emailError = ref(false);
 const firstnameError = ref(false);
