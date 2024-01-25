@@ -17,11 +17,29 @@ header("Content-Type: application/json");
 
 require("../database/db.php");
 
+/** TRAINERS CAN HAVE DIFFERENT ROLES:
+ *  TRAINER
+ *          creates students
+ *          creates Events
+ *          creates groups
+ *          creates Trainings
+ *          signs for training an event
+ *          editing event info
+ *  SENIOR-TRAINER
+ *          (all of the above, plus:)
+ *          edits students
+ *          edits Events
+ *          edits groups
+ *          edits Trainings
+ *  ADMIN
+ *          (everything)
+ */
+
 //################################################# HANDLES GET REQUESTS:
 // RETURNS Boolean INDICATING IF A USER IS LOGGED IN
 if($_SERVER["REQUEST_METHOD"] === "GET")
 {
-    $students = getAllStudents();
+    $students = getAllTrainers();
     if(is_string($students)) {
         $res["reason"] = "connection-problems";
     }

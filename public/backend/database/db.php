@@ -328,7 +328,11 @@ function getAllGroups() {
 
 }
 ////////////////////////////////////    GROUP QUERIES  [end]  //////////////////////////////////////
-
+/** UPDATES THE GROUPS ENTRY OF A USER BASED ON HIS ID WITH
+ *  A JSON STRING CONTAINING THE NEW GROUP STRING
+ *  returns
+ *  {true/false | Exeption->getMessage()}     => Bool | String
+*/
 function updateUserGroups($id, $groups) {
     $con = connect();
     $query =

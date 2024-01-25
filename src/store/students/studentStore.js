@@ -8,7 +8,7 @@ export default {
     namespaced: true,
     state() {
         return {
-            // ENDPOINT FOR WORKING WITH GROUPS-API
+            // ENDPOINT FOR WORKING WITH STUDENT-API
             API_STUDENTS: "http://localhost/Eskamedin/sport_calendar/vue_app/public/backend/students/students.php",
             // FOR EDITING A STUDENT HIS DATA ARE PREPARED HERE
             studentID_edit: null,
