@@ -4,6 +4,35 @@
 
 
 ////////////////////////////////////    TRAINER QUERIES  [start]  //////////////////////////////////////
+/** DELETES A TRAINER USING HIS ID
+ *  returns
+ * {true | Exeption->getMessage()} => Bool | String */
+function deleteTrainer($id) {
+    $con = connect();
+    $query =
+    "DELETE FROM sport_cal_user
+    WHERE id = ?";
+    try {
+        $stmt = mysqli_prepare($con, $query);
+        mysqli_stmt_bind_param($stmt, "i", $id);
+        mysqli_stmt_execute($stmt);
+        $affected = mysqli_stmt_affected_rows($stmt);
+        mysqli_stmt_free_result($stmt);
+        mysqli_stmt_close($stmt);
+        mysqli_close($con);
+        if($affected === 0)
+        {
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+    catch(Exeption $e) {
+        mysqli_close($con);
+        return $e->getMessage();
+    }
+}
 /** CREATES A NEW TRAINER
  *  returns
  * {true | Exeption->getMessage()} => Bool | String */

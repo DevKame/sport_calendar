@@ -28,7 +28,7 @@
                     :lastname="trainer.lastname"
                     :email="trainer.email"
                     :role="trainer.role"
-                    @delete-item="deleteStudent(idx, student.id)"
+                    @delete-item="deleteTrainer(idx, trainer.id)"
                     @edit-item="editStudent(student.id, student.email, student.firstname, student.lastname, filteredGroups(student.id))"></trainer-item>
                 </transition-group>
             </div>
@@ -85,19 +85,20 @@ function editStudent(id, email, fn, ln, groups) {
     router.push({name: "Edit-Student"});
 }
 
-async function deleteStudent(index, id) {
+async function deleteTrainer(index, id) {
     const deletereq =
     {
-        task: "delete-student",
+        task: "delete-trainer",
         id: id,
     };
-    const deletedata = await store.dispatch("students/post", deletereq);
+    const deletedata = await store.dispatch("trainers/post", deletereq);
     if(deletedata.success) {
         trainerArray.value.splice(index, 1);
         if(trainerArray.value.length === 0)
         {
             noTrainersAvailable.value = true;
         }
+        //TODO: needs to update all trainings where this trainer was signed in
     }
     else {
         router.replace({name:"Error"});

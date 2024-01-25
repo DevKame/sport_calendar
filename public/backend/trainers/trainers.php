@@ -132,9 +132,9 @@ else if($_SERVER["REQUEST_METHOD"] === "POST")
             }
             $res["success"] = true;
             break;
-        //################### DELETES A STUDENT BASED ON ITS ID:
-        case "delete-student":
-            $result = deleteStudent($req->id);
+        //################### DELETES A TRAINER USING HIS ID:
+        case "delete-trainer":
+            $result = deleteTrainer($req->id);
             if(is_bool($result)) {
                 if($result) {
                     $res["success"] = true;
