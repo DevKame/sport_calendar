@@ -17,7 +17,7 @@
 
             <ov-load v-if="loadingContent" class="mt-3"></ov-load>
             <transition name="no-content">
-                <h6 class="noContentHeadline text-center mt-3" v-if="noTrainersAvailable">There are no students existent. Click "New Student to create one"</h6>
+                <h6 class="noContentHeadline text-center mt-3" v-if="noTrainersAvailable">There are no trainers existent. Click "New Trainer to create one"</h6>
             </transition>
             <div v-if="!noTrainersAvailable" class="listHolder w-100">
                 <transition-group tag="ul" name="content-list" class="trainerList p-0" mode="out-in">
