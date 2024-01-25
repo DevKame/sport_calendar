@@ -78,20 +78,18 @@
             <div class="d-flex justify-content-between align-items-center">
                 <label for="createRole">Role</label>
             </div>
-            <div class="selectHolder border border-success w-100 position-relative">
-                <select
-                @click="resetErrors"
-                id="createRole"
-                name="createRole"
-                v-model.trim="createRole"
-                ref="trainerRoleInput"
-                class="position-absolute"
-                value="TRAINER">
-                    <option value="TRAINER">Trainer</option>
-                    <option v-if="userRole === 'ADMIN'" value="SENIOR-TRAINER">Senior trainer</option>
-                    <option v-if="userRole === 'ADMIN'" value="ADMIN">Admin</option>
-                </select>
-            </div>
+
+            <select
+            @click="resetErrors"
+            id="createRole"
+            name="createRole"
+            v-model.trim="createRole"
+            ref="trainerRoleInput"
+            value="TRAINER">
+                <option value="TRAINER">Trainer</option>
+                <option v-if="userRole === 'ADMIN'" value="SENIOR-TRAINER">Senior trainer</option>
+                <option v-if="userRole === 'ADMIN'" value="ADMIN">Admin</option>
+            </select>
             
             <div class="alertHolder my-2">
                 <transition name="error" mode="out-in">
@@ -245,17 +243,9 @@ async function create_trainer() {
 </script>
 
 <style scoped>
-.selectHolder {
+/* .selectHolder {
     min-height: 30px;
-}
-select {
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: transparent;
-    border: 2px solid var(--tert);
-}
+} */
 .groupWrapper label:last-child {
     font-size: 12px;
 }

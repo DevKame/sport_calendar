@@ -18,6 +18,21 @@ input[type="mail"]:focus,
 input[type="password"]:focus {
     background-color: var(--sec);
 }
+select {
+    outline: none;
+    width: 100%;
+    min-height: 30px;
+    border: 2px solid var(--tert);
+    border-radius: 5px;
+    background-color: rgba(0,0,0,0);
+    transition: all .3s ease;
+}
+select:focus {
+    background-color: var(--sec);
+}
+option {
+    background-color: var(--sec);
+}
 
 
 a {
