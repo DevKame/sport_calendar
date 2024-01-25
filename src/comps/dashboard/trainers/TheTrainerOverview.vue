@@ -92,7 +92,7 @@ onMounted(async () => {
  * @param {number} id   => ID OF THE TO-BE-EDITED Trainer 
  * @param {String} name => NAME OF THE TO-BE-EDITED Trainer */
 function editTrainer(id, email, fn, ln, role) {
-    if(userRole.value !== "ADMIN" && userRole.value !== "SENIOR-TRAINER") {
+    if((userRole.value !== "ADMIN" && userRole.value !== "SENIOR-TRAINER") || id === store.getters["auth/userID"]) {
         accessInfoActive.value = true;
     }
     else {
@@ -104,7 +104,7 @@ function editTrainer(id, email, fn, ln, role) {
  * @param {number} index    => ON WHAT IDX IS THE LIST ELEMENT
  * @param {number} id       => ID OF THE TRAINER */
 async function deleteTrainer(index, id) {
-    if(userRole.value !== "ADMIN") {
+    if(userRole.value !== "ADMIN"  || id === store.getters["auth/userID"]) {
         accessInfoActive.value = true;
     }
     else

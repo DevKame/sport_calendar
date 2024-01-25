@@ -13,7 +13,7 @@
 
             <template #body>
                 <div class="w-100 h-100 px-2 pt-2 bg-prim d-flex flex-column justify-content-start align-items-start">
-                    <p>Sorry, based on your role you dont have access to this function.</p><hr>
+                    <p>Sorry, either you try to edit/delete your own account or based on your role you dont have access to this function.</p>
                     <p>If your role is:</p>
                     <p class="fw-bold">TRAINER:</p>
                     <p>You can only create groups, students, etc aswell as editing the information of
