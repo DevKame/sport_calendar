@@ -38,6 +38,47 @@ else if($_SERVER["REQUEST_METHOD"] === "POST")
     switch($req->task)
     {
         //################### RENAMES A GROUP BASED ON ITS ID:
+        case "update-user-groups":
+            $allUsers = getAllUserGroups();
+            if(is_string($allUsers))
+            {
+                $res["reason"] = "connection-problems";
+            } else {
+
+                $failedUpdates = 0;
+                foreach($allUsers as $user)
+                {
+                    $groups = json_decode($user["groups"]);
+                    $idx = array_search($req->id, $groups);
+                    if(is_int($idx))
+                    {
+                        unset($groups[$idx]);
+                        $groups = array_values($groups);
+                        $newJSONGroupString = json_encode($groups);
+                        $updateResult = updateUserGroups($user["id"], $newJSONGroupString);
+                        if(!is_bool($updateResult))
+                        {
+                            $failedUpdates++;
+                            break;
+                        }
+                        else {
+                            if(!$updateResult)
+                            {
+                                $failedUpdates++;
+                            }
+                        }
+                        
+                    }
+                }
+                if($failedUpdates === 0)
+                {
+                    $res["success"] = true;
+                } else {
+                    $res["reason"] = "connection-problems";
+                }
+            }
+            break;
+        //################### RENAMES A GROUP BASED ON ITS ID:
         case "edit-group":
             $affectedRows = editGroup($req->id, $req->name);
             if(is_int($affectedRows))

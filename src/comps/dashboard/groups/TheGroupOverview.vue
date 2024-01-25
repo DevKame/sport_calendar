@@ -97,6 +97,16 @@ async function deleteGroup(index, id) {
         {
             noGroupsAvailable.value = true;
         }
+        const updateuserreq =
+        {
+            task: "update-user-groups",
+            id: id,
+        };
+        const updatedata = await store.dispatch("groups/post", updateuserreq);
+        if(!updatedata.success)
+        {
+            router.push({name: "Error"});
+        }
     }
     else {
         router.replace({name:"Error"});

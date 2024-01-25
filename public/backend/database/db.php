@@ -1,10 +1,6 @@
 <?php
 
 
-$host =     "localhost";
-$user =     "Kamedin";
-$pw =       "12345";
-$db =       "kame_apps";
 
 
 ////////////////////////////////////    STUDENT QUERIES  [start]  //////////////////////////////////////
@@ -332,6 +328,69 @@ function getAllGroups() {
 
 }
 ////////////////////////////////////    GROUP QUERIES  [end]  //////////////////////////////////////
+
+function updateUserGroups($id, $groups) {
+    $con = connect();
+    $query =
+    "UPDATE sport_cal_user
+    SET
+    groups = ?
+    WHERE id = ?";
+    try {
+        $stmt = mysqli_prepare($con, $query);
+        mysqli_stmt_bind_param($stmt, "si", $groups, $id);
+        mysqli_stmt_execute($stmt);
+        $affected = mysqli_stmt_affected_rows($stmt);
+        mysqli_stmt_close($stmt);
+        mysqli_close($con);
+        return $affected === 0 ? false : true;
+    }
+    catch(Exeption $e) {
+        mysqli_close($con);
+        return $e->getMessage();
+    }
+}
+/** FETCHES THE ID AND GROUPS OF ALL USERS:
+ *  returns
+ * {$groups | Exeption->getMessage()} => Array | String */
+function getAllUserGroups() {
+    $con = connect();
+    $users = [];
+    $query =
+    "SELECT
+    id,
+    groups
+    FROM sport_cal_user";
+    $stmt = mysqli_prepare($con, $query);
+    try {
+        mysqli_execute($stmt);
+        mysqli_stmt_bind_result($stmt, $id, $groups);
+        mysqli_stmt_store_result($stmt);
+        $totalUsers = mysqli_stmt_num_rows($stmt);
+        if($totalUsers === 0) {
+            mysqli_stmt_free_result($stmt);
+            mysqli_stmt_close($stmt);
+        }
+        else {
+            while(mysqli_stmt_fetch($stmt)) {
+                $users[] =
+                [
+                    "id" => $id,
+                    "groups" => $groups,
+                ];
+            }
+            mysqli_stmt_free_result($stmt);
+            mysqli_stmt_close($stmt);
+        }
+        mysqli_close($con);
+        return $users;
+    }
+    catch(Exeption $e) {
+        mysqli_close($con);
+        return $e->getMessage();
+    }
+
+}
 /** USES A USER-ID TO FETCH THIS USERS DATA
  *  args:
  *  {$id}                               => int
@@ -475,6 +534,9 @@ function doesEmailExist($email) {
 
 }
 function connect() {
-    global $host, $user, $pw, $db;
+    $host =     "localhost";
+    $user =     "Kamedin";
+    $pw =       "12345";
+    $db =       "kame_apps";
     return mysqli_connect($host, $user, $pw, $db);
 }
