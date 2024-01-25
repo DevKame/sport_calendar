@@ -29,7 +29,7 @@
                     :email="trainer.email"
                     :role="trainer.role"
                     @delete-item="deleteTrainer(idx, trainer.id)"
-                    @edit-item="editStudent(student.id, student.email, student.firstname, student.lastname, filteredGroups(student.id))"></trainer-item>
+                    @edit-item="editTrainer(trainer.id, trainer.email, trainer.firstname, trainer.lastname, trainer.role)"></trainer-item>
                 </transition-group>
             </div>
     </div>
@@ -76,13 +76,13 @@ onMounted(async () => {
     }
 });
 
-/** PREPARES STATE WITH NAME AND ID OF TO-BE-EDITED STUDENT AND SWITCHES
- *  TO Edit-Student ROUTE TO ENABLE THE ACTUAL EDITING
- * @param {number} id   => ID OF THE TO-BE-EDITED STUDENT 
- * @param {String} name => NAME OF THE TO-BE-EDITED STUDENT */
-function editStudent(id, email, fn, ln, groups) {
-    store.commit("students/prepareStudentForEdit", {email: email, id: id, firstname: fn, lastname: ln, groups: groups});
-    router.push({name: "Edit-Student"});
+/** PREPARES STATE WITH DATA OF TO-BE-EDITED TRAINER AND SWITCHES
+ *  TO Edit-Trainer ROUTE TO ENABLE THE ACTUAL EDITING
+ * @param {number} id   => ID OF THE TO-BE-EDITED Trainer 
+ * @param {String} name => NAME OF THE TO-BE-EDITED Trainer */
+function editTrainer(id, email, fn, ln, role) {
+    store.commit("trainers/prepareTrainerForEdit", {email: email, id: id, firstname: fn, lastname: ln, role});
+    router.push({name: "Edit-Trainer"});
 }
 
 async function deleteTrainer(index, id) {

@@ -4,6 +4,34 @@
 
 
 ////////////////////////////////////    TRAINER QUERIES  [start]  //////////////////////////////////////
+/** CHANGES A TRAINER
+ *  returns
+ * {$affected | Exeption->getMessage()} => int | String */
+function editTrainer($id, $email, $fn, $ln, $role, $groups) {
+    $con = connect();
+    $query =
+    "UPDATE sport_cal_user
+    SET
+    email = ?,
+    firstname = ?,
+    lastname = ?,
+    role = ?,
+    groups = ?
+    WHERE id = ?";
+    try {
+        $stmt = mysqli_prepare($con, $query);
+        mysqli_stmt_bind_param($stmt, "sssssi", $email, $fn, $ln, $role, $groups, $id);
+        mysqli_stmt_execute($stmt);
+        $affected = mysqli_stmt_affected_rows($stmt);
+        mysqli_stmt_close($stmt);
+        mysqli_close($con);
+        return $affected;
+    }
+    catch(Exeption $e) {
+        mysqli_close($con);
+        return $e->getMessage();
+    }
+}
 /** DELETES A TRAINER USING HIS ID
  *  returns
  * {true | Exeption->getMessage()} => Bool | String */

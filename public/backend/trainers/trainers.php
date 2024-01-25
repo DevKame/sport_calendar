@@ -60,8 +60,8 @@ else if($_SERVER["REQUEST_METHOD"] === "POST")
     switch($req->task)
     {
         //################### CHANGES DATA OF A STUDENT:
-        case "edit-student":
-            $affectedRows = editStudent($req->id, $req->email,$req->firstname, $req->lastname, $req->chosengroups);
+        case "edit-trainer":
+            $affectedRows = editTrainer($req->id, $req->email,$req->firstname, $req->lastname, $req->role, $req->chosengroups);
             if(is_int($affectedRows))
             {
                 if($affectedRows === 1)
@@ -75,8 +75,8 @@ else if($_SERVER["REQUEST_METHOD"] === "POST")
                 $res["reason"] = "connection-problems";
             }
             break;
-        //################### VALIDATES DATA USED FOR CAHNGING A STUDENT:
-        case "validate-student-edit":
+        //################### VALIDATES DATA USED FOR CHANGING A TRAINER:
+        case "validate-trainer-edit":
             // VALIDATION OF EMAIL
             $trimmedEmail = trim($req->email);
             if($trimmedEmail === "")
