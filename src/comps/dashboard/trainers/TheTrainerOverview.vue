@@ -100,7 +100,9 @@ function editTrainer(id, email, fn, ln, role) {
         router.push({name: "Edit-Trainer"});
     }
 }
-
+/** DELETES THE CHOSEN TRAINER USING HIS ID AND REMOVES THE CORRESPONDING DOM
+ * @param {number} index    => ON WHAT IDX IS THE LIST ELEMENT
+ * @param {number} id       => ID OF THE TRAINER */
 async function deleteTrainer(index, id) {
     if(userRole.value !== "ADMIN") {
         accessInfoActive.value = true;
@@ -119,7 +121,7 @@ async function deleteTrainer(index, id) {
             {
                 noTrainersAvailable.value = true;
             }
-            //TODO: needs to update all trainings where this trainer was signed in
+            //TODO: needs to update all events where this trainer was signed in
         }
         else {
             router.replace({name:"Error"});

@@ -144,7 +144,6 @@ const loadingRoute = ref(true);
 let preparedTrainer = reactive({});
 onMounted(async () => {
     preparedTrainer = {...store.getters["trainers/preparedTrainerForEdit"]};
-    console.table(preparedTrainer);
     editEmail.value = preparedTrainer.email;
     editFirstname.value = preparedTrainer.firstname;
     editLastname.value = preparedTrainer.lastname;
@@ -183,7 +182,7 @@ function resetErrors() {
 }
 
 
-// REPRESENTS THAT SUBMITTING IS IN PROGRESS
+// INDICATES THAT SUBMITTING IS IN PROGRESS
 const submitInProgress = ref(false);
 /** SUBMITTING PROCESS OF CREATING A STUDENT */
 async function change_trainer() {
@@ -199,7 +198,6 @@ async function change_trainer() {
     };
     resetErrors();
     let valiresponse = await store.dispatch("trainers/post", valireq);
-    console.table(valiresponse);
     if(!valiresponse.success)
     {
         switch(valiresponse.reason) {

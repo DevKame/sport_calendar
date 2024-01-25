@@ -96,8 +96,7 @@ onMounted(async () => {
 /** APPLIES THE ACTUAL GROUP NAMES OF ALL GROUPS THE
  *  STUDENT HAS TO HIS LISTITEM
  * @param {number} id           => ID OF THE STUDENT
- * returns {Array} namedGroups  => ACTUAL GROUPNAMES THAT FIT TO THE STUDENT
- */
+ * returns {Array} namedGroups  => ACTUAL GROUPNAMES THAT FIT TO THE STUDENT */
 function filteredGroups(id) {
     let student = studentArray.value.find(curr => curr.id === id);
     const studentGroups = JSON.parse(student.groups);
@@ -126,6 +125,9 @@ function editStudent(id, email, fn, ln, groups) {
     }
 }
 
+/** DELETES THE CHOSEN STUDENT USING HIS ID AND REMOVES THE CORRESPONDING DOM
+ * @param {number} index    => ON WHAT IDX IS THE LIST ELEMENT
+ * @param {number} id       => ID OF THE STUDENT */
 async function deleteStudent(index, id) {
     if(userRole.value !== "ADMIN") {
         accessInfoActive.value = true;

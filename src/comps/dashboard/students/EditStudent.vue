@@ -137,7 +137,6 @@ const groupArray = ref([]);
 // MAKES SURE TO ALREADY SELECT THE BOXES THAT FIT
 // THE STUDENTS GROUPS
 onMounted(async () => {
-    console.clear();
     preparedStudent = {...store.getters["students/preparedStudentForEdit"]};
     editEmail.value = preparedStudent.email;
     editFirstname.value = preparedStudent.firstname;
@@ -200,15 +199,6 @@ function updateChosenGroups(id) {
         oldGroups.push(id);
     }
     chosenGroups.value = JSON.stringify(oldGroups);
-    showData();
-}
-//DEV: SHOWING THE COMPLETE FORM
-function showData() {
-    console.clear();
-    console.log("Email:", editEmail.value);
-    console.log("Firstname:", editFirstname.value);
-    console.log("Lastname:", editLastname.value);
-    console.log("chosenGroups:", chosenGroups.value);
 }
 // UN-DISPLAYS POTENTIAL ERRORS
 function resetErrors() {
@@ -221,8 +211,9 @@ function resetErrors() {
 }
 
 
-// REPRESENTS THAT SUBMITTING IS IN PROGRESS
+// INDICATES THAT SUBMITTING IS IN PROGRESS
 const submitInProgress = ref(false);
+
 /** SUBMITTING PROCESS OF CREATING A STUDENT */
 async function change_student() {
     submitInProgress.value = true;
@@ -237,7 +228,6 @@ async function change_student() {
     };
     resetErrors();
     let valiresponse = await store.dispatch("students/post", valireq);
-    console.table(valiresponse);
     if(!valiresponse.success)
     {
         switch(valiresponse.reason) {

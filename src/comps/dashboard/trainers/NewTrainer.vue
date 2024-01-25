@@ -172,8 +172,9 @@ function resetErrors() {
 }
 
 
-// REPRESENTS THAT SUBMITTING IS IN PROGRESS
+// INDICATES THAT SUBMITTING IS IN PROGRESS
 const submitInProgress = ref(false);
+
 /** SUBMITTING PROCESS OF CREATING A STUDENT */
 async function create_trainer() {
     submitInProgress.value = true;

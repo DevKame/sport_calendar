@@ -96,10 +96,9 @@ function editGroup(id, name) {
     }
 }
 //TODO: When deleting group, update TRAININGS and EVENTS too
-/** INVOKES THE ACTION TO DELETE A GROUP. USES INDEX AFTER
- *  SUCCESS TO DELETE THE GROUP OUT OF groupArray
- * @param {number} index    => INDEX OF THIS GROUP WITHIN groupArray 
- * @param {number} id       => ID OF THE TO-BE-DELETED GROUP */
+/** DELETES THE CHOSEN GROUP USING ITS ID AND REMOVES THE CORRESPONDING DOM
+ * @param {number} index    => ON WHAT IDX IS THE LIST ELEMENT
+ * @param {number} id       => ID OF THE GROUP */
 async function deleteGroup(index, id) {
     if(userRole.value !== "ADMIN") {
         accessInfoActive.value = true;
