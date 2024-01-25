@@ -10,7 +10,7 @@
                 <h6 class="m-0 mb-1">Welcome, <span>{{ userFirstname }}</span> <span>{{ userLastname }}</span></h6>
                 <div class="roleHolder d-flex justify-content-start align-items-center w-100">
                     <p class="m-0">Role:</p>
-                    <div class="badge text-black ms-2">{{ userRole }}</div>
+                    <div class="badge text-black ms-2 d-flex justify-content-center align-items-center">{{ userRole }}</div>
                 </div>
             </div>
 

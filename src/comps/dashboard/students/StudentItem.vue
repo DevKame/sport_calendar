@@ -89,9 +89,11 @@ hr {
     height: 2px;
 }
 .delete-option {
+    z-index: 10;
     left: 450%;
 }
 .edit-option {
+    z-index: 10;
     left: 200%;
 }
 .edit-option,
