@@ -32,7 +32,6 @@ require("../database/db.php");
  *          edits Events
  *          edits groups
  *          edits Trainings
- *          delete trainigns
  *          edits Trainers
  *  ADMIN
  *          (everything)
@@ -44,13 +43,13 @@ require("../database/db.php");
 // RETURNS Boolean INDICATING IF A USER IS LOGGED IN
 if($_SERVER["REQUEST_METHOD"] === "GET")
 {
-    $trainers = getAllTrainers();
-    if(is_string($trainers)) {
+    $trainings = getAllTrainings();
+    if(is_string($trainings)) {
         $res["reason"] = "connection-problems";
     }
     else {
         $res["success"] = true;
-        $res["trainers"] = $trainers;
+        $res["trainings"] = $trainings;
     }
 }
 //################################################# HANDLES POST REQUESTS
@@ -133,9 +132,9 @@ else if($_SERVER["REQUEST_METHOD"] === "POST")
             }
             $res["success"] = true;
             break;
-        //################### DELETES A TRAINER USING HIS ID:
-        case "delete-trainer":
-            $result = deleteTrainer($req->id);
+        //################### DELETES A TRAINING USING ITS ID:
+        case "delete-training":
+            $result = deleteTraining($req->id);
             if(is_bool($result)) {
                 if($result) {
                     $res["success"] = true;
@@ -146,73 +145,42 @@ else if($_SERVER["REQUEST_METHOD"] === "POST")
                 $res["reason"] = "connection-problems";
             }
             break;
-        //################### CREATES A NEW TRAINER:
-        case "create-trainer":
-            if(!is_string(createTrainer($req->email, $req->firstname, $req->lastname, $req->role, $req->chosengroups)))
+        //################### CREATES A NEW TRAINING:
+        case "create-training":
+            if(!is_string(createTraining($req->name, $req->chosengroups)))
             {
                 $res["success"] = true;
             } else {
                 $res["reason"] = "connection-problems";
             }
             break;
-        //################### VALIDATES DATA FOR CREATING A NEW TRAINER:
-        case "validate-trainer":
-            // VALIDATION OF EMAIL
-            $trimmedEmail = trim($req->email);
-            if($trimmedEmail === "")
-            {
-                $res["reason"] = "invalid-email-value";
-                break;
-            }
-            if(strlen($req->email) > 40)
-            {
-                $res["reason"] = "email-too-long";
-                break;
-            }
-            if(!filter_var($req->email, FILTER_VALIDATE_EMAIL))
-            {
-                $res["reason"] = "invalid-email-value";
-                break;
-            }
-            $allEmails = getallEmails($req->email);
-            if(is_string($allEmails))
+        //################### VALIDATES DATA FOR CREATING A NEW TRAINING:
+        case "validate-training":
+            // VALIDATION OF DOUBLE NAME
+            $allTrainingNames = getallTrainingNames($req->name);
+            if(is_string($allTrainingNames))
             {
                 $res["reason"] = "connection-problems";
                 break;
             }
             else {
-                if($allEmails > 0) {
+                if($allTrainingNames > 0) {
                     $res["reason"] = "found-double";
                     break;
                 }
             }
-            // VALIDATION OF FIRSTNAME
-            $trimmedFirstname = trim($req->firstname);
-            if($trimmedFirstname === "")
+            // VALIDATION OF NAME
+            $trimmedName = trim($req->name);
+            if($trimmedName === "" || strlen($trimmedName) > 24)
             {
-                $res["reason"] = "invalid-firstname-value";
+                $res["reason"] = "invalid-name";
                 break;
             }
-            if(strlen($req->firstname) > 16)
+            // VALIDATION OF GROUPS
+            //TODO: ADD THIS GROUP LENGTH CHECK TO STUDENTS TOO
+            if(strlen($req->chosengroups) > 256)
             {
-                $res["reason"] = "firstname-too-long";
-                break;
-            }
-            // VALIDATION OF LASTNAME
-            $trimmedLastname = trim($req->lastname);
-            if($trimmedLastname === "")
-            {
-                $res["reason"] = "invalid-lastname-value";
-                break;
-            }
-            if(strlen($req->lastname) > 32)
-            {
-                $res["reason"] = "lastname-too-long";
-                break;
-            }
-            if($req->role !== "ADMIN" && $req->role !== "TRAINER" && $req->role !== "SENIOR-TRAINER")
-            {
-                $res["reason"] = "invalid-role";
+                $res["reason"] = "groups-too-long";
                 break;
             }
             $res["success"] = true;

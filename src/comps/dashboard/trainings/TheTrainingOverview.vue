@@ -1,5 +1,5 @@
 <template>
-    <div @click="overviewClickHandler" class="trainingOverview overflow-x-hidden ps-2 allOverviews d-flex flex-column justify-content-start align-items-center border border-danger">
+    <div @click="overviewClickHandler" class="trainingOverview overflow-hidden ps-2 allOverviews d-flex flex-column justify-content-start align-items-center border border-danger">
 
             <itf-card :dashboard-card="true">
                 <template #header>
@@ -8,7 +8,7 @@
 
                 <template #body>
                     <div class="w-100 h-100 d-flex justify-content-around align-items-center py-2 bg-prim">
-                        <router-link :to="{name: 'New-Trainer'}" class="px-1 btn-positive border border-black rounded-2 ">
+                        <router-link :to="{name: 'New-Training'}" class="px-1 btn-positive border border-black rounded-2 ">
                             New Training
                         </router-link>
                     </div>
@@ -21,15 +21,13 @@
             </transition>
             <div v-if="!noTrainingsAvailable" class="listHolder w-100">
                 <transition-group tag="ul" name="content-list" class="trainingList p-0" mode="out-in">
-                    <trainer-item
-                    v-for="(trainer, idx) in trainerArray"
-                    :key="trainer.id"
-                    :firstname="trainer.firstname"
-                    :lastname="trainer.lastname"
-                    :email="trainer.email"
-                    :role="trainer.role"
-                    @delete-item="deleteTrainer(idx, trainer.id)"
-                    @edit-item="editTrainer(trainer.id, trainer.email, trainer.firstname, trainer.lastname, trainer.role)"></trainer-item>
+                    <trainings-item
+                    v-for="(training, idx) in trainingArray"
+                    :key="training.id"
+                    :name="training.name"
+                    :groups="filteredGroups(training.id)"
+                    @delete-item="deleteTraining(idx, training.id)"
+                    @edit-item="editTrainer(trainer.id, trainer.email, trainer.firstname, trainer.lastname, trainer.role)"></trainings-item>
                 </transition-group>
             </div>
             <teleport to="body">
@@ -45,7 +43,7 @@ import { defineEmits, onMounted, ref, computed } from 'vue';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 
-import TrainerItem from "../trainers/TrainerItem.vue";
+import TrainingsItem from "./TrainingsItem.vue";
 
 const router = useRouter();
 const store = useStore();
@@ -58,7 +56,7 @@ function overviewClickHandler() {
     emits("empty-click");
 }
 
-// VALUES REPRESENT IF NO STUDENT IS EXISTENT AND
+// VALUES REPRESENT IF NO TRAINING IS EXISTENT AND
 // IF THE CONTENT IS CURRENTLY LOADING
 const noTrainingsAvailable = ref(false);
 const loadingContent = ref(false);
@@ -69,23 +67,49 @@ const userRole = computed(() => {
 });
 const accessInfoActive = ref(false);
 
-// FETCHED TRAINERS ARE SAVED WITHIN HERE
-const trainerArray = ref([]);
+// ALL FETCHED TRAININGS AND GROUPS ARE SAVED HERE
+const trainingArray = ref([]);
+const groupArray = ref([]);
 
-// INITIAL FETCHING OF TRAINERS TO BE ABLE TO DISPLAY THEM
+// INITIAL FETCHING OF TRAININGS AND GROUPS TO BE ABLE TO DISPLAY THEM
 onMounted(async () => {
     loadingContent.value = true;
-
-    const trainerdata = await store.dispatch("trainers/getAllTrainers");
+    // FETCH ALL GROUPS
+    const groupdata = await store.dispatch("groups/getAllGroups");
     loadingContent.value = false;
-    if(trainerdata.trainers.length === 0)
+    groupArray.value = [...groupdata.groups];
+
+    // FETCH ALL TRAININGS:
+    const trainerdata = await store.dispatch("trainings/getAllTrainings");
+    loadingContent.value = false;
+    if(trainerdata.trainings.length === 0)
     {
         noTrainingsAvailable.value = true;
     }
     else {
-        trainerArray.value = [...trainerdata.trainers];
+        trainingArray.value = [...trainerdata.trainings];
+        console.table(trainingArray.value);
     }
 });
+
+/** APPLIES THE ACTUAL GROUP NAMES OF ALL GROUPS THE
+ *  TRAINING HAS TO ITS LIST ITEM
+ * @param {number} id           => ID OF THE TRAINING
+ * returns {Array} namedGroups  => ACTUAL GROUPNAMES THAT FIT TO THE TRAINING */
+ function filteredGroups(id) {
+    let training = trainingArray.value.find(curr => curr.id === id);
+    const trainingGroups = JSON.parse(training.groups);
+    const namedGroups = [];
+    for(let group of groupArray.value)
+    {
+        if(trainingGroups.includes(group.id))
+        {
+            namedGroups.push(group.name);
+        }
+    }
+    console.table(namedGroups);
+    return namedGroups;
+}
 
 /** PREPARES STATE WITH DATA OF TO-BE-EDITED TRAINER AND SWITCHES
  *  TO Edit-Trainer ROUTE TO ENABLE THE ACTUAL EDITING
@@ -103,25 +127,24 @@ function editTrainer(id, email, fn, ln, role) {
 /** DELETES THE CHOSEN TRAINER USING HIS ID AND REMOVES THE CORRESPONDING DOM
  * @param {number} index    => ON WHAT IDX IS THE LIST ELEMENT
  * @param {number} id       => ID OF THE TRAINER */
-async function deleteTrainer(index, id) {
-    if(userRole.value !== "ADMIN"  || id === store.getters["auth/userID"]) {
+async function deleteTraining(index, id) {
+    if(userRole.value !== "ADMIN" && userRole.value !== "SENIOR-TRAINER") {
         accessInfoActive.value = true;
     }
     else
     {
         const deletereq =
         {
-            task: "delete-trainer",
+            task: "delete-training",
             id: id,
         };
-        const deletedata = await store.dispatch("trainers/post", deletereq);
+        const deletedata = await store.dispatch("trainings/post", deletereq);
         if(deletedata.success) {
-            trainerArray.value.splice(index, 1);
-            if(trainerArray.value.length === 0)
+            trainingArray.value.splice(index, 1);
+            if(trainingArray.value.length === 0)
             {
                 noTrainingsAvailable.value = true;
             }
-            //TODO: needs to update all events where this trainer was signed in
         }
         else {
             router.replace({name:"Error"});
@@ -138,7 +161,7 @@ async function deleteTrainer(index, id) {
     font-family: "Raleway Reg 400";
 }
 .content-list-move {
-    transition: transform .2s ease;
+    transition: transform .8s ease;
 }
 .content-list-enter-from,
 .content-list-leave-to {

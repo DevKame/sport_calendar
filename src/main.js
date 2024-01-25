@@ -31,7 +31,9 @@ import NewStudent           from "./comps/dashboard/students/NewStudent.vue";
 import EditStudent          from "./comps/dashboard/students/EditStudent.vue";
 
 import NewTrainer           from "./comps/dashboard/trainers/NewTrainer.vue";
-import EditTrainer           from "./comps/dashboard/trainers/EditTrainer.vue";
+import EditTrainer          from "./comps/dashboard/trainers/EditTrainer.vue";
+
+import NewTraining          from "./comps/dashboard/trainings/NewTraining.vue";
 
 // FONTAWESOME
 import { library } from "@fortawesome/fontawesome-svg-core";
@@ -115,6 +117,11 @@ let router = createRouter({
                     path: "trainings",
                     name: "Trainings",
                     component: TheTrainingOverview,
+                },
+                {
+                    path: "newtraining",
+                    name: "New-Training",
+                    component: NewTraining,
                 },
                 {
                     path: "trainers",

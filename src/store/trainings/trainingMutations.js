@@ -10,7 +10,6 @@ export default {
         moduleState.trainerrole_edit = data.role;
     },
     // SETS THE Edit-Student VALUES BACK TO null
-    //TODO: WATCH THIS METHOD IN STUDENTS:
     resetGroupDataForEdit(moduleState) {
         moduleState.studentemail_edit = null;
         moduleState.studentID_edit = null;
