@@ -79,7 +79,7 @@ function editGroup(id, name) {
     store.commit("groups/setGroupDataForEdit", {name: name, id: id});
     router.push({name: "Edit-Group"});
 }
-//TODO: When deleting group, update all users groups
+//TODO: When deleting group, update TRAININGS and EVENTS too
 /** INVOKES THE ACTION TO DELETE A GROUP. USES INDEX AFTER
  *  SUCCESS TO DELETE THE GROUP OUT OF groupArray
  * @param {number} index    => INDEX OF THIS GROUP WITHIN groupArray 
