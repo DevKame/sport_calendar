@@ -3,6 +3,83 @@
 
 
 
+////////////////////////////////////    EVENT QUERIES  [start]  //////////////////////////////////////
+function setEventAsOld($id) {
+    $con = connect();
+    $query =
+    "UPDATE sport_cal_events
+    SET
+    old = 1
+    WHERE id = ?";
+    try {
+        $stmt = mysqli_prepare($con, $query);
+    
+        mysqli_stmt_bind_param($stmt, "i", $id);
+        mysqli_stmt_execute($stmt);
+        $affected = mysqli_stmt_affected_rows($stmt);
+        mysqli_stmt_close($stmt);
+        mysqli_close($con);
+        return $affected;
+    }
+    catch(Exeption $e) {
+        mysqli_close($con);
+        return $e->getMessage();
+    }
+}
+/** FETCHES ALL EXISTENT EVENTS
+ *  returns
+ * {$groups | Exeption->getMessage()} => Array | String */
+function getAllEvents() {
+    $con = connect();
+    $events = [];
+    $query =
+    "SELECT id, name, fulldate, day, month, year, fulltime, hour, minute, max, trainer, info, groups, booked, old, students
+    FROM sport_cal_events";
+    $stmt = mysqli_prepare($con, $query);
+    try {
+        mysqli_execute($stmt);
+        mysqli_stmt_bind_result($stmt, $id, $name, $fulldate, $day, $month, $year, $fulltime, $hour, $minute, $max, $trainer, $info, $groups, $booked, $old, $students);
+        mysqli_stmt_store_result($stmt);
+        $totalEvents = mysqli_stmt_num_rows($stmt);
+        if($totalEvents === 0) {
+            mysqli_stmt_free_result($stmt);
+            mysqli_stmt_close($stmt);
+        }
+        else {
+            while(mysqli_stmt_fetch($stmt)) {
+                $events[] =
+                [
+                    "id" => $id,
+                    "name" => $name,
+                    "fulldate" => $fulldate,
+                    "day" => $day,
+                    "month" => $month,
+                    "year" => $year,
+                    "fulltime" => $fulltime,
+                    "hour" => $hour,
+                    "minute" => $minute,
+                    "max" => $max,
+                    "trainer" => $trainer,
+                    "info" => $info,
+                    "groups" => $groups,
+                    "booked" => $booked,
+                    "old" => $old,
+                    "students" => $students,
+                ];
+            }
+            mysqli_stmt_free_result($stmt);
+            mysqli_stmt_close($stmt);
+        }
+        mysqli_close($con);
+        return $events;
+    }
+    catch(Exeption $e) {
+        mysqli_close($con);
+        return $e->getMessage();
+    }
+
+}
+////////////////////////////////////    EVENT QUERIES  [end]  //////////////////////////////////////
 ////////////////////////////////////    TRAININGS QUERIES  [start]  //////////////////////////////////////
 /** CHANGES A TRAINING
  *  returns
@@ -257,6 +334,52 @@ function createTrainer($email, $firstname, $lastname, $role, $groups) {
         return $e.getMessage();
     }
 }
+/** FETCHES ONLY NAMES AND IDS OF ALL STUDENTS
+ *  returns
+ * {$groups | Exeption->getMessage()} => Array | String */
+function getTrainerNameAndID() {
+    $con = connect();
+    $trainers = [];
+    $query =
+    "SELECT
+    id,
+    firstname,
+    lastname
+    FROM sport_cal_user
+    WHERE role = 'TRAINER'
+    OR role = 'SENIOR-TRAINER'
+    OR role = 'ADMIN'";
+    $stmt = mysqli_prepare($con, $query);
+    try {
+        mysqli_execute($stmt);
+        mysqli_stmt_bind_result($stmt, $id, $firstname, $lastname);
+        mysqli_stmt_store_result($stmt);
+        $totalTrainers = mysqli_stmt_num_rows($stmt);
+        if($totalTrainers === 0) {
+            mysqli_stmt_free_result($stmt);
+            mysqli_stmt_close($stmt);
+        }
+        else {
+            while(mysqli_stmt_fetch($stmt)) {
+                $trainers[] =
+                [
+                    "id" => $id,
+                    "firstname" => $firstname,
+                    "lastname" => $lastname,
+                ];
+            }
+            mysqli_stmt_free_result($stmt);
+            mysqli_stmt_close($stmt);
+        }
+        mysqli_close($con);
+        return $trainers;
+    }
+    catch(Exeption $e) {
+        mysqli_close($con);
+        return $e->getMessage();
+    }
+
+}
 /** FETCHES ALL EXISTENT TRAINERS
  *  returns
  * {$groups | Exeption->getMessage()} => Array | String */
@@ -436,6 +559,50 @@ function getAllEmails($email) {
         
         mysqli_close($con);
         return $totalEmails;
+    }
+    catch(Exeption $e) {
+        mysqli_close($con);
+        return $e->getMessage();
+    }
+
+}
+/** FETCHES ONLY NAME AND ID OF ALL STUDENTS
+ *  returns
+ * {$groups | Exeption->getMessage()} => Array | String */
+function getStudentNameAndID() {
+    $con = connect();
+    $students = [];
+    $query =
+    "SELECT
+    id,
+    firstname,
+    lastname
+    FROM sport_cal_user
+    WHERE role = 'STUDENT'";
+    $stmt = mysqli_prepare($con, $query);
+    try {
+        mysqli_execute($stmt);
+        mysqli_stmt_bind_result($stmt, $id, $firstname, $lastname);
+        mysqli_stmt_store_result($stmt);
+        $totalStudents = mysqli_stmt_num_rows($stmt);
+        if($totalStudents === 0) {
+            mysqli_stmt_free_result($stmt);
+            mysqli_stmt_close($stmt);
+        }
+        else {
+            while(mysqli_stmt_fetch($stmt)) {
+                $students[] =
+                [
+                    "id" => $id,
+                    "firstname" => $firstname,
+                    "lastname" => $lastname,
+                ];
+            }
+            mysqli_stmt_free_result($stmt);
+            mysqli_stmt_close($stmt);
+        }
+        mysqli_close($con);
+        return $students;
     }
     catch(Exeption $e) {
         mysqli_close($con);

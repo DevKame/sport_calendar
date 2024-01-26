@@ -10,6 +10,7 @@ import groupStore from "./groups/groupStore.js";
 import studentStore from "./students/studentStore.js";
 import trainerStore from "./trainers/trainerStore.js";
 import trainingStore from "./trainings/trainingStore.js";
+import eventStore from "./events/eventStore.js";
 
 const store = createStore({
     modules: {
@@ -18,6 +19,7 @@ const store = createStore({
         students: studentStore,
         trainers: trainerStore,
         trainings: trainingStore,
+        events: eventStore,
     },
     state() {
         return {

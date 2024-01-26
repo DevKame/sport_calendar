@@ -21,13 +21,33 @@ require("../database/db.php");
 // RETURNS Boolean INDICATING IF A USER IS LOGGED IN
 if($_SERVER["REQUEST_METHOD"] === "GET")
 {
-    $students = getAllStudents();
-    if(is_string($students)) {
+    $events = getAllEvents();
+    if(is_string($events)) {
         $res["reason"] = "connection-problems";
     }
     else {
-        $res["success"] = true;
-        $res["students"] = $students;
+        $failedUpdates = 0;
+        foreach($events as $event)
+        {
+            if(isEventOld($event))
+            {
+                $turnToOldResult = setEventAsOld($event["id"]);
+                if(is_string($turnToOldResult))
+                {
+                    $failedUpdates++;
+                    break;
+                } else {
+                    $event["old"] = 1;
+                }
+            }
+        }
+        if($failedUpdates === 0)
+        {
+            $res["success"] = true;
+            $res["events"] = $events;
+        } else {
+            $res["reason"] = "connection-problems";
+        }
     }
 }
 //################################################# HANDLES POST REQUESTS
@@ -37,17 +57,6 @@ else if($_SERVER["REQUEST_METHOD"] === "POST")
     $req = json_decode(file_get_contents("php://input"));
     switch($req->task)
     {
-        //################### FETCHES ONLY ALL STUDENTS (ONLY NAME AND ID):
-        case "get-name-and-id":
-            $students = getStudentNameAndID();
-            if(is_string($students)) {
-                $res["reason"] = "connection-problems";
-            }
-            else {
-                $res["success"] = true;
-                $res["students"] = $students;
-            }
-            break;
         //################### CHANGES DATA OF A STUDENT:
         case "edit-student":
             $affectedRows = editStudent($req->id, $req->email,$req->firstname, $req->lastname, $req->chosengroups);
@@ -72,8 +81,8 @@ else if($_SERVER["REQUEST_METHOD"] === "POST")
         //################### VALIDATES DATA USED FOR CAHNGING A STUDENT:
         case "validate-student-edit":
             // VALIDATION OF EMAIL
-            $trimmedEmail = trim($req->email);
-            if($trimmedEmail === "")
+            $evrimmedEmail = trim($req->email);
+            if($evrimmedEmail === "")
             {
                 $res["reason"] = "invalid-email-value";
                 break;
@@ -101,8 +110,8 @@ else if($_SERVER["REQUEST_METHOD"] === "POST")
                 }
             }
             // VALIDATION OF FIRSTNAME
-            $trimmedFirstname = trim($req->firstname);
-            if($trimmedFirstname === "")
+            $evrimmedFirstname = trim($req->firstname);
+            if($evrimmedFirstname === "")
             {
                 $res["reason"] = "invalid-firstname-value";
                 break;
@@ -113,8 +122,8 @@ else if($_SERVER["REQUEST_METHOD"] === "POST")
                 break;
             }
             // VALIDATION OF LASTNAME
-            $trimmedLastname = trim($req->lastname);
-            if($trimmedLastname === "")
+            $evrimmedLastname = trim($req->lastname);
+            if($evrimmedLastname === "")
             {
                 $res["reason"] = "invalid-lastname-value";
                 break;
@@ -151,8 +160,8 @@ else if($_SERVER["REQUEST_METHOD"] === "POST")
         //################### VALIDATES DATA FOR CREATING A NEW STUDENT:
         case "validate-student":
             // VALIDATION OF EMAIL
-            $trimmedEmail = trim($req->email);
-            if($trimmedEmail === "")
+            $evrimmedEmail = trim($req->email);
+            if($evrimmedEmail === "")
             {
                 $res["reason"] = "invalid-email-value";
                 break;
@@ -180,8 +189,8 @@ else if($_SERVER["REQUEST_METHOD"] === "POST")
                 }
             }
             // VALIDATION OF FIRSTNAME
-            $trimmedFirstname = trim($req->firstname);
-            if($trimmedFirstname === "")
+            $evrimmedFirstname = trim($req->firstname);
+            if($evrimmedFirstname === "")
             {
                 $res["reason"] = "invalid-firstname-value";
                 break;
@@ -192,8 +201,8 @@ else if($_SERVER["REQUEST_METHOD"] === "POST")
                 break;
             }
             // VALIDATION OF LASTNAME
-            $trimmedLastname = trim($req->lastname);
-            if($trimmedLastname === "")
+            $evrimmedLastname = trim($req->lastname);
+            if($evrimmedLastname === "")
             {
                 $res["reason"] = "invalid-lastname-value";
                 break;
@@ -206,6 +215,15 @@ else if($_SERVER["REQUEST_METHOD"] === "POST")
             $res["success"] = true;
             break;
     }
+}
+
+function isEventOld($ev) {
+    $now            = time();
+    $event_stamp   = mktime((int)$ev["hour"], (int)$ev["minute"], 0, (int)$ev["month"], (int)$ev["day"], (int)$ev["year"]);
+    $result = $event_stamp < $now ?
+    true :
+    false;
+    return $result;
 }
 
 

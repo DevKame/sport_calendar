@@ -41,3 +41,7 @@
     background-color: var(--edit);
     color: black;
 }
+.btn-role-badge {
+    background-color: var(--role-badge);
+    color: black;
+}

@@ -60,6 +60,17 @@ else if($_SERVER["REQUEST_METHOD"] === "POST")
     $req = json_decode(file_get_contents("php://input"));
     switch($req->task)
     {
+        //################### FETCHES ALL TRAINERS (ONLY NAME AND ID):
+        case "get-name-and-id":
+            $trainers = getTrainerNameAndID();
+            if(is_string($trainers)) {
+                $res["reason"] = "connection-problems";
+            }
+            else {
+                $res["success"] = true;
+                $res["trainers"] = $trainers;
+            }
+            break;
         //################### CHANGES DATA OF A TRAINER:
         case "edit-trainer":
             $affectedRows = editTrainer($req->id, $req->email,$req->firstname, $req->lastname, $req->role, $req->chosengroups);
