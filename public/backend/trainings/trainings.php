@@ -18,7 +18,7 @@ header("Content-Type: application/json");
 require("../database/db.php");
 
  //################################################# HANDLES GET REQUESTS:
-// RETURNS Boolean INDICATING IF A USER IS LOGGED IN
+// RETURNS ALL TRAININGS
 if($_SERVER["REQUEST_METHOD"] === "GET")
 {
     $trainings = getAllTrainings();
