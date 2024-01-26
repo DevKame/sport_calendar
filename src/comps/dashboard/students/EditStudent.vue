@@ -145,13 +145,10 @@ onMounted(async () => {
 
     let groupsAsArray = [...groupdata.groups];
 
-    console.log("prepStudent.groups:", preparedStudent.groups);
     let checkedGroups =
     groupsAsArray.filter(curr => preparedStudent.groups.includes(curr.name));
 
     groupArray.value = selectBoxes(groupsAsArray, checkedGroups);
-    console.log("alle Groups:");
-    console.table(groupArray.value);
 
     loadingRoute.value = false;
 });
@@ -163,10 +160,6 @@ onMounted(async () => {
  * 
  * @returns {Array}             => MODIFIED groups WITH "CHECKED" VALUES */
 function selectBoxes(groups, sgroups) {
-    console.log("allGroups vor 'selectBoxes':");
-    console.table(groups);
-    console.log("training groups:");
-    console.table(sgroups);
     for(let grp of groups)
     {
         if(sgroups.find(curr => curr.id === grp.id))
@@ -174,8 +167,6 @@ function selectBoxes(groups, sgroups) {
             grp.checked = true;
         }
     }
-    console.log("allGroups nach 'selectBoxes':");
-    console.table(groups);
     return groups;
 }
 // VALUES BIND TO INPUT ELEMENTS WITH V-MODEL

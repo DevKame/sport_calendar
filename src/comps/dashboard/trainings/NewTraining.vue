@@ -98,7 +98,6 @@ onMounted(async () => {
     const groupdata = await store.dispatch("groups/getAllGroups");
     loadingGroups.value = false;
     groupArray.value = [...groupdata.groups];
-    console.table(groupArray.value);
 });
 // VALUES BIND TO INPUT ELEMENTS WITH V-MODEL
 const createName = ref("");
@@ -117,7 +116,6 @@ const trainingNameInput = ref();
  *  YOU CHECKED OR UN-CHECKED A GROUP
  * @param {number} id   => ID OF THE CLICKED GROUP */
 function updateChosenGroups(id) {
-    console.clear();
     const oldGroups = JSON.parse(chosenGroups.value);
     if(oldGroups.includes(id))
     {
@@ -126,13 +124,6 @@ function updateChosenGroups(id) {
         oldGroups.push(id);
     }
     chosenGroups.value = JSON.stringify(oldGroups);
-    showData();
-}
-//DEV: SHOWING THE COMPLETE FORM
-function showData() {
-    // console.clear();
-    console.log("Name:", createName.value);
-    console.log("chosenGroups:", chosenGroups.value);
 }
 // UN-DISPLAYS POTENTIAL ERRORS
 function resetErrors() {
@@ -158,7 +149,6 @@ async function create_training() {
     let valiresponse = await store.dispatch("trainings/post", valireq);
     if(!valiresponse.success)
     {
-        console.log(valiresponse);
         switch(valiresponse.reason) {
             case "found-double":
                 doubleError.value = true;
