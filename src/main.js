@@ -34,6 +34,7 @@ import NewTrainer           from "./comps/dashboard/trainers/NewTrainer.vue";
 import EditTrainer          from "./comps/dashboard/trainers/EditTrainer.vue";
 
 import NewTraining          from "./comps/dashboard/trainings/NewTraining.vue";
+import EditTraining         from "./comps/dashboard/trainings/EditTraining.vue";
 
 // FONTAWESOME
 import { library } from "@fortawesome/fontawesome-svg-core";
@@ -122,6 +123,11 @@ let router = createRouter({
                     path: "newtraining",
                     name: "New-Training",
                     component: NewTraining,
+                },
+                {
+                    path: "edittraining",
+                    name: "Edit-Training",
+                    component: EditTraining,
                 },
                 {
                     path: "trainers",

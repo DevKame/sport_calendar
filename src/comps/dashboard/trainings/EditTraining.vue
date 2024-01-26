@@ -1,18 +1,18 @@
 <template>
-    <form @submit.prevent="create_training" @click="clickHandler" :class="{not_clickable: submitInProgress}" class="px-2 border border-danger d-flex flex-column justify-content-start align-items-center">
-        <h1 class="me-auto">New training</h1>
+    <form @submit.prevent="change_training" @click="clickHandler" :class="{not_clickable: submitInProgress}" class="px-2 border border-danger d-flex flex-column justify-content-start align-items-center">
+        <h1 class="me-auto">Edit training</h1>
         
         <div class="inputWrapper border border-danger d-flex flex-column justify-cotnent-start align-items-center">
 
             <div class="d-flex justify-content-between align-items-center">
-                <label for="createName">Name</label>
+                <label for="editName">Name</label>
             </div>
             <input
             @click="resetErrors"
             type="text"
-            id="createName"
-            name="createName"
-            v-model.trim="createName"
+            id="editName"
+            name="editName"
+            v-model.trim="editName"
             ref="trainingNameInput" />
 
             <small>Max. 24 characters</small>
@@ -42,6 +42,7 @@
                         :key="group.id"
                         :id="group.id"
                         :name="group.name"
+                        :checked="group.checked"
                         @box-clicked="updateChosenGroups(group.id)"></group-checkboxes>
                     </div>
                     
@@ -54,7 +55,7 @@
                                 <p class="m-0 fw-bold">Too much groups. Choose less please</p>
                             </error-alert>
                             <success-alert v-else-if="creationSuccess" @close-alert="creationSuccess = false">
-                                <p class="m-0 fw-bold">Training succefully created</p>
+                                <p class="m-0 fw-bold">Training succefully changed</p>
                             </success-alert>
                         </transition>
                     </div>
@@ -72,7 +73,7 @@
 
 
 <script setup>
-import { defineEmits, ref, onMounted } from 'vue';
+import { defineEmits, ref, onMounted, reactive } from 'vue';
 import { useStore } from 'vuex';
 
 import GroupCheckboxes from "../shared/GroupCheckboxes.vue";
@@ -92,16 +93,53 @@ const loadingGroups = ref(false);
 
 // ALL FETCHED GROUPS ARE BEEING SAVE HERE
 const groupArray = ref([]);
+
+let preparedTraining = reactive({});
 // FETCHES ALL GROUPS TO RENDER AS CHECKBOXES
 onMounted(async () => {
     loadingGroups.value = true;
+    
+    preparedTraining = {...store.getters["trainings/preparedTrainingForEdit"]};
+    editName.value = preparedTraining.name;
     const groupdata = await store.dispatch("groups/getAllGroups");
-    loadingGroups.value = false;
-    groupArray.value = [...groupdata.groups];
+
+    let groupsAsArray = [...groupdata.groups];
+
+    console.log("prepTraining.groups:", preparedTraining.groups);
+    let checkedGroups =
+    groupsAsArray.filter(curr => preparedTraining.groups.includes(curr.name));
+
+    groupArray.value = selectBoxes(groupsAsArray, checkedGroups);
+    console.log("alle Groups:");
     console.table(groupArray.value);
+    loadingGroups.value = false;
 });
+/** ADDS A CHECKED VALUE (Bool) TO EVERY GROUP THAT THE STUDENT
+ *  ALSO HAVE TO MAKE SURE TO AUTOMATICLY SELECT THE CORRESPONDING
+ *  CHECKBOXES
+ * @param {Array} groups        => ALL GROUPS THAT WILL BE groupArray.value LATER
+ * @param {Array} tgroups       => ALL GROUPS OF THE STUDENT
+ * 
+ * @returns {Array}             => MODIFIED groups WITH "CHECKED" VALUES */
+function selectBoxes(groups, tgroups) {
+    console.log("allGroups vor 'selectBoxes':");
+    console.table(groups);
+    console.log("training groups:");
+    console.table(tgroups);
+
+    for(let grp of groups)
+    {
+        if(tgroups.find(curr => curr.id === grp.id))
+        {
+            grp.checked = true;
+        }
+    }
+    console.log("allGroups nach 'selectBoxes':");
+    console.table(groups);
+    return groups;
+}
 // VALUES BIND TO INPUT ELEMENTS WITH V-MODEL
-const createName = ref("");
+const editName = ref("");
 const chosenGroups = ref("[]");
 // INDICATORS IF AND WHAT INPUT FIELD HAS AN ERROR
 const nameError = ref(false);
@@ -117,7 +155,6 @@ const trainingNameInput = ref();
  *  YOU CHECKED OR UN-CHECKED A GROUP
  * @param {number} id   => ID OF THE CLICKED GROUP */
 function updateChosenGroups(id) {
-    console.clear();
     const oldGroups = JSON.parse(chosenGroups.value);
     if(oldGroups.includes(id))
     {
@@ -126,13 +163,7 @@ function updateChosenGroups(id) {
         oldGroups.push(id);
     }
     chosenGroups.value = JSON.stringify(oldGroups);
-    showData();
-}
-//DEV: SHOWING THE COMPLETE FORM
-function showData() {
-    // console.clear();
-    console.log("Name:", createName.value);
-    console.log("chosenGroups:", chosenGroups.value);
+    console.log(chosenGroups.value);
 }
 // UN-DISPLAYS POTENTIAL ERRORS
 function resetErrors() {
@@ -146,19 +177,19 @@ function resetErrors() {
 // REPRESENTS THAT SUBMITTING IS IN PROGRESS
 const submitInProgress = ref(false);
 /** SUBMITTING PROCESS OF CREATING A STUDENT */
-async function create_training() {
+async function change_training() {
     submitInProgress.value = true;
     const valireq =
     {
-        task: "validate-training",
-        name: createName.value,
+        task: "validate-training-edit",
+        id: preparedTraining.id,
+        name: editName.value,
         chosengroups: chosenGroups.value,
     };
     resetErrors();
     let valiresponse = await store.dispatch("trainings/post", valireq);
     if(!valiresponse.success)
     {
-        console.log(valiresponse);
         switch(valiresponse.reason) {
             case "found-double":
                 doubleError.value = true;
@@ -173,21 +204,19 @@ async function create_training() {
     }
     else
     {
-        const createreq =
+        const changereq =
         {
-            task: "create-training",
-            name: createName.value,
+            task: "edit-training",
+            id: preparedTraining.id,
+            name: editName.value,
             chosengroups: chosenGroups.value,
         };
-        let createresponse = await store.dispatch("trainings/post", createreq);
-        if(createresponse.success) {
+        let changeresponse = await store.dispatch("trainings/post", changereq);
+        if(changeresponse.success) {
             document.querySelectorAll("input[type='checkbox']").forEach(box => {
                 box.checked = false;
             });
-            createName.value = "";
-            chosenGroups.value = "[]";
             creationSuccess.value = true;
-            trainingNameInput.value.focus();
         } else {
             connectionError.value = true;
         }
@@ -195,6 +224,13 @@ async function create_training() {
     submitInProgress.value = false;
 
 }
+
+//TODO:
+/** When beeing on Edit-* Route, it only works if you directly
+ *  came from the corresponding overview. If user refreshes or enters
+ *  route manually, the needed vuex state wont be set. Thats why:
+ *  set nav guard that redirects if Edit-* Routes are not invoked from
+ *  an overview (FOR EVERY TOPIC(GROUPS/STUDENTS/etc)) */
 </script>
 
 <style scoped>

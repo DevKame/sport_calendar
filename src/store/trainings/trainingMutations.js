@@ -1,17 +1,16 @@
 
 
 export default {
-    // SETS THE VALUES FOR Edit-Student ROUTE TO REMEMBER WHAT TO EDIT
-    prepareTrainerForEdit(moduleState, data) {
-        moduleState.traineremail_edit = data.email;
-        moduleState.trainerID_edit = data.id;
-        moduleState.trainerfirstname_edit = data.firstname;
-        moduleState.trainerlastname_edit = data.lastname;
-        moduleState.trainerrole_edit = data.role;
+    // SETS THE VALUES FOR Edit-Training ROUTE TO REMEMBER WHAT TO EDIT
+    prepareTrainingForEdit(moduleState, data) {
+        moduleState.trainingID_edit = data.id;
+        moduleState.trainingname_edit = data.name;
+        moduleState.traininggroups_edit = data.groups;
     },
-    // SETS THE Edit-Student VALUES BACK TO null
-    resetGroupDataForEdit(moduleState) {
-        moduleState.studentemail_edit = null;
-        moduleState.studentID_edit = null;
+    // SETS THE Edit-Training VALUES BACK TO null
+    resetTrainingDataForEdit(moduleState) {
+        moduleState.trainingID_edit = null;
+        moduleState.trainingname_edit = null;
+        moduleState.traininggroups_edit = null;
     }
 }

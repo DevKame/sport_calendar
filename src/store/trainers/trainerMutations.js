@@ -9,10 +9,13 @@ export default {
         moduleState.trainerlastname_edit = data.lastname;
         moduleState.trainerrole_edit = data.role;
     },
-    // SETS THE Edit-Student VALUES BACK TO null
-    //TODO: WATCH THIS METHOD IN STUDENTS:
-    resetGroupDataForEdit(moduleState) {
-        moduleState.studentemail_edit = null;
-        moduleState.studentID_edit = null;
+    // SETS THE Edit-Trainer VALUES BACK TO null
+    //TODO: WATCH THIS METHOD IN TRAINERS:
+    resetTrainerDataForEdit(moduleState) {
+        moduleState.traineremail_edit = null;
+        moduleState.trainerID_edit = null;
+        moduleState.trainerfirstname_edit = null;
+        moduleState.trainerlastname_edit = null;
+        moduleState.trainerrole_edit = null;
     }
 }

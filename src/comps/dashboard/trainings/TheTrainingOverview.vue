@@ -27,7 +27,7 @@
                     :name="training.name"
                     :groups="filteredGroups(training.id)"
                     @delete-item="deleteTraining(idx, training.id)"
-                    @edit-item="editTrainer(trainer.id, trainer.email, trainer.firstname, trainer.lastname, trainer.role)"></trainings-item>
+                    @edit-item="editTraining(training.id, training.name, filteredGroups(training.id))"></trainings-item>
                 </transition-group>
             </div>
             <teleport to="body">
@@ -88,7 +88,6 @@ onMounted(async () => {
     }
     else {
         trainingArray.value = [...trainerdata.trainings];
-        console.table(trainingArray.value);
     }
 });
 
@@ -107,7 +106,6 @@ onMounted(async () => {
             namedGroups.push(group.name);
         }
     }
-    console.table(namedGroups);
     return namedGroups;
 }
 
@@ -115,13 +113,13 @@ onMounted(async () => {
  *  TO Edit-Trainer ROUTE TO ENABLE THE ACTUAL EDITING
  * @param {number} id   => ID OF THE TO-BE-EDITED Trainer 
  * @param {String} name => NAME OF THE TO-BE-EDITED Trainer */
-function editTrainer(id, email, fn, ln, role) {
+function editTraining(id, name, groups) {
     if((userRole.value !== "ADMIN" && userRole.value !== "SENIOR-TRAINER") || id === store.getters["auth/userID"]) {
         accessInfoActive.value = true;
     }
     else {
-        store.commit("trainers/prepareTrainerForEdit", {email: email, id: id, firstname: fn, lastname: ln, role});
-        router.push({name: "Edit-Trainer"});
+        store.commit("trainings/prepareTrainingForEdit", {id: id, name: name, groups: groups});
+        router.push({name: "Edit-Training"});
     }
 }
 /** DELETES THE CHOSEN TRAINER USING HIS ID AND REMOVES THE CORRESPONDING DOM

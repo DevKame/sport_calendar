@@ -37,7 +37,7 @@ import { useStore } from 'vuex';
 
 const store = useStore();
 
-// DISPLAYED VALUES ARE PROVIDED FROM <TheStudentOverview>
+// DISPLAYED VALUES ARE PROVIDED FROM <TheTrainerOverview>
 let props = defineProps([
     "email",
     "firstname",
@@ -54,19 +54,19 @@ const menuOn = ref(false);
 function toggleMenu() {
     menuOn.value = !menuOn.value;
     if(!menuOn.value) {
-        resetEditGroup();
+        resetEditTrainer();
     }
 }
 
 function deleteItem() {
-    resetEditGroup();
+    resetEditTrainer();
     emits("delete-item");
 }
 function editItem() {
     emits("edit-item");
 }
-function resetEditGroup() {
-    store.commit["groups/resetGroupDataForEdit"];
+function resetEditTrainer() {
+    store.commit["trainers/resetTrainerDataForEdit"];
 }
 
 const detailView = ref(false);

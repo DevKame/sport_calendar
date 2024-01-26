@@ -39,7 +39,7 @@ import { useStore } from 'vuex';
 
 const store = useStore();
 
-// DISPLAYED VALUES ARE PROVIDED FROM <TheStudentOverview>
+// DISPLAYED VALUES ARE PROVIDED FROM <TheTrainingOverview>
 let props = defineProps([
     "name",
     "groups",
@@ -54,19 +54,19 @@ const menuOn = ref(false);
 function toggleMenu() {
     menuOn.value = !menuOn.value;
     if(!menuOn.value) {
-        resetEditGroup();
+        resetEditTraining();
     }
 }
 
 function deleteItem() {
-    resetEditGroup();
+    resetEditTraining();
     emits("delete-item");
 }
 function editItem() {
     emits("edit-item");
 }
-function resetEditGroup() {
-    store.commit["groups/resetGroupDataForEdit"];
+function resetEditTraining() {
+    store.commit["trainings/resetTrainingDataForEdit"];
 }
 
 const detailView = ref(false);

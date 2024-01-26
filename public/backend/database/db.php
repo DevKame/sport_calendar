@@ -4,6 +4,59 @@
 
 
 ////////////////////////////////////    TRAININGS QUERIES  [start]  //////////////////////////////////////
+/** CHANGES A TRAINING
+ *  returns
+ * {$affected | Exeption->getMessage()} => int | String */
+function editTraining($id, $name, $groups) {
+    $con = connect();
+    $query =
+    "UPDATE sport_cal_trainings
+    SET
+    name = ?,
+    groups = ?
+    WHERE id = ?";
+    try {
+        $stmt = mysqli_prepare($con, $query);
+        mysqli_stmt_bind_param($stmt, "ssi", $name, $groups, $id);
+        mysqli_stmt_execute($stmt);
+        $affected = mysqli_stmt_affected_rows($stmt);
+        mysqli_stmt_close($stmt);
+        mysqli_close($con);
+        return $affected;
+    }
+    catch(Exeption $e) {
+        mysqli_close($con);
+        return $e->getMessage();
+    }
+}
+/** CHECKS IF THERE IS A DOUBLICAT NAME DESPITE THE ONE CONNECTED TO THE PROVIDED ID
+ *  returns
+ * {$totalEmails | Exeption->getMessage()} => int | String */
+function getTrainingNameExeptOwn($name, $id) {
+    $con = connect();
+    $query =
+    "SELECT name
+    FROM sport_cal_trainings
+    WHERE name = ?
+    AND NOT id = ?";
+    $stmt = mysqli_prepare($con, $query);
+    try {
+        mysqli_stmt_bind_param($stmt, "si", $name, $id);
+        mysqli_execute($stmt);
+        mysqli_stmt_store_result($stmt);
+        $totalEmails = mysqli_stmt_num_rows($stmt);
+        mysqli_stmt_free_result($stmt);
+        mysqli_stmt_close($stmt);
+        
+        mysqli_close($con);
+        return $totalEmails;
+    }
+    catch(Exeption $e) {
+        mysqli_close($con);
+        return $e->getMessage();
+    }
+
+}
 /** DELETES A TRAINING USING ITS ID
  *  returns
  * {true | Exeption->getMessage()} => Bool | String */

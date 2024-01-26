@@ -1,14 +1,12 @@
 
 
 export default {
-    // RETURNS THE DATA OF A PREPARED STUDENT
-    preparedTrainerForEdit(moduleState) {
+    // RETURNS THE DATA OF A PREPARED TRAINING
+    preparedTrainingForEdit(moduleState) {
         return {
-            email: moduleState.traineremail_edit,
-            id: moduleState.trainerID_edit,
-            firstname: moduleState.trainerfirstname_edit,
-            lastname: moduleState.trainerlastname_edit,
-            role: moduleState.trainerrole_edit,
+            id: moduleState.trainingID_edit,
+            name: moduleState.trainingname_edit,
+            groups: moduleState.traininggroups_edit,
         };
         
     },
