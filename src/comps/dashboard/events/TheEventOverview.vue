@@ -11,7 +11,7 @@
                         <router-link :to="{name: 'New-Event'}" class="px-1 btn-positive border border-black rounded-2 ">
                             New Event
                         </router-link>
-                        <a  v-if="oldEventsExistent" @click.prevent="console.log('delete olds')" class="px-1 btn-role-badge border border-black rounded-2 ">
+                        <a  v-if="oldEventsExistent" @click.prevent="console.log('delete olds')" class="px-1 btnDeleteOlds btn-role-badge border border-black rounded-2 ">
                             Delete old events
                         </a>
                     </div>
@@ -28,6 +28,7 @@
                     v-for="(event, idx) in eventArray"
                     :key="event.id"
                     :event="event"
+                    :trainer="getTrainerNameFromEventProperties(event.trainer)"
                     :groups="filteredGroups(event.id)"
                     @delete-item="deleteStudent(idx, event.id)"
                     @edit-item="editStudent(event.id, event.email, event.firstname, event.lastname, filteredGroups(event.id))"></event-item>
@@ -110,8 +111,22 @@ onMounted(async () => {
     loadingContent.value = false;
 });
 
+function getTrainerNameFromEventProperties(t) {
+    console.clear();
+    let result = "no-trainer";
+    if(t !== "no-trainer")
+    {
+        let trainername = trainerArray.value.find(curr => curr.id === +t);
+        result = trainername.firstname;
+        if(+t === store.getters["auth/userID"])
+        {
+            result = "You!";
+        }
+    }
+    return result;
+}
+
 const oldEventsExistent = computed(() => {
-    console.log(eventArray.value.find(curr => curr.old === 1) === undefined);
     return eventArray.value.find(curr => curr.old === 1) !== undefined ?
     true : false;
 });

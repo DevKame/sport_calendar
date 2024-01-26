@@ -85,7 +85,7 @@ let router = createRouter({
         {
             path: "/dashboard",
             name: "Dashboard",
-            redirect: {name: "Trainings"},
+            redirect: {name: "Events"},
             component: TheDashboard,
             /** RIGHT BEFORE THIS NAV GUARD A GLOBAL NAV GUARD WAS INVOKED
              *  TO CHECK IF A USER AT ALL IS LOGGED IN. IF IT CAME TO THIS

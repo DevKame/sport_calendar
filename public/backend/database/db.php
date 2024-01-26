@@ -4,6 +4,54 @@
 
 
 ////////////////////////////////////    EVENT QUERIES  [start]  //////////////////////////////////////
+/** CREATES A NEW EVENT
+ *  returns
+ * {true | Exeption->getMessage()} => Bool | String */
+function createEvent($name, $fulldate, $fulltime, $year, $month, $day, $hour, $minute, $max, $trainer, $info, $groups) {
+    $con = connect();
+    $query =
+    "INSERT INTO sport_cal_events
+    (name, fulldate, fulltime, year, month, day, hour, minute, max, trainer, info, groups)
+    VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
+    try {
+        $stmt = mysqli_prepare($con, $query);
+        mysqli_stmt_bind_param($stmt, "ssssssssisss", $name, $fulldate, $fulltime, $year, $month, $day, $hour, $minute, $max, $trainer, $info, $groups);
+        mysqli_stmt_execute($stmt);
+        mysqli_stmt_close($stmt);
+        mysqli_close($con);
+        return true;
+    }
+    catch(Exeption $e) {
+        return $e.getMessage();
+    }
+}
+/** FETCHES ALL EXISTENT EVENTS THAT HAVE SAME DATE AND TIME TO CHECK FOR DOUBLES
+ *  returns
+ * {$totalEvents | Exeption->getMessage()} => Array | String */
+function getDoubleEvents($fd, $ft) {
+    $con = connect();
+    $query =
+    "SELECT *
+    FROM sport_cal_events
+    WHERE fulldate = ?
+    AND fulltime = ?";
+    try {
+        $stmt = mysqli_prepare($con, $query);
+        mysqli_stmt_bind_param($stmt, "ss", $fd, $ft);
+        mysqli_execute($stmt);
+        mysqli_stmt_store_result($stmt);
+        $totalEvents = mysqli_stmt_num_rows($stmt);
+        mysqli_stmt_free_result($stmt);
+        mysqli_stmt_close($stmt);
+        mysqli_close($con);
+        return $totalEvents;
+    }
+    catch(Exeption $e) {
+        mysqli_close($con);
+        return $e->getMessage();
+    }
+
+}
 function setEventAsOld($id) {
     $con = connect();
     $query =
@@ -28,7 +76,7 @@ function setEventAsOld($id) {
 }
 /** FETCHES ALL EXISTENT EVENTS
  *  returns
- * {$groups | Exeption->getMessage()} => Array | String */
+ * {$events | Exeption->getMessage()} => Array | String */
 function getAllEvents() {
     $con = connect();
     $events = [];

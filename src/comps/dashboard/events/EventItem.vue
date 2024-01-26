@@ -24,7 +24,7 @@
                 <div class="w-100 mt-1 d-flex justify-content-start align-items-center">
                     <p class="m-0">{{ props.event.fulldate }}</p>
                     <p class="m-0 ms-4">{{ props.event.fulltime }}</p>
-                    <p class="m-0 ms-auto badge bg-role-badge text-black">no-trainer</p>
+                    <p class="m-0 ms-auto badge bg-role-badge text-black" :class="{you_badge: trainer === 'You!', no_trainer: trainer === 'no-trainer'}">{{ trainer }}</p>
                 </div>
             </header>
             <transition name="details">
@@ -55,7 +55,8 @@ const store = useStore();
 // DISPLAYED VALUES ARE PROVIDED FROM <TheStudentOverview>
 let props = defineProps([
     "event",
-    "groups"
+    "groups",
+    "trainer",
 ]);
 let emits = defineEmits([
     "delete-item",
@@ -100,6 +101,14 @@ const detailView = ref(false);
 
 
 <style scoped>
+.bg-role-badge.no_trainer {
+    border: 3px solid black;
+    background-color: var(--delete);
+}
+.bg-role-badge.you_badge {
+    border: 3px solid black;
+    background-color: var(--sec);
+}
 header .badge {
     font-size: 12px;
 }

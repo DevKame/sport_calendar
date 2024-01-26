@@ -148,69 +148,67 @@ else if($_SERVER["REQUEST_METHOD"] === "POST")
                 $res["reason"] = "connection-problems";
             }
             break;
-        //################### CREATES A NEW STUDENT:
-        case "create-student":
-            if(!is_string(createStudent($req->email,$req->firstname,$req->lastname,$req->chosengroups)))
+        //################### CREATES A NEW EVENT:
+        case "create-event":
+            if(!is_string(createEvent($req->name,$req->fulldate,$req->fulltime,$req->year,$req->month,$req->day,$req->hour,$req->minute,$req->max,$req->trainer,$req->info,$req->groups)))
             {
                 $res["success"] = true;
             } else {
                 $res["reason"] = "connection-problems";
             }
             break;
-        //################### VALIDATES DATA FOR CREATING A NEW STUDENT:
+        //################### VALIDATES DATA FOR CREATING A NEW EVENT:
         case "validate-event":
-            //DATETIME FORMAT MUST BE:              0000-00-00T00:00
-            // VALIDATION OF EMAIL
-            $evrimmedEmail = trim($req->email);
-            if($evrimmedEmail === "")
+            // VALIDATION OF NAME
+            $trimmedName = trim($req->name);
+            if($trimmedName === "" || strlen($req->name) > 24)
             {
-                $res["reason"] = "invalid-email-value";
+                $res["reason"] = "invalid-name-value";
                 break;
             }
-            if(strlen($req->email) > 40)
-            {
-                $res["reason"] = "email-too-long";
+            // VALIDATION OF DATETIME
+            // DATETIME FORMAT MUST BE:  0000-00-00T00:00
+            $datetimeregex = '/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/';
+            //      - DATETIME: FORMAT IS RIGHT AND DATE IS NOT IN PAST:
+            if(!isEventInFuture($req) || preg_match($datetimeregex, $req->datetime) !== 1) {
+                $res["reason"] = "invalid-datetime-value";
                 break;
             }
-            if(!filter_var($req->email, FILTER_VALIDATE_EMAIL))
-            {
-                $res["reason"] = "invalid-email-value";
-                break;
-            }
-            $allEmails = getallEmails($req->email);
-            if(is_string($allEmails))
+            //      - DATETIME: DATE IS NOT ALREDY BOOKED AT THAT DATE:
+            $doubles = getDoubleEvents($req->fulldate, $req->fulltime);
+            if(is_string($doubles))
             {
                 $res["reason"] = "connection-problems";
                 break;
-            }
-            else {
-                if($allEmails > 0) {
+            } else {
+                if($doubles > 0) {
                     $res["reason"] = "found-double";
                     break;
                 }
             }
-            // VALIDATION OF FIRSTNAME
-            $evrimmedFirstname = trim($req->firstname);
-            if($evrimmedFirstname === "")
+            // VALIDATION OF MAX PARTICIPANTS:
+            if(is_string($req->max) || $req->max < 1)
             {
-                $res["reason"] = "invalid-firstname-value";
+                $res["reason"] = "invalid-max-value";
                 break;
             }
-            if(strlen($req->firstname) > 16)
+            // VALIDATION OF TRAINER:
+            $trainerregex = '/^(no-trainer|\d+)$/';
+            if(!preg_match($trainerregex, $req->trainer))
             {
-                $res["reason"] = "firstname-too-long";
+                $res["reason"] = "invalid-trainer-value";
                 break;
             }
-            // VALIDATION OF LASTNAME
-            $evrimmedLastname = trim($req->lastname);
-            if($evrimmedLastname === "")
+            // VALIDATION OF INFO:
+            if(strlen($req->info) > 256)
             {
-                $res["reason"] = "invalid-lastname-value";
+                $res["reason"] = "invalid-info-value";
                 break;
             }
-            if(strlen($req->lastname) > 32)
+            // VALIDATION OF GROUPS:
+            if(strlen($req->groups) > 256)
             {
-                $res["reason"] = "lastname-too-long";
+                $res["reason"] = "groups-too-long";
                 break;
             }
             $res["success"] = true;
@@ -218,6 +216,20 @@ else if($_SERVER["REQUEST_METHOD"] === "POST")
     }
 }
 
+function isEventInFuture($t) {
+    $chosenEvent = mktime(
+                            (int)$t->hour,
+                            (int)$t->minute,
+                            0,
+                            (int)$t->month,
+                            (int)$t->day,
+                            (int)$t->year,);
+    $currentTime = time();
+    $result = $chosenEvent > $currentTime ?
+    true : false;
+    return $result;
+}
+// RETURNS Bool WETHER DATETIME VALUES ARE OLDER THAN CURRENT TIME:
 function isEventOld($ev) {
     $now            = time();
     $event_stamp   = mktime((int)$ev["hour"], (int)$ev["minute"], 0, (int)$ev["month"], (int)$ev["day"], (int)$ev["year"]);

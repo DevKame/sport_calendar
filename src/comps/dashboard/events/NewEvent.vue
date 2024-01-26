@@ -1,8 +1,8 @@
 <template>
-    <form @submit.prevent="create_event" @click="clickHandler" :class="{not_clickable: submitInProgress}" class="px-2 border border-danger d-flex flex-column justify-content-start align-items-center">
+    <form @submit.prevent="create_event" @click="clickHandler" :class="{not_clickable: submitInProgress}" class="px-2 pb-4 border border-danger d-flex flex-column justify-content-start align-items-center">
         <h1 class="me-auto">New event</h1>
         
-        <div class="inputWrapper border border-danger d-flex flex-column justify-cotnent-start align-items-center">
+        <div class="inputWrapper d-flex flex-column justify-cotnent-start align-items-center">
 
             <div class="d-flex justify-content-between align-items-center">
                 <label for="createName">Name</label>
@@ -22,13 +22,10 @@
                     <error-alert v-if="nameError" @close-alert="nameError = false">
                         <p class="m-0 fw-bold">Enter a none-empty value below 25 characters</p>
                     </error-alert>
-                    <error-alert v-else-if="doubleError" @close-alert="doubleError = false">
-                        <p class="m-0 fw-bold">Name {{ createName }} already exists</p>
-                    </error-alert>
                 </transition>
             </div>
         </div>
-        <div class="inputWrapper border border-danger d-flex flex-column justify-cotnent-start align-items-center">
+        <div class="inputWrapper d-flex flex-column justify-cotnent-start align-items-center">
 
             <div class="d-flex justify-content-between align-items-center pe-2">
                 <label for="">Pre-defined training</label>
@@ -50,13 +47,12 @@
 
         </div>
 
-        <div class="inputWrapper border border-danger d-flex flex-column justify-cotnent-start align-items-center">
+        <div class="inputWrapper mt-5 d-flex flex-column justify-cotnent-start align-items-center">
 
             <div class="d-flex justify-content-between align-items-center">
                 <label for="createDatetime">Date and time</label>
             </div>
             <input
-            @input="console.clear();showData();"
             @click="resetErrors"
             type="datetime-local"
             id="createDatetime"
@@ -67,13 +63,16 @@
             <div class="alertHolder my-2">
                 <transition name="error" mode="out-in">
                     <error-alert v-if="datetimeError" @close-alert="datetimeError = false">
-                        <p class="m-0 fw-bold">Enter a valid date/time using only this widget</p>
+                        <p class="m-0 fw-bold">Use this widget to enter a value thats in the future</p>
+                    </error-alert>
+                    <error-alert v-else-if="doubleError" @close-alert="doubleError = false">
+                        <p class="m-0 fw-bold">An event with that date already exists</p>
                     </error-alert>
                 </transition>
             </div>
         </div>
         
-        <div class="inputWrapper border border-danger d-flex flex-column justify-cotnent-start align-items-center">
+        <div class="inputWrapper d-flex flex-column justify-cotnent-start align-items-center">
 
             <div class="d-flex justify-content-between align-items-center">
                 <label for="createMax">Max. participants</label>
@@ -97,7 +96,7 @@
             </div>
         </div>
         
-        <div class="inputWrapper border border-danger d-flex flex-column justify-cotnent-start align-items-center">
+        <div class="inputWrapper d-flex flex-column justify-cotnent-start align-items-center">
 
             <div class="d-flex justify-content-between align-items-center pe-2">
                 <label for="createTrainer">Trainer</label>
@@ -105,14 +104,13 @@
             </div>
 
             <select
-            @input="console.clear();showData();"
+            @input="createTrainerHandler"
             @click="resetErrors"
             id="createTrainer"
             name="createTrainer"
-            v-model.trim="createTrainer"
             ref="eventTrainerInput"
             value="TRAINER">
-                <option value="no-trainer">noch keinen Trainer</option>
+                <option value="no-trainer">kein Trainer</option>
                 <option v-for="trainer in trainerArray"
                 :key="trainer.id"
                 :value="trainer.id">
@@ -129,7 +127,7 @@
             </div>
         </div>
         
-        <div class="inputWrapper border border-danger d-flex flex-column justify-cotnent-start align-items-center">
+        <div class="inputWrapper d-flex flex-column justify-cotnent-start align-items-center">
 
             <div class="d-flex justify-content-between align-items-center pe-2">
                 <label for="createInfo">Information</label>
@@ -159,7 +157,7 @@
         
         <ov-load v-if="loadingGroups"></ov-load>
         <div v-else class="w-100">
-                <div v-if="groupArray.length > 0" class="inputWrapper groupWrapper border border-danger d-flex flex-column justify-cotnent-start align-items-center">
+                <div v-if="groupArray.length > 0" class="inputWrapper groupWrapper d-flex flex-column justify-cotnent-start align-items-center">
                     <div class="d-flex justify-content-between align-items-center pe-2">
                         <label>Limit to particular group(s)</label>
                         <label class="fst-italic optional-label">optional</label>
@@ -179,6 +177,9 @@
                             <error-alert v-if="connectionError" @close-alert="connectionError = false">
                                 <p class="m-0 fw-bold">We have issues connecting to our data. Try again later. We have issues connecting to our data. Try again later.</p>
                             </error-alert>
+                            <error-alert v-else-if="groupError" @close-alert="groupError = false">
+                                <p class="m-0 fw-bold">Too many groups. Choose less</p>
+                            </error-alert>
                             <success-alert v-else-if="creationSuccess" @close-alert="creationSuccess = false">
                                 <p class="m-0 fw-bold">Group succefully created</p>
                             </success-alert>
@@ -190,7 +191,7 @@
 
         <div class="w-100 mt-3 d-flex justify-content-end align-items-center">
             <form-loading v-if="submitInProgress" class="me-5"></form-loading>
-            <router-link :to="{name:'Students'}" type="button" class="rounded-2 me-2 px-2">BACK</router-link>
+            <router-link :to="{name:'Events'}" type="button" class="rounded-2 me-2 px-2">BACK</router-link>
             <input type="submit" value="CREATE" class="btn-sec border border-black rounded-2">
         </div>
     </form>
@@ -198,11 +199,13 @@
 
 
 <script setup>
-import { defineEmits, ref, onMounted, computed } from 'vue';
+import { defineEmits, ref, onMounted, computed, watch, reactive } from 'vue';
 import { useStore } from 'vuex';
+import { useRouter } from 'vue-router';
 
 import GroupCheckboxes from "../shared/GroupCheckboxes.vue";
 
+const router = useRouter();
 const store = useStore();
 
 // HANDLING CLICKS FOR DASHBOARD TO KNOW WHEN TO COLLAPSE NAV
@@ -255,12 +258,15 @@ const createMax = ref(0);
 const createTrainer = ref("no-trainer");
 const createInfo = ref("");
 const chosenGroups = ref("[]");
+
+let splittedDatetime = reactive({});
 // INDICATORS IF AND WHAT INPUT FIELD HAS AN ERROR
 const nameError = ref(false);
 const datetimeError = ref(false);
 const maxError = ref(false);
 const trainerError = ref(false);
 const infoError = ref(false);
+const groupError = ref(false);
 const doubleError = ref(false);
 const connectionError = ref(false);
 const creationSuccess = ref(false);
@@ -303,11 +309,31 @@ function trainingSelectHandler(e) {
     }
     showData();
 }
+function createTrainerHandler(e) {
+    createTrainer.value = e.target.value;
+    console.clear();
+    showData();
+}
 function createNameHandler() {
     eventTrainingInput.value.value = "no-training";
     console.clear();
     showData();
 }
+
+watch(createDatetime, val => {
+    console.clear();
+    let year = val.slice(0, 4);
+    let month = val.slice(5, 7);
+    let day = val.slice(8, 10);
+    let hour = val.slice(11, 13);
+    let minute = val.slice(14, 16);
+    splittedDatetime.day = day;
+    splittedDatetime.month = month;
+    splittedDatetime.year = year;
+    splittedDatetime.hour = hour;
+    splittedDatetime.minute = minute;
+    console.warn(splittedDatetime);
+});
 /** CALLBACK FOR CLICKING ON A GROUP CHECKBOX
  *  UPDATES THE chosenGroups JSON STRING BASED ON IF
  *  YOU CHECKED OR UN-CHECKED A GROUP
@@ -346,9 +372,11 @@ function showData() {
 // UN-DISPLAYS POTENTIAL ERRORS
 function resetErrors() {
     nameError.value = false;
+    datetimeError.value = false;
     maxError.value = false;
     trainerError.value = false;
-    datetimeError.value = false;
+    infoError.value = false;
+    groupError.value = false;
     doubleError.value = false;
     connectionError.value = false;
     creationSuccess.value = false;
@@ -360,17 +388,26 @@ const submitInProgress = ref(false);
 /** SUBMITTING PROCESS OF CREATING A STUDENT */
 async function create_event() {
     submitInProgress.value = true;
-    const valireq =
+    const req =
     {
-        task: "validate-student",
+        task: "validate-event",
         name: createName.value,
-        trainer: createTrainer.value,
+        datetime: createDatetime.value,
+        fulldate: splittedDatetime.day + "." + splittedDatetime.month + "." + splittedDatetime.year,
+        fulltime: splittedDatetime.hour + ":" + splittedDatetime.minute,
+        year: splittedDatetime.year,
+        month: splittedDatetime.month,
+        day: splittedDatetime.day,
+        hour: splittedDatetime.hour,
+        minute: splittedDatetime.minute,
         max: createMax.value,
-        dateime: createDatetime.value,
-        chosengroups: chosenGroups.value,
+        trainer: createTrainer.value,
+        info: createInfo.value,
+        groups: chosenGroups.value,
     };
     resetErrors();
-    let valiresponse = await store.dispatch("students/post", valireq);
+    console.table(req);
+    let valiresponse = await store.dispatch("events/post", req);
     if(!valiresponse.success)
     {
         switch(valiresponse.reason) {
@@ -380,38 +417,38 @@ async function create_event() {
             case "found-double":
                 doubleError.value = true;
                 break;
-            case "invalid-trainer-value":
-                trainerError.value = true;
+            case "invalid-datetime-value":
+                datetimeError.value = true;
                 break;
             case "invalid-max-value":
                 maxError.value = true;
                 break;
-            case "invalid-lastname-value":
-            case "lastname-too-long":
-                datetimeError.value = true;
+            case "invalid-trainer-value":
+                trainerError.value = true;
+                break;
+            case "invalid-info-value":
+                infoError.value = true;
+                break;
+            case "groups-too-long":
+                groupError.value = true;
+                break;
+            case "connection-problems":
+                router.replace({name: "Error"});
                 break;
         }
     }
     else
     {
-        const createreq =
-        {
-            task: "create-student",
-            name: createName.value,
-            trainer: createTrainer.value,
-            max: createMax.value,
-            datetime: createDatetime.value,
-            chosengroups: chosenGroups.value,
-        };
-        let createresponse = await store.dispatch("students/post", createreq);
+        req.task = "create-event";
+        let createresponse = await store.dispatch("events/post", req);
         if(createresponse.success) {
             document.querySelectorAll("input[type='checkbox']").forEach(box => {
                 box.checked = false;
             });
             createName.value = "";
+            createDatetime.value = "";
             createMax.value = 0;
             createTrainer.value = "no-trainer";
-            createDatetime.value = "";
             chosenGroups.value = "[]";
             creationSuccess.value = true;
             eventNameInput.value.focus();
