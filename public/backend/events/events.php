@@ -158,7 +158,8 @@ else if($_SERVER["REQUEST_METHOD"] === "POST")
             }
             break;
         //################### VALIDATES DATA FOR CREATING A NEW STUDENT:
-        case "validate-student":
+        case "validate-event":
+            //DATETIME FORMAT MUST BE:              0000-00-00T00:00
             // VALIDATION OF EMAIL
             $evrimmedEmail = trim($req->email);
             if($evrimmedEmail === "")

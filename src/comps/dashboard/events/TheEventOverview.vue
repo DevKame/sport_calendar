@@ -8,7 +8,7 @@
 
                 <template #body>
                     <div class="w-100 h-100 d-flex justify-content-around align-items-center py-2 bg-prim">
-                        <router-link :to="{name: 'New-Student'}" class="px-1 btn-positive border border-black rounded-2 ">
+                        <router-link :to="{name: 'New-Event'}" class="px-1 btn-positive border border-black rounded-2 ">
                             New Event
                         </router-link>
                         <a  v-if="oldEventsExistent" @click.prevent="console.log('delete olds')" class="px-1 btn-role-badge border border-black rounded-2 ">
@@ -74,7 +74,6 @@ const accessInfoActive = ref(false);
 const groupArray = ref([]);
 const studentArray = ref([]);
 const trainerArray = ref([]);
-const trainingsArray = ref([]);
 const eventArray = ref([]);
 
 // INITIAL FETCHING OF GROUPS AND STUDENTS TO BE ABLE TO DISPLAY THEM
@@ -83,31 +82,23 @@ onMounted(async () => {
 
 
     const groupdata = await store.dispatch("groups/getAllGroups");
-    loadingContent.value = false;
     groupArray.value = [...groupdata.groups];
     console.table(groupArray.value);
     
     const studentreq = {task:"get-name-and-id"};
     const studentdata = await store.dispatch("students/post", studentreq);
-    loadingContent.value = false;
     studentArray.value = [...studentdata.students];
     console.table(studentArray.value);
     
     const trainerreq = {task:"get-name-and-id"};
     const trainerdata = await store.dispatch("trainers/post", trainerreq);
-    loadingContent.value = false;
     trainerArray.value = [...trainerdata.trainers];
     console.table(trainerArray.value);
 
     
-    const trainingsdata = await store.dispatch("trainings/getAllTrainings");
-    loadingContent.value = false;
-    trainingsArray.value = [...trainingsdata.trainings];
-    console.table(trainingsArray.value);
 
 
     const eventdata = await store.dispatch("events/getAllEvents");
-    loadingContent.value = false;
     if(eventdata.events.length === 0)
     {
         noEventsAvailable.value = true;
@@ -116,6 +107,7 @@ onMounted(async () => {
         eventArray.value = [...eventdata.events];
     }
     console.table(eventArray.value);
+    loadingContent.value = false;
 });
 
 const oldEventsExistent = computed(() => {

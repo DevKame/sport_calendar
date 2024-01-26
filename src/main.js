@@ -36,6 +36,8 @@ import EditTrainer          from "./comps/dashboard/trainers/EditTrainer.vue";
 import NewTraining          from "./comps/dashboard/trainings/NewTraining.vue";
 import EditTraining         from "./comps/dashboard/trainings/EditTraining.vue";
 
+import NewEvent             from "./comps/dashboard/events/NewEvent.vue";
+
 // FONTAWESOME
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
@@ -113,6 +115,11 @@ let router = createRouter({
                     path: "events",
                     name: "Events",
                     component: TheEventOverview,
+                },
+                {
+                    path: "newevent",
+                    name: "New-Event",
+                    component: NewEvent,
                 },
                 {
                     path: "trainings",

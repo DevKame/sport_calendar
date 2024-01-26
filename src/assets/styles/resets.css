@@ -1,7 +1,10 @@
 
 input[type="text"],
 input[type="mail"],
-input[type="password"] {
+input[type="password"],
+input[type="number"],
+input[type="datetime-local"],
+textarea {
     outline: none;
     border: 2px solid var(--tert);
     border-radius: 5px;
@@ -15,8 +18,15 @@ input[type="password"].focus_or_filled {
 }
 input[type="text"]:focus,
 input[type="mail"]:focus,
-input[type="password"]:focus {
+input[type="password"]:focus,
+input[type="number"]:focus,
+input[type="datetime-local"]:focus,
+textarea:focus {
     background-color: var(--sec);
+}
+textarea {
+    min-height: 75px;
+    resize: none;
 }
 select {
     outline: none;
