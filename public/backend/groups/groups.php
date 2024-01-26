@@ -37,7 +37,48 @@ else if($_SERVER["REQUEST_METHOD"] === "POST")
     $req = json_decode(file_get_contents("php://input"));
     switch($req->task)
     {
-        //################### RENAMES A GROUP BASED ON ITS ID:
+        //################### REMOVES A DELETED GROUP FROM ALL POSSIBLE TRAININGS:
+        case "update-training-groups":
+            $allTrainings = getAllTrainingGroups();
+            if(is_string($allTrainings))
+            {
+                $res["reason"] = "connection-problems";
+            } else {
+
+                $failedUpdates = 0;
+                foreach($allTrainings as $training)
+                {
+                    $groups = json_decode($training["groups"]);
+                    $idx = array_search($req->id, $groups);
+                    if(is_int($idx))
+                    {
+                        unset($groups[$idx]);
+                        $groups = array_values($groups);
+                        $newJSONGroupString = json_encode($groups);
+                        $updateResult = updateTrainingGroups($training["id"], $newJSONGroupString);
+                        if(!is_bool($updateResult))
+                        {
+                            $failedUpdates++;
+                            break;
+                        }
+                        else {
+                            if(!$updateResult)
+                            {
+                                $failedUpdates++;
+                            }
+                        }
+                        
+                    }
+                }
+                if($failedUpdates === 0)
+                {
+                    $res["success"] = true;
+                } else {
+                    $res["reason"] = "connection-problems";
+                }
+            }
+            break;
+        //################### REMOVES A DELETED GROUP FROM ALL POSSIBLE USERS:
         case "update-user-groups":
             $allUsers = getAllUserGroups();
             if(is_string($allUsers))
@@ -87,7 +128,12 @@ else if($_SERVER["REQUEST_METHOD"] === "POST")
                 {
                     $res["success"] = true;
                 } else {
-                    $res["reason"] = "connection-problems";
+                    if($affectedRows === 0)
+                    {
+                        $res["reason"] = "no-changes";
+                    } else {
+                        $res["reason"] = "connection-problems";
+                    }
                 }
             }
             else {

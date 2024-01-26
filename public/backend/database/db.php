@@ -638,6 +638,73 @@ function getAllGroups() {
  *  returns
  *  {true/false | Exeption->getMessage()}     => Bool | String
 */
+function updateTrainingGroups($id, $groups) {
+    $con = connect();
+    $query =
+    "UPDATE sport_cal_trainings
+    SET
+    groups = ?
+    WHERE id = ?";
+    try {
+        $stmt = mysqli_prepare($con, $query);
+        mysqli_stmt_bind_param($stmt, "si", $groups, $id);
+        mysqli_stmt_execute($stmt);
+        $affected = mysqli_stmt_affected_rows($stmt);
+        mysqli_stmt_close($stmt);
+        mysqli_close($con);
+        return $affected === 0 ? false : true;
+    }
+    catch(Exeption $e) {
+        mysqli_close($con);
+        return $e->getMessage();
+    }
+}
+/** FETCHES THE ID AND GROUPS OF ALL TRAININGS:
+ *  returns
+ * {$groups | Exeption->getMessage()} => Array | String */
+function getAllTrainingGroups() {
+    $con = connect();
+    $trainings = [];
+    $query =
+    "SELECT
+    id,
+    groups
+    FROM sport_cal_trainings";
+    $stmt = mysqli_prepare($con, $query);
+    try {
+        mysqli_execute($stmt);
+        mysqli_stmt_bind_result($stmt, $id, $groups);
+        mysqli_stmt_store_result($stmt);
+        $totalTrainings = mysqli_stmt_num_rows($stmt);
+        if($totalTrainings === 0) {
+            mysqli_stmt_free_result($stmt);
+            mysqli_stmt_close($stmt);
+        }
+        else {
+            while(mysqli_stmt_fetch($stmt)) {
+                $trainings[] =
+                [
+                    "id" => $id,
+                    "groups" => $groups,
+                ];
+            }
+            mysqli_stmt_free_result($stmt);
+            mysqli_stmt_close($stmt);
+        }
+        mysqli_close($con);
+        return $trainings;
+    }
+    catch(Exeption $e) {
+        mysqli_close($con);
+        return $e->getMessage();
+    }
+
+}
+/** UPDATES THE GROUPS ENTRY OF A USER BASED ON HIS ID WITH
+ *  A JSON STRING CONTAINING THE NEW GROUP STRING
+ *  returns
+ *  {true/false | Exeption->getMessage()}     => Bool | String
+*/
 function updateUserGroups($id, $groups) {
     $con = connect();
     $query =

@@ -105,6 +105,9 @@
                 <error-alert v-if="connectionError" @close-alert="connectionError = false">
                     <p class="m-0 fw-bold">We have issues connecting to our data. Try again later. We have issues connecting to our data. Try again later.</p>
                 </error-alert>
+                <error-alert v-else-if="noChangeError" @close-alert="noChangeError = false">
+                    <p class="m-0 fw-bold">You made no changes</p>
+                </error-alert>
                 <success-alert v-else-if="creationSuccess" @close-alert="creationSuccess = false">
                     <p class="m-0 fw-bold">Group succefully created</p>
                 </success-alert>
@@ -159,6 +162,7 @@ const editLastname = ref("");
 const editRole = ref("TRAINER");
 // INDICATORS IF AND WHAT INPUT FIELD HAS AN ERROR
 const emailError = ref(false);
+const noChangeError = ref(false);
 const firstnameError = ref(false);
 const lastnameError = ref(false);
 const roleError = ref(false);
@@ -173,6 +177,7 @@ const trainerRoleInput = ref();
 // UN-DISPLAYS POTENTIAL ERRORS
 function resetErrors() {
     emailError.value = false;
+    noChangeError.value = true;
     firstnameError.value = false;
     lastnameError.value = false;
     doubleError.value = false;
@@ -240,7 +245,14 @@ async function change_trainer() {
         if(changeresponse.success) {
             creationSuccess.value = true;
         } else {
-            connectionError.value = true;
+            switch(changeresponse.reason) {
+                case "no-changes":
+                    noChangeError.value = true;
+                    break;
+                default:
+                    connectionError.value = true;
+                    break;
+            }
         }
     }
     submitInProgress.value = false;

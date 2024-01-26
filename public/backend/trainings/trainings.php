@@ -46,11 +46,17 @@ else if($_SERVER["REQUEST_METHOD"] === "POST")
                 {
                     $res["success"] = true;
                 } else {
-                    $res["reason"] = "connection-problems";
+                    if($affectedRows === 0)
+                    {
+                        $res["reason"] = "no-changes";
+                    } else {
+                        $res["reason"] = "connection-problems";
+                    }
                 }
             }
             else {
                 $res["reason"] = "connection-problems";
+                $res["at"] = "affectedRows is not an int (so Exeptionw as thrown in db.php)";
             }
             break;
         //################### VALIDATES DATA USED FOR CHANGING A TRAINER:

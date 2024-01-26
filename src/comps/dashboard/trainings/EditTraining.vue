@@ -54,6 +54,9 @@
                             <error-alert v-else-if="groupError" @close-alert="connectionError = false">
                                 <p class="m-0 fw-bold">Too much groups. Choose less please</p>
                             </error-alert>
+                            <error-alert v-else-if="noChangeError" @close-alert="noChangeError = false">
+                                <p class="m-0 fw-bold">You made no changes</p>
+                            </error-alert>
                             <success-alert v-else-if="creationSuccess" @close-alert="creationSuccess = false">
                                 <p class="m-0 fw-bold">Training succefully changed</p>
                             </success-alert>
@@ -66,7 +69,7 @@
         <div class="w-100 mt-3 d-flex justify-content-end align-items-center">
             <form-loading v-if="submitInProgress" class="me-5"></form-loading>
             <router-link :to="{name:'Trainings'}" type="button" class="rounded-2 me-2 px-2">BACK</router-link>
-            <input type="submit" value="CREATE" class="btn-sec border border-black rounded-2">
+            <input type="submit" value="SAVE" class="btn-sec border border-black rounded-2">
         </div>
     </form>
 </template>
@@ -133,6 +136,7 @@ const editName = ref("");
 const chosenGroups = ref("[]");
 // INDICATORS IF AND WHAT INPUT FIELD HAS AN ERROR
 const nameError = ref(false);
+const noChangeError = ref(false);
 const doubleError = ref(false);
 const groupError = ref(false);
 const connectionError = ref(false);
@@ -157,6 +161,7 @@ function updateChosenGroups(id) {
 // UN-DISPLAYS POTENTIAL ERRORS
 function resetErrors() {
     nameError.value = false;
+    noChangeError.value = false;
     doubleError.value = false;
     connectionError.value = false;
     creationSuccess.value = false;
@@ -202,17 +207,22 @@ async function change_training() {
         };
         let changeresponse = await store.dispatch("trainings/post", changereq);
         if(changeresponse.success) {
-            document.querySelectorAll("input[type='checkbox']").forEach(box => {
-                box.checked = false;
-            });
             creationSuccess.value = true;
         } else {
-            connectionError.value = true;
+            switch(changeresponse.reason) {
+                case "no-changes":
+                    noChangeError.value = true;
+                    break;
+                default:
+                    connectionError.value = true;
+                    break;
+            }
         }
     }
     submitInProgress.value = false;
 
 }
+//TODO: When i dont change anything and click "SAVE" i get "connection error"
 
 //TODO:
 /** When beeing on Edit-* Route, it only works if you directly

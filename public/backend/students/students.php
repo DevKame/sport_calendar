@@ -46,7 +46,12 @@ else if($_SERVER["REQUEST_METHOD"] === "POST")
                 {
                     $res["success"] = true;
                 } else {
-                    $res["reason"] = "connection-problems";
+                    if($affectedRows === 0)
+                    {
+                        $res["reason"] = "no-changes";
+                    } else {
+                        $res["reason"] = "connection-problems";
+                    }
                 }
             }
             else {

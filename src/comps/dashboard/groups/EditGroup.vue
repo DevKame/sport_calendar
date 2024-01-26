@@ -25,6 +25,9 @@
                     <error-alert v-else-if="doubleError" @close-alert="doubleError = false">
                         <p class="m-0 fw-bold">Group {{ editName }} already exists</p>
                     </error-alert>
+                    <error-alert v-else-if="noChangeError" @close-alert="noChangeError = false">
+                        <p class="m-0 fw-bold">You made no changes</p>
+                    </error-alert>
                     <error-alert v-else-if="connectionError" @close-alert="connectionError = false">
                         <p class="m-0 fw-bold">We have issues connecting to our data. Try again later. We have issues connecting to our data. Try again later.</p>
                     </error-alert>
@@ -68,6 +71,7 @@ onMounted(() => {
 
 // INDICATORS IF AND WHAT INPUT FIELD HAS AN ERROR
 const nameError = ref(false);
+const noChangeError = ref(false);
 const doubleError = ref(false);
 const connectionError = ref(false);
 const editionSuccess = ref(false);
@@ -77,6 +81,7 @@ const groupNameInput = ref();
 // UN-DISPLAYS POTENTIAL ERRORS
 function resetErrors() {
     nameError.value = false;
+    noChangeError.value = true;
     doubleError.value = false;
     connectionError.value = false;
     editionSuccess.value = false;
@@ -117,12 +122,19 @@ async function edit_group() {
             name: editName.value,
             id: store.getters["groups/editGroupID"],
         };
-        let editresponse = await store.dispatch("groups/post", editreq);
-        if(editresponse.success) {
+        let changeresponse = await store.dispatch("groups/post", editreq);
+        if(changeresponse.success) {
             editionSuccess.value = true;
             groupNameInput.value.focus();
         } else {
-            connectionError.value = true;
+            switch(changeresponse.reason) {
+                case "no-changes":
+                    noChangeError.value = true;
+                    break;
+                default:
+                    connectionError.value = true;
+                    break;
+            }
         }
     }
     submitInProgress.value = false;

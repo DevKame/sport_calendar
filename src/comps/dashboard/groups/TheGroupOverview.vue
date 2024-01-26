@@ -122,10 +122,22 @@ async function deleteGroup(index, id) {
                 task: "update-user-groups",
                 id: id,
             };
-            const updatedata = await store.dispatch("groups/post", updateuserreq);
-            if(!updatedata.success)
+            const updateuserdata = await store.dispatch("groups/post", updateuserreq);
+            if(!updateuserdata.success)
             {
                 router.push({name: "Error"});
+            }
+            else {
+                const updatetrainingreq =
+                {
+                    task: "update-training-groups",
+                    id: id,
+                };
+                const updatetrainingdata = await store.dispatch("groups/post", updatetrainingreq);
+                if(!updatetrainingdata.success)
+                {
+                    router.push({name: "Error"});
+                }
             }
         }
         else {
