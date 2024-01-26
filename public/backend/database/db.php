@@ -800,7 +800,33 @@ function getAllGroups() {
 
 }
 ////////////////////////////////////    GROUP QUERIES  [end]  //////////////////////////////////////
-/** UPDATES THE GROUPS ENTRY OF A USER BASED ON HIS ID WITH
+/** UPDATES THE GROUPS ENTRY OF AN EVENT BASED ON ITS ID WITH
+ *  A JSON STRING CONTAINING THE NEW GROUP STRING
+ *  returns
+ *  {true/false | Exeption->getMessage()}     => Bool | String
+*/
+function updateEventGroups($id, $groups) {
+    $con = connect();
+    $query =
+    "UPDATE sport_cal_EVENTS
+    SET
+    groups = ?
+    WHERE id = ?";
+    try {
+        $stmt = mysqli_prepare($con, $query);
+        mysqli_stmt_bind_param($stmt, "si", $groups, $id);
+        mysqli_stmt_execute($stmt);
+        $affected = mysqli_stmt_affected_rows($stmt);
+        mysqli_stmt_close($stmt);
+        mysqli_close($con);
+        return $affected === 0 ? false : true;
+    }
+    catch(Exeption $e) {
+        mysqli_close($con);
+        return $e->getMessage();
+    }
+}
+/** UPDATES THE GROUPS ENTRY OF A TRAINING BASED ON ITS ID WITH
  *  A JSON STRING CONTAINING THE NEW GROUP STRING
  *  returns
  *  {true/false | Exeption->getMessage()}     => Bool | String
@@ -825,6 +851,47 @@ function updateTrainingGroups($id, $groups) {
         mysqli_close($con);
         return $e->getMessage();
     }
+}
+/** FETCHES THE ID AND GROUPS OF ALL EVENTS:
+ *  returns
+ * {$groups | Exeption->getMessage()} => Array | String */
+function getAllEventGroups() {
+    $con = connect();
+    $events = [];
+    $query =
+    "SELECT
+    id,
+    groups
+    FROM sport_cal_events";
+    $stmt = mysqli_prepare($con, $query);
+    try {
+        mysqli_execute($stmt);
+        mysqli_stmt_bind_result($stmt, $id, $groups);
+        mysqli_stmt_store_result($stmt);
+        $totalEvents = mysqli_stmt_num_rows($stmt);
+        if($totalEvents === 0) {
+            mysqli_stmt_free_result($stmt);
+            mysqli_stmt_close($stmt);
+        }
+        else {
+            while(mysqli_stmt_fetch($stmt)) {
+                $events[] =
+                [
+                    "id" => $id,
+                    "groups" => $groups,
+                ];
+            }
+            mysqli_stmt_free_result($stmt);
+            mysqli_stmt_close($stmt);
+        }
+        mysqli_close($con);
+        return $events;
+    }
+    catch(Exeption $e) {
+        mysqli_close($con);
+        return $e->getMessage();
+    }
+
 }
 /** FETCHES THE ID AND GROUPS OF ALL TRAININGS:
  *  returns

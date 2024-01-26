@@ -38,6 +38,47 @@ else if($_SERVER["REQUEST_METHOD"] === "POST")
     switch($req->task)
     {
         //################### REMOVES A DELETED GROUP FROM ALL POSSIBLE TRAININGS:
+        case "update-event-groups":
+            $allEvents = getAllEventGroups();
+            if(is_string($allEvents))
+            {
+                $res["reason"] = "connection-problems";
+            } else {
+
+                $failedUpdates = 0;
+                foreach($allEvents as $event)
+                {
+                    $groups = json_decode($event["groups"]);
+                    $idx = array_search($req->id, $groups);
+                    if(is_int($idx))
+                    {
+                        unset($groups[$idx]);
+                        $groups = array_values($groups);
+                        $newJSONGroupString = json_encode($groups);
+                        $updateResult = updateEventGroups($event["id"], $newJSONGroupString);
+                        if(!is_bool($updateResult))
+                        {
+                            $failedUpdates++;
+                            break;
+                        }
+                        else {
+                            if(!$updateResult)
+                            {
+                                $failedUpdates++;
+                            }
+                        }
+                        
+                    }
+                }
+                if($failedUpdates === 0)
+                {
+                    $res["success"] = true;
+                } else {
+                    $res["reason"] = "connection-problems";
+                }
+            }
+            break;
+        //################### REMOVES A DELETED GROUP FROM ALL POSSIBLE TRAININGS:
         case "update-training-groups":
             $allTrainings = getAllTrainingGroups();
             if(is_string($allTrainings))

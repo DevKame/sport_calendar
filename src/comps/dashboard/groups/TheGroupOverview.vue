@@ -138,6 +138,19 @@ async function deleteGroup(index, id) {
                 {
                     router.push({name: "Error"});
                 }
+                else {
+                    
+                    const updateeventreq =
+                    {
+                        task: "update-event-groups",
+                        id: id,
+                    };
+                    const updateeventdata = await store.dispatch("groups/post", updateeventreq);
+                    if(!updateeventdata.success)
+                    {
+                        router.push({name: "Error"});
+                    }
+                }
             }
         }
         else {
