@@ -24,7 +24,7 @@
                 <div class="w-100 mt-1 d-flex justify-content-start align-items-center">
                     <p class="m-0">{{ props.event.fulldate }}</p>
                     <p class="m-0 ms-4">{{ props.event.fulltime }}</p>
-                    <p class="m-0 ms-auto badge bg-role-badge text-black" :class="{you_badge: trainer === 'You!', no_trainer: trainer === 'no-trainer'}">{{ trainer }}</p>
+                    <p class="m-0 ms-auto badge bg-trainer-badge text-black" :class="{you_badge: trainerIsYou, no_trainer: trainerIsNone}">{{ trainer }}</p>
                 </div>
             </header>
             <transition name="details">
@@ -71,6 +71,12 @@ function toggleMenu() {
         resetEditGroup();
     }
 }
+const trainerIsYou = computed(() => {
+    return props.trainer === "You!";
+});
+const trainerIsNone = computed(() => {
+    return props.trainer === "no-trainer";
+});
 
 const indicatorForOld = computed(() => {
     return props.event.old === 1 ?
@@ -101,11 +107,11 @@ const detailView = ref(false);
 
 
 <style scoped>
-.bg-role-badge.no_trainer {
+.bg-trainer-badge.no_trainer {
     border: 3px solid black;
     background-color: var(--delete);
 }
-.bg-role-badge.you_badge {
+.bg-trainer-badge.you_badge {
     border: 3px solid black;
     background-color: var(--sec);
 }

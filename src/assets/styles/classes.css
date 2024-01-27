@@ -19,6 +19,9 @@
 .bg-role-badge {
     background-color: var(--role-badge);
 }
+.bg-trainer-badge {
+    background-color: var(--neutral-weak);
+}
 
 
 .btn-sec {
