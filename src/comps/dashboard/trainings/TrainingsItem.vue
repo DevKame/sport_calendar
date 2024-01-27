@@ -57,14 +57,16 @@ function toggleMenu() {
         resetEditTraining();
     }
 }
-
+// TELLS PARENT TO INVOKE AN EDIT ACTION
 function deleteItem() {
     resetEditTraining();
     emits("delete-item");
 }
+// TELLS PARENT TO INVOKE A DELETE ACTION
 function editItem() {
     emits("edit-item");
 }
+// RESETS POSSIBLE PREPARED DATA FOR EDITING
 function resetEditTraining() {
     store.commit["trainings/resetTrainingDataForEdit"];
 }

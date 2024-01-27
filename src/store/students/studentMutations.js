@@ -10,8 +10,11 @@ export default {
         moduleState.studentgroups_edit = data.groups;
     },
     // SETS THE Edit-Student VALUES BACK TO null
-    resetGroupDataForEdit(moduleState) {
+    resetStudentDataForEdit(moduleState) {
         moduleState.studentemail_edit = null;
         moduleState.studentID_edit = null;
+        moduleState.studentfirstname_edit = null;
+        moduleState.studentlastname_edit = null;
+        moduleState.studentgroups_edit = null;
     }
 }

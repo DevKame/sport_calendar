@@ -68,20 +68,23 @@ const menuOn = ref(false);
 function toggleMenu() {
     menuOn.value = !menuOn.value;
     if(!menuOn.value) {
-        resetEditGroup();
+        resetEditEvent();
     }
 }
+// DEPENDENT ON WHICH TRAINER IS APPLIED, THIS BADGE GETS ANOTHER CLASS
+// AND WITH THAT OTHER COLORS
 const trainerIsYou = computed(() => {
     return props.trainer === "You!";
 });
 const trainerIsNone = computed(() => {
     return props.trainer === "no-trainer";
 });
-
+// IF EVENT IS OLD, IT GETS A VISUAL INDICATOR FOR THAT
 const indicatorForOld = computed(() => {
     return props.event.old === 1 ?
     "old" : "new";
 });
+// SETS THE INFO CONTENT OR A DEFAULT VALUE IF NO CONTENT IS PROVIDED
 const infoContent = computed(() => {
     let result = "No information available";
     if(props.event.info.trim() !== "")
@@ -91,15 +94,18 @@ const infoContent = computed(() => {
     return result;
 });
 
+// TELLS PARENT TO INVOKE AN EDIT ACTION
 function deleteItem() {
-    resetEditGroup();
+    resetEditEvent();
     emits("delete-item");
 }
+// TELLS PARENT TO INVOKE A DELETE ACTION
 function editItem() {
     emits("edit-item");
 }
-function resetEditGroup() {
-    store.commit["groups/resetGroupDataForEdit"];
+// RESETS POSSIBLE PREPARED DATA FOR EDITING
+function resetEditEvent() {
+    store.commit["events/resetEventDataForEdit"];
 }
 
 const detailView = ref(false);

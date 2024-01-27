@@ -82,7 +82,6 @@
                 <label for="createMax">Max. participants</label>
             </div>
             <input
-            @input="showData();"
             @click="resetErrors"
             type="number"
             id="createMax"
@@ -140,7 +139,6 @@
             </div>
 
             <textarea
-            @input="showData();"
             @click="resetErrors"
             id="createInfo"
             name="createInfo"
@@ -220,18 +218,12 @@ const emits = defineEmits([
 function clickHandler() {
     emits("empty-click");
 }
-
+// TOTAL CHARACTERS OF createInfo
 const infoChars = computed(() => {
     return createInfo.value.length;
 });
-
-const userRole = computed(() => {
-    return store.getters["auth/userRole"];
-});
-
 // REPRESENTS THE LOADING OF COMPLETE ROUTE
 const loadingRoute = ref(true);
-
 // ALL FETCHED GROUPS AND TRAINERS ARE BEEING SAVE HERE
 const groupArray = ref([]);
 const trainerArray = ref([]);
@@ -271,11 +263,9 @@ onMounted(async () => {
 
     loadingRoute.value = false;
 
+    // TO SET A VALUE TO eventTrainerInput AFTER THE ASNY onMount IS ACTUALLY DONE
     await nextTick();
-    
     eventTrainerInput.value.value = createTrainer.value;
-    // console.clear();
-    showData();
 });
 
 /** ADDS A CHECKED VALUE (Bool) TO EVERY GROUP THAT THE EVENT
@@ -286,8 +276,6 @@ onMounted(async () => {
  * 
  * @returns {Array}             => MODIFIED groups WITH "CHECKED" VALUES */
  function selectBoxes(groups, egroups) {
-    console.warn();
-    console.table(egroups);
     for(let grp of groups)
     {
         if(egroups.find(curr => curr.id === grp.id))
@@ -325,26 +313,22 @@ const eventTrainingInput = ref();
 const eventTrainerInput = ref();
 const eventInfoInput = ref();
 
+// RESETS chosenGroups ADN DESELCTS EVERY CHECKBOX:
 function resetChosenGroups() {
     chosenGroups.value = "[]";
     document.querySelectorAll("input[type='checkbox']").forEach(box => {
         box.checked = false;
     });
 }
+// CALLBACK FOR <select> FOR TRAININGS
 function trainingSelectHandler(e) {
     resetChosenGroups();
     if(e.target.value !== "no-training")
     {
         let trainingID = +e.target.value;
-        console.log("id des gewählten Trainings:", trainingID);
         let training = trainingArray.value.find(curr => curr.id === trainingID);
-        console.log("Ausgewähltes Training:");
-        console.table(training);
         let groupsOfTraining = JSON.parse(training.groups);
-        console.log("Gruppen dieses Trainings:");
-        console.table(groupsOfTraining);
         document.querySelectorAll("input[type='checkbox']").forEach(box => {
-            console.log(+box.id);
             if(groupsOfTraining.includes(+box.id))
             {
                 box.checked = true;
@@ -353,17 +337,17 @@ function trainingSelectHandler(e) {
         });
         createName.value = training.name;
     }
-    showData();
 }
+// CALLBACK FOR <select> FOR TRAINERS
 function createTrainerHandler(e) {
     createTrainer.value = e.target.value;
-    showData();
 }
+// CALLBACK: RESETS THE <select> FOR TRAININGS WHEN TYPING SOMETHING FOR createName
 function createNameHandler() {
     eventTrainingInput.value.value = "no-training";
-    showData();
 }
-
+// WHENEVER THE <input type="datetime-local"> CHANGES, SPLITS ITS DAY,MONTH,YEAR,HOUR AND MINUTE
+// TO splittedDatetime
 watch(createDatetime, val => {
     let year = val.slice(0, 4);
     let month = val.slice(5, 7);
@@ -394,20 +378,6 @@ function updateChosenGroups(id, resetTrainingSelect) {
         oldGroups.push(id);
     }
     chosenGroups.value = JSON.stringify(oldGroups);
-    showData();
-}
-//DEV: SHOWING THE COMPLETE FORM
-function showData() {
-    console.log(userRole.value);
-    console.table(trainerArray.value);
-    console.table(trainingArray.value);
-    console.table(groupArray.value);
-    console.log("Name:", createName.value);
-    console.log("Datetime:", createDatetime.value);
-    console.log("Max:", createMax.value);
-    console.log("Trainer:", createTrainer.value);
-    console.log("Info:", createInfo.value);
-    console.log("chosenGroups:", chosenGroups.value);
 }
 // UN-DISPLAYS POTENTIAL ERRORS
 function resetErrors() {
@@ -422,8 +392,6 @@ function resetErrors() {
     connectionError.value = false;
     creationSuccess.value = false;
 }
-
-
 // REPRESENTS THAT SUBMITTING IS IN PROGRESS
 const submitInProgress = ref(false);
 /** SUBMITTING PROCESS OF CREATING A STUDENT */
@@ -449,7 +417,6 @@ async function change_event() {
     };
     resetErrors();
     let valiresponse = await store.dispatch("events/post", req);
-    console.table(req);
     if(!valiresponse.success)
     {
         switch(valiresponse.reason) {

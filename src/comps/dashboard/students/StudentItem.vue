@@ -59,19 +59,22 @@ const menuOn = ref(false);
 function toggleMenu() {
     menuOn.value = !menuOn.value;
     if(!menuOn.value) {
-        resetEditGroup();
+        resetEditStudent();
     }
 }
 
+// TELLS PARENT TO INVOKE AN EDIT ACTION
 function deleteItem() {
-    resetEditGroup();
+    resetEditStudent();
     emits("delete-item");
 }
+// TELLS PARENT TO INVOKE A DELETE ACTION
 function editItem() {
     emits("edit-item");
 }
-function resetEditGroup() {
-    store.commit["groups/resetGroupDataForEdit"];
+// RESETS POSSIBLE PREPARED DATA FOR EDITING
+function resetEditStudent() {
+    store.commit["students/resetStudentDataForEdit"];
 }
 
 const detailView = ref(false);

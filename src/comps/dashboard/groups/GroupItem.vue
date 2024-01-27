@@ -45,14 +45,16 @@ function toggleMenu() {
         resetEditGroup();
     }
 }
+// TELLS PARENT TO INVOKE AN EDIT ACTION
 function deleteItem() {
     resetEditGroup();
     emits("delete-item");
 }
+// TELLS PARENT TO INVOKE A DELETE ACTION
 function editItem() {
     emits("edit-item");
 }
-// SETS THE TO-BE-EDITED VALUES FOR THE GROUP WITHIN THE STATE TO null
+// RESETS POSSIBLE PREPARED DATA FOR EDITING
 function resetEditGroup() {
     store.commit["groups/resetGroupDataForEdit"];
 }

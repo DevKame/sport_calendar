@@ -220,10 +220,8 @@ function clickHandler() {
 const infoChars = computed(() => {
     return createInfo.value.length;
 });
-
 // REPRESENTS THE LOADING OF POSSIBLE GROUPS TO CHOOSE
 const loadingGroups = ref(false);
-
 // ALL FETCHED GROUPS AND TRAINERS ARE BEEING SAVE HERE
 const groupArray = ref([]);
 const trainerArray = ref([]);
