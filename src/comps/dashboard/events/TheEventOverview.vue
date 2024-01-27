@@ -8,12 +8,14 @@
 
                 <template #body>
                     <div class="w-100 h-100 d-flex justify-content-around align-items-center py-2 bg-prim">
-                        <router-link :to="{name: 'New-Event'}" class="px-1 btn-positive border border-black rounded-2 ">
-                            New Event
-                        </router-link>
-                        <a  v-if="oldEventsExistent" @click.prevent="console.log('delete olds')" class="px-1 btnDeleteOlds btn-role-badge border border-black rounded-2 ">
-                            Delete old events
-                        </a>
+                        <transition-group tag="div" name="overview-buttons" class="h-100 w-100 d-flex justify-content-around align-items-center">
+                            <router-link :to="{name: 'New-Event'}" class="px-1 btn-positive border border-black rounded-2 ">
+                                New Event
+                            </router-link>
+                            <a  v-if="oldEventsExistent" @click.prevent="deleteAllOlds" class="px-1 btnDeleteOlds btn-role-badge border border-black rounded-2 ">
+                                Delete old events
+                            </a>
+                        </transition-group>
                     </div>
                 </template>
             </itf-card>
@@ -115,6 +117,29 @@ onMounted(async () => {
     console.table(eventArray.value);
     loadingContent.value = false;
 });
+
+async function deleteAllOlds() {
+    const olds = eventArray.value.filter(curr => curr.old === 1);
+    console.table(olds);
+    for(let e of olds)
+    {
+        try {
+            const req = {task: "delete-event", id: e.id};
+            await store.dispatch("events/post", req);
+            let idx = eventArray.value.indexOf(olds.find(curr => curr.id === req.id));
+            console.log(idx);
+            eventArray.value.splice(idx, 1);
+            const newOlds = eventArray.value.filter(curr => curr.old === 1);
+            if(newOlds.length === 0)
+            {
+                oldEventsExistent.value = false;
+            }
+        }
+        catch {
+            router.replace({name: "Error"});
+        }
+    }
+}
 /** DELIVERS A DIFFERENT "trainer" PROP TO <EventItem> DEPENDING ON VALUE OF "t"
  * @param {String} t            => "no-trainer" | stringified number
  * @returns {String} result     => "no-trainer" | "You!" | trainer.firstname */
@@ -240,5 +265,20 @@ async function deleteEvent(index, id) {
 .no-content-leave-from {
     opacity: 1;
     transform: translate(0, 0);
+}
+.overview-buttons-leave-from {
+    transform: translate(0, 0);
+    opacity: 1;
+}
+.overview-buttons-leave-active {
+    transition: all .3s ease;
+    position: absolute;
+}
+.overview-buttons-move {
+    transition: all .3s ease;
+}
+.overview-buttons-leave-to {
+    transform: translate(100%, 0);
+    opacity: 0;
 }
 </style>
