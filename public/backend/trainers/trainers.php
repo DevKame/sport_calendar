@@ -60,6 +60,32 @@ else if($_SERVER["REQUEST_METHOD"] === "POST")
     $req = json_decode(file_get_contents("php://input"));
     switch($req->task)
     {
+        //################### REMOVES A DELETED GROUP FROM ALL POSSIBLE TRAININGS:
+        case "update-event-trainer":
+            $allEvents = getTotalEventsWithTrainerID($req->id);
+            if(is_string($allEvents))
+            {
+                $res["reason"] = "connection-problems";
+            } else {
+
+                $failedUpdates = 0;
+                foreach($allEvents as $event)
+                {
+                    $resetResult = resetTrainerFromSingleEvent($event["id"]);
+                    if(is_string($resetResult))
+                    {
+                        $failedUpdates++;
+                        break;
+                    }
+                }
+                if($failedUpdates === 0)
+                {
+                    $res["success"] = true;
+                } else {
+                    $res["reason"] = "connection-problems";
+                }
+            }
+            break;
         //################### FETCHES ALL TRAINERS (ONLY NAME AND ID):
         case "get-name-and-id":
             $trainers = getTrainerNameAndID();

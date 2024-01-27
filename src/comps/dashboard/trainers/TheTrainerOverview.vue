@@ -121,6 +121,16 @@ async function deleteTrainer(index, id) {
             {
                 noTrainersAvailable.value = true;
             }
+            const req =
+            {
+                task: "update-event-trainer",
+                id: id,
+            };
+            const updateeventdata = await store.dispatch("trainers/post", req);
+            if(!updateeventdata.success)
+            {
+                router.push({name: "Error"});
+            }
             //TODO: needs to update all events where this trainer was signed in
         }
         else {

@@ -4,6 +4,67 @@
 
 
 ////////////////////////////////////    EVENT QUERIES  [start]  //////////////////////////////////////
+function resetTrainerFromSingleEvent($id) {
+    $con = connect();
+    $query =
+    "UPDATE sport_cal_events
+    SET trainer = 'no-trainer'
+    WHERE id = ?";
+    try {
+        $stmt = mysqli_prepare($con, $query);
+        mysqli_stmt_bind_param($stmt, "i", $id);
+        mysqli_stmt_execute($stmt);
+        $affectedRows = mysqli_stmt_num_rows($stmt);
+        mysqli_stmt_close($stmt);
+        mysqli_close($con);
+        return $affectedRows;
+    }
+    catch(Exeption $e) {
+        mysqli_close($con);
+        return $e->getMessage();
+    }
+}
+/** FETCHES ALL EXISTENT EVENTS
+ *  returns
+ * {$events | Exeption->getMessage()} => Array | String */
+function getTotalEventsWithTrainerID($id) {
+    $con = connect();
+    $events = [];
+    $query =
+    "SELECT id, trainer
+    FROM sport_cal_events
+    WHERE trainer = ?";
+    $stmt = mysqli_prepare($con, $query);
+    try {
+        mysqli_stmt_bind_param($stmt, "i", $id);
+        mysqli_execute($stmt);
+        mysqli_stmt_bind_result($stmt, $id, $trainer);
+        mysqli_stmt_store_result($stmt);
+        $totalEvents = mysqli_stmt_num_rows($stmt);
+        if($totalEvents === 0) {
+            mysqli_stmt_free_result($stmt);
+            mysqli_stmt_close($stmt);
+        }
+        else {
+            while(mysqli_stmt_fetch($stmt)) {
+                $events[] =
+                [
+                    "id" => $id,
+                    "trainer" => $trainer,
+                ];
+            }
+            mysqli_stmt_free_result($stmt);
+            mysqli_stmt_close($stmt);
+        }
+        mysqli_close($con);
+        return $events;
+    }
+    catch(Exeption $e) {
+        mysqli_close($con);
+        return $e->getMessage();
+    }
+
+}
 /** CREATES A NEW EVENT
  *  returns
  * {true | Exeption->getMessage()} => Bool | String */
