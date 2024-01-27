@@ -9,7 +9,7 @@
                 <template #body>
                     <div class="w-100 h-100 d-flex justify-content-around align-items-center py-2 bg-prim">
                         <transition-group tag="div" name="overview-buttons" class="h-100 w-100 d-flex justify-content-around align-items-center">
-                            <router-link :to="{name: 'New-Event'}" class="px-1 btn-positive border border-black rounded-2 ">
+                            <router-link :to="{name: 'New-Event'}" key="randomKey" class="px-1 btn-positive border border-black rounded-2 ">
                                 New Event
                             </router-link>
                             <a  v-if="oldEventsExistent" @click.prevent="deleteAllOlds" class="px-1 btnDeleteOlds btn-role-badge border border-black rounded-2 ">
@@ -107,6 +107,7 @@ onMounted(async () => {
 
             return dateA - dateB;
         });
+        toggleDeleteOldsButton();
     }
     loadingContent.value = false;
 });
@@ -147,12 +148,12 @@ function getTrainerNameFromEventProperties(t) {
     }
     return result;
 }
-/** CHECKS IF AT LEAST ONE FETCHED EVENT IS OLD
- *  @returns {Bool}     => RENDERS "Delete old events"- BUTTON IF TRUE */
-const oldEventsExistent = computed(() => {
-    return eventArray.value.find(curr => curr.old === 1) !== undefined ?
+// DETERMINES IF BUTTON FOR DELETING OLD EVENTS SHOULD BE DISPLAYED
+const oldEventsExistent = ref(false);
+function toggleDeleteOldsButton() {
+    oldEventsExistent.value = eventArray.value.find(curr => curr.old === 1) !== undefined ?
     true : false;
-});
+}
 /** APPLIES THE ACTUAL GROUP NAMES OF ALL GROUPS THE
  *  EVENT HAS TO HIS LISTITEM
  * @param {number} id               => ID OF THE EVENT
@@ -257,9 +258,13 @@ async function deleteEvent(index, id) {
     opacity: 1;
     transform: translate(0, 0);
 }
-.overview-buttons-leave-from {
+.overview-buttons-leave-from,
+.overview-buttons-enter-to {
     transform: translate(0, 0);
     opacity: 1;
+}
+.overview-buttons-enter-active {
+    transition: all .3s ease;
 }
 .overview-buttons-leave-active {
     transition: all .3s ease;
@@ -268,7 +273,8 @@ async function deleteEvent(index, id) {
 .overview-buttons-move {
     transition: all .3s ease;
 }
-.overview-buttons-leave-to {
+.overview-buttons-leave-to,
+.overview-buttons-enter-from {
     transform: translate(100%, 0);
     opacity: 0;
 }

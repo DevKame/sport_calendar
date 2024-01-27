@@ -133,15 +133,17 @@ const emits = defineEmits([
 function clickHandler() {
     emits("empty-click");
 }
+// IS NEEDED TO DETERMINE WHAT ROLES CAN BE CREATED
 const userRole = computed(() => {
     return store.getters["auth/userRole"];
 });
 
+// INDICATES LOADING OF THE ROUTE
 const contentLoading = ref(true);
+// STOPS THE LOADING ANIMATION
 onMounted(() => {
     contentLoading.value = false;
 });
-
 // VALUES BIND TO INPUT ELEMENTS WITH V-MODEL
 const createEmail = ref("");
 const createFirstname = ref("");
@@ -170,11 +172,8 @@ function resetErrors() {
     connectionError.value = false;
     creationSuccess.value = false;
 }
-
-
 // INDICATES THAT SUBMITTING IS IN PROGRESS
 const submitInProgress = ref(false);
-
 /** SUBMITTING PROCESS OF CREATING A STUDENT */
 async function create_trainer() {
     submitInProgress.value = true;
@@ -188,7 +187,6 @@ async function create_trainer() {
     };
     resetErrors();
     let valiresponse = await store.dispatch("trainers/post", valireq);
-    console.table(valiresponse);
     if(!valiresponse.success)
     {
         switch(valiresponse.reason) {

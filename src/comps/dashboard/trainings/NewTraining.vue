@@ -132,8 +132,6 @@ function resetErrors() {
     connectionError.value = false;
     creationSuccess.value = false;
 }
-
-
 // REPRESENTS THAT SUBMITTING IS IN PROGRESS
 const submitInProgress = ref(false);
 /** SUBMITTING PROCESS OF CREATING A STUDENT */

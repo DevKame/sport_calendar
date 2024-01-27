@@ -139,7 +139,6 @@ onMounted(async () => {
     const groupdata = await store.dispatch("groups/getAllGroups");
     loadingGroups.value = false;
     groupArray.value = [...groupdata.groups];
-    console.table(groupArray.value);
 });
 // VALUES BIND TO INPUT ELEMENTS WITH V-MODEL
 const createEmail = ref("");
@@ -171,15 +170,6 @@ function updateChosenGroups(id) {
         oldGroups.push(id);
     }
     chosenGroups.value = JSON.stringify(oldGroups);
-    showData();
-}
-//DEV: SHOWING THE COMPLETE FORM
-function showData() {
-    console.clear();
-    console.log("Email:", createEmail.value);
-    console.log("Firstname:", createFirstname.value);
-    console.log("Lastname:", createLastname.value);
-    console.log("chosenGroups:", chosenGroups.value);
 }
 // UN-DISPLAYS POTENTIAL ERRORS
 function resetErrors() {
@@ -190,8 +180,6 @@ function resetErrors() {
     connectionError.value = false;
     creationSuccess.value = false;
 }
-
-
 // REPRESENTS THAT SUBMITTING IS IN PROGRESS
 const submitInProgress = ref(false);
 /** SUBMITTING PROCESS OF CREATING A STUDENT */
