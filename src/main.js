@@ -111,77 +111,21 @@ let router = createRouter({
             },
             children:
             [
-                {
-                    path: "events",
-                    name: "Events",
-                    component: TheEventOverview,
-                },
-                {
-                    path: "newevent",
-                    name: "New-Event",
-                    component: NewEvent,
-                },
-                {
-                    path: "trainings",
-                    name: "Trainings",
-                    component: TheTrainingOverview,
-                },
-                {
-                    path: "newtraining",
-                    name: "New-Training",
-                    component: NewTraining,
-                },
-                {
-                    path: "edittraining",
-                    name: "Edit-Training",
-                    component: EditTraining,
-                },
-                {
-                    path: "trainers",
-                    name: "Trainers",
-                    component: TheTrainerOverview,
-                },
-                {
-                    path: "newtrainer",
-                    name: "New-Trainer",
-                    component: NewTrainer,
-                },
-                {
-                    path: "edittrainer",
-                    name: "Edit-Trainer",
-                    component: EditTrainer,
-                },
-                {
-                    path: "students",
-                    name: "Students",
-                    component: TheStudentOverview,
-                },
-                {
-                    path: "newstudent",
-                    name: "New-Student",
-                    component: NewStudent,
-                },
-                {
-                    path: "editstudent",
-                    name: "Edit-Student",
-                    component: EditStudent,
-                },
-                {
-                    path: "groups",
-                    name: "Groups",
-                    component: TheGroupOverview,
-                },
-                {
-                    path: "newgroup",
-                    name: "New-Group",
-                    component: NewGroup,
-                },
-                {
-                    path: "editgroup",
-                    name: "Edit-Group",
-                    component: EditGroup,
-                },
-            ]
+                { path: "events", name: "Events", component: TheEventOverview },
+                { path: "newevent", name: "New-Event", component: NewEvent },
+                { path: "trainings", name: "Trainings", component: TheTrainingOverview },
+                { path: "newtraining", name: "New-Training", component: NewTraining },
+                { path: "edittraining", name: "Edit-Training", component: EditTraining },
+                { path: "trainers", name: "Trainers", component: TheTrainerOverview },
+                { path: "newtrainer", name: "New-Trainer", component: NewTrainer },
+                { path: "edittrainer", name: "Edit-Trainer", component: EditTrainer },
+                { path: "students", name: "Students", component: TheStudentOverview },
+                { path: "newstudent", name: "New-Student", component: NewStudent },
+                { path: "editstudent", name: "Edit-Student", component: EditStudent },
+                { path: "groups", name: "Groups", component: TheGroupOverview },
+                { path: "newgroup", name: "New-Group", component: NewGroup },
+                { path: "editgroup", name: "Edit-Group", component: EditGroup },
+            ],
         },
         {
             path: "/error",
