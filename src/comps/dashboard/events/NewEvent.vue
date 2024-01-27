@@ -181,7 +181,7 @@
                                 <p class="m-0 fw-bold">Too many groups. Choose less</p>
                             </error-alert>
                             <success-alert v-else-if="creationSuccess" @close-alert="creationSuccess = false">
-                                <p class="m-0 fw-bold">Group succefully created</p>
+                                <p class="m-0 fw-bold">Event succefully created</p>
                             </success-alert>
                         </transition>
                     </div>
