@@ -30,7 +30,7 @@
                     :event="event"
                     :trainer="getTrainerNameFromEventProperties(event.trainer)"
                     :groups="filteredGroups(event.id)"
-                    @delete-item="deleteStudent(idx, event.id)"
+                    @delete-item="deleteEvent(idx, event.id)"
                     @edit-item="editEvent(event, filteredGroups(event.id))"></event-item>
                 </transition-group>
             </div>
@@ -105,7 +105,12 @@ onMounted(async () => {
         noEventsAvailable.value = true;
     }
     else {
-        eventArray.value = [...eventdata.events];
+        eventArray.value = eventdata.events.sort((a, b) => {
+            const dateA = new Date(+a.year, +a.month - 1, +a.day,  +a.hour + 1, +a.minute, 0, 0);
+            const dateB = new Date(+b.year, +b.month - 1, +b.day,  +b.hour + 1, +b.minute, 0, 0);
+
+            return dateA - dateB;
+        });
     }
     console.table(eventArray.value);
     loadingContent.value = false;
@@ -152,8 +157,8 @@ function filteredGroups(id) {
 
 /** PREPARES STATE WITH NAME AND ID OF TO-BE-EDITED EVENT AND SWITCHES
  *  TO Edit-Event ROUTE TO ENABLE THE ACTUAL EDITING
- * @param {number} id   => ID OF THE TO-BE-EDITED EVENT 
- * @param {String} name => NAME OF THE TO-BE-EDITED EVENT */
+ * @param {object} event    => THE EVENT ITSELF 
+ * @param {Array} groups    => EVENTS GROUPS AS ARRAY */
 function editEvent(event, groups) {
     if(userRole.value !== "ADMIN" && userRole.value !== "SENIOR-TRAINER") {
         accessInfoActive.value = true;
@@ -167,20 +172,20 @@ function editEvent(event, groups) {
     }
 }
 
-/** DELETES THE CHOSEN STUDENT USING HIS ID AND REMOVES THE CORRESPONDING DOM
+/** DELETES THE CHOSEN EVENT USING HIS ID AND REMOVES THE CORRESPONDING DOM
  * @param {number} index    => ON WHAT IDX IS THE LIST ELEMENT
- * @param {number} id       => ID OF THE STUDENT */
-async function deleteStudent(index, id) {
+ * @param {number} id       => ID OF THE EVENT */
+async function deleteEvent(index, id) {
     if(userRole.value !== "ADMIN") {
         accessInfoActive.value = true;
     }
     else {
-        const deletereq =
+        const req =
         {
-            task: "delete-student",
+            task: "delete-event",
             id: id,
         };
-        const deletedata = await store.dispatch("students/post", deletereq);
+        const deletedata = await store.dispatch("events/post", req);
         if(deletedata.success) {
             eventArray.value.splice(index, 1);
             if(eventArray.value.length === 0)

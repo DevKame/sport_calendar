@@ -57,7 +57,7 @@ else if($_SERVER["REQUEST_METHOD"] === "POST")
     $req = json_decode(file_get_contents("php://input"));
     switch($req->task)
     {
-        //################### CHANGES DATA OF A EVENT:
+        //################### CHANGES DATA OF AN EVENT:
         case "edit-event":
             $affectedRows = editEvent($req->id,$req->name,$req->fulldate,$req->fulltime,$req->year,$req->month,$req->day,$req->hour,$req->minute,$req->max,$req->trainer,$req->info,$req->groups);
             if(is_int($affectedRows))
@@ -125,9 +125,9 @@ else if($_SERVER["REQUEST_METHOD"] === "POST")
             }
             $res["success"] = true;
             break;
-        //################### DELETES A STUDENT BASED ON ITS ID:
-        case "delete-student":
-            $result = deleteStudent($req->id);
+        //################### DELETES AN EVENT BASED ON ITS ID:
+        case "delete-event":
+            $result = deleteEvent($req->id);
             if(is_bool($result)) {
                 if($result) {
                     $res["success"] = true;
