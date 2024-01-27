@@ -79,28 +79,22 @@ const studentArray = ref([]);
 const trainerArray = ref([]);
 const eventArray = ref([]);
 
-// INITIAL FETCHING OF GROUPS AND STUDENTS TO BE ABLE TO DISPLAY THEM
+// INITIAL FETCHING OF GROUPS, TRAINERS, TRAININGS AND EVENTS TO BE ABLE TO DISPLAY THEM
 onMounted(async () => {
     loadingContent.value = true;
 
 
     const groupdata = await store.dispatch("groups/getAllGroups");
     groupArray.value = [...groupdata.groups];
-    console.table(groupArray.value);
     
     const studentreq = {task:"get-name-and-id"};
     const studentdata = await store.dispatch("students/post", studentreq);
     studentArray.value = [...studentdata.students];
-    console.table(studentArray.value);
     
     const trainerreq = {task:"get-name-and-id"};
     const trainerdata = await store.dispatch("trainers/post", trainerreq);
     trainerArray.value = [...trainerdata.trainers];
-    console.table(trainerArray.value);
-
     
-
-
     const eventdata = await store.dispatch("events/getAllEvents");
     if(eventdata.events.length === 0)
     {
@@ -114,20 +108,17 @@ onMounted(async () => {
             return dateA - dateB;
         });
     }
-    console.table(eventArray.value);
     loadingContent.value = false;
 });
-
+// CALLBACK FOR CLICKING ON "Delete old events" - BUTTON
 async function deleteAllOlds() {
     const olds = eventArray.value.filter(curr => curr.old === 1);
-    console.table(olds);
     for(let e of olds)
     {
         try {
             const req = {task: "delete-event", id: e.id};
             await store.dispatch("events/post", req);
             let idx = eventArray.value.indexOf(olds.find(curr => curr.id === req.id));
-            console.log(idx);
             eventArray.value.splice(idx, 1);
             const newOlds = eventArray.value.filter(curr => curr.old === 1);
             if(newOlds.length === 0)
