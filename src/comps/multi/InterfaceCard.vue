@@ -32,6 +32,7 @@ let props = defineProps([
 <style scoped>
 .itfCard {
     box-shadow: 0 0 10px 2px #777;
+    z-index: 15;
 }
 .itfHeader {
     width: 100%;

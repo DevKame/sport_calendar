@@ -1,5 +1,5 @@
 <template>
-    <li class="studentItem my-2 d-flex justify-content-start align-items-center">
+    <li class="eventItem my-2 d-flex justify-content-between align-items-center">
         <div @click="toggleMenu" class="toggleOptions position-relative rounded-circle d-flex justify-content-center align-items-center">
             <fa-icon icon="fa-solid fa-gear"></fa-icon>
 
@@ -52,7 +52,7 @@ import { useStore } from 'vuex';
 
 const store = useStore();
 
-// DISPLAYED VALUES ARE PROVIDED FROM <TheStudentOverview>
+// DISPLAYED VALUES ARE PROVIDED FROM <TheEventOverview>
 let props = defineProps([
     "event",
     "groups",
@@ -162,7 +162,7 @@ button {
     width: 30px;
     aspect-ratio: 1;
 }
-.studentItem {
+.eventItem {
     font-family: "Raleway Reg 400";
 }
 .details-enter-from

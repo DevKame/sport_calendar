@@ -366,7 +366,7 @@ async function try_logout() {
 .navItemHolder {
     width: 60%;
     aspect-ratio: 1;
-    z-index: 10;
+    z-index: 21;
 }
 .navHolder {
     width: clamp(80px, 20%, 110px);
@@ -393,7 +393,6 @@ async function try_logout() {
     height: 80%;
 }
 .dashboardHeader {
-    width: 100%;
     height: 100px;
     box-shadow: 0 2px 10px 1px #333;
     font-family: "Raleway SBold 600";
