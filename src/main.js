@@ -54,6 +54,8 @@ import { faTable } from "@fortawesome/free-solid-svg-icons";
 import { faGear } from "@fortawesome/free-solid-svg-icons";
 import { faPencil } from "@fortawesome/free-solid-svg-icons";
 import { faBan } from "@fortawesome/free-solid-svg-icons";
+import { faUserSlash } from "@fortawesome/free-solid-svg-icons";
+import { faCalendar } from "@fortawesome/free-regular-svg-icons";
 
 library.add(faMicrochip);
 library.add(faClose);
@@ -66,6 +68,8 @@ library.add(faTable);
 library.add(faGear);
 library.add(faPencil);
 library.add(faBan);
+library.add(faUserSlash);
+library.add(faCalendar);
 
 // ROUTER
 import { createRouter, createWebHistory } from "vue-router";

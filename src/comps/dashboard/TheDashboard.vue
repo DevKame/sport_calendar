@@ -2,11 +2,11 @@
     <div>
         <header @click="reactToDashboardclick" class="dashboardHeader p-2 d-flex justify-content-start align-items-center bg-sec">
             
-            <div class="imageHolder border border-danger d-flex justify-content-center align-items-center">
+            <div class="imageHolder d-flex justify-content-center align-items-center">
                 <img src="@/assets/img/logos/kaizen-630.png" alt="Kaizen Logo"/>
             </div>
 
-            <div class="userHolder ms-2 border border-info d-flex flex-column justify-content-center align-items-start">
+            <div class="userHolder ms-2 d-flex flex-column justify-content-center align-items-start">
                 <h6 class="m-0 mb-1">Welcome, <span>{{ userFirstname }}</span> <span>{{ userLastname }}</span></h6>
                 <div class="roleHolder d-flex justify-content-start align-items-center w-100">
                     <p class="m-0">Role:</p>
@@ -14,55 +14,63 @@
                 </div>
             </div>
 
-            <div class="navHolder position-relative d-flex justify-content-center align-items-center border border-success ms-auto">
+            <div class="navHolder position-relative d-flex justify-content-center align-items-center ms-auto">
                 <div :class="{opened: navIsOpen}" class="navItemHolder nav-menu position-relative border border-black rounded-circle d-flex justify-content-center align-items-center">
                     <fa-icon icon="fa-solid fa-bars-staggered" size="xl" class="pe-none"></fa-icon>
                 </div>
                 <transition name="events">
-                    <div v-if="navIsOpen" class="navItemHolder bg-tert nav-events border border-black rounded-circle d-flex justify-content-center align-items-center">
+                    <div v-if="navIsOpen" class="navItemHolder bg-prim nav-events border border-black rounded-circle d-flex justify-content-center align-items-center">
                         <router-link :to="{name: 'Events'}" class="d-flex flex-column justify-content-start align-items-center">
                             <fa-icon icon="fa-regular fa-rectangle-list" class="pe-none"></fa-icon>
-                            <small>Events</small>
+                            <small class="fw-bold">Events</small>
                         </router-link>
                     </div>
                 </transition>
                 <transition name="trainings">
-                    <div v-if="navIsOpen" class="navItemHolder bg-tert nav-trainings border border-black rounded-circle d-flex justify-content-center align-items-center">
+                    <div v-if="navIsOpen" class="navItemHolder bg-prim nav-trainings border border-black rounded-circle d-flex justify-content-center align-items-center">
                         <router-link :to="{name: 'Trainings'}" class="d-flex flex-column justify-content-start align-items-center">
                             <fa-icon icon="fa-solid fa-dumbbell" class="pe-none"></fa-icon>
-                            <small>Trainings</small>
+                            <small class="fw-bold">Trainings</small>
                         </router-link>
                     </div>
                 </transition>
                 <transition name="trainers">
-                    <div v-if="navIsOpen" class="navItemHolder bg-tert nav-trainers border border-black rounded-circle d-flex justify-content-center align-items-center">
+                    <div v-if="navIsOpen" class="navItemHolder bg-prim nav-trainers border border-black rounded-circle d-flex justify-content-center align-items-center">
                         <router-link :to="{name: 'Trainers'}" class="d-flex flex-column justify-content-start align-items-center">
                             <fa-icon icon="fa-solid fa-person-chalkboard" class="pe-none"></fa-icon>
-                            <small>Trainers</small>
+                            <small class="fw-bold">Trainers</small>
                         </router-link>
                     </div>
                 </transition>
                 <transition name="students">
-                    <div v-if="navIsOpen" class="navItemHolder bg-tert nav-students border border-black rounded-circle d-flex justify-content-center align-items-center">
+                    <div v-if="navIsOpen" class="navItemHolder bg-prim nav-students border border-black rounded-circle d-flex justify-content-center align-items-center">
                         <router-link :to="{name: 'Students'}" class="d-flex flex-column justify-content-start align-items-center">
                             <fa-icon icon="fa-solid fa-people-group" class="pe-none"></fa-icon>
-                            <small>Students</small>
+                            <small class="fw-bold">Students</small>
                         </router-link>
                     </div>
                 </transition>
                 <transition name="groups">
-                    <div v-if="navIsOpen" class="navItemHolder bg-tert nav-groups border border-black rounded-circle d-flex justify-content-center align-items-center">
+                    <div v-if="navIsOpen" class="navItemHolder bg-prim nav-groups border border-black rounded-circle d-flex justify-content-center align-items-center">
                         <router-link :to="{name: 'Groups'}" class="d-flex flex-column justify-content-start align-items-center">
                             <fa-icon icon="fa-solid fa-table" class="pe-none"></fa-icon>
-                            <small>Groups</small>
+                            <small class="fw-bold">Groups</small>
+                        </router-link>
+                    </div>
+                </transition>
+                <transition name="calendar">
+                    <div v-if="navIsOpen" class="navItemHolder bg-sec nav-calendar border border-black rounded-circle d-flex justify-content-center align-items-center">
+                        <router-link :to="{name: 'Groups'}" class="d-flex flex-column justify-content-start align-items-center">
+                            <fa-icon icon="fa-regular fa-calendar" class="pe-none"></fa-icon>
+                            <small class="fw-bold">Calendar</small>
                         </router-link>
                     </div>
                 </transition>
                 <transition name="logout">
                     <div @click="try_logout" v-if="navIsOpen" class="navItemHolder bg-delete nav-logout border border-black rounded-circle d-flex justify-content-center align-items-center">
                         <span class="d-flex flex-column justify-content-start align-items-center">
-                            <fa-icon icon="fa-solid fa-table" class="pe-none"></fa-icon>
-                            <small>Logout</small>
+                            <fa-icon icon="fa-solid fa-user-slash" class="pe-none"></fa-icon>
+                            <small class="fw-bold">Logout</small>
                         </span>
                     </div>
                 </transition>
@@ -144,6 +152,12 @@ async function try_logout() {
     position: absolute;
     top: 50%;
     left: 50%;
+    transform: translate(-50%, 850%);
+}
+.nav-calendar {
+    position: absolute;
+    top: 50%;
+    left: 50%;
     transform: translate(-50%, 725%);
 }
 .nav-groups {
@@ -185,6 +199,20 @@ async function try_logout() {
 }
 .logout-enter-to,
 .logout-leave-from {
+    opacity: 1;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, 850%);
+}
+.calendar-enter-from,
+.calendar-leave-to {
+    opacity: 0;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+.calendar-enter-to,
+.calendar-leave-from {
     opacity: 1;
     top: 50%;
     left: 50%;
@@ -258,12 +286,14 @@ async function try_logout() {
 .trainers-enter-active,
 .students-enter-active,
 .groups-enter-active,
+.calendar-enter-active,
 .logout-enter-active,
 .events-leave-active,
 .trainings-leave-active,
 .trainers-leave-active,
 .students-leave-active,
 .groups-leave-active,
+.calendar-leave-active,
 .logout-leave-active {
     transition: all .4s ease-out;
 }
