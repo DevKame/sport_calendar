@@ -1,6 +1,6 @@
 <template>
-    <main class="theLogin pt-4 d-flex flex-column justify-content-start align-items-center">
-        <header class="logoHeader mb-5 d-flex flex-column justify-content-center align-items-center">
+    <main class="theLogin pt-1 pt-xxl-4 d-flex flex-column justify-content-start align-items-center">
+        <header class="logoHeader mb-2 d-flex flex-column justify-content-center align-items-center">
             <img src="@/assets/img/logos/kaizen-630.png" />
             <p>Placebo Kaizen Martial Arts</p>
             <p>Team Calendar</p>
@@ -99,7 +99,7 @@
                 <div v-if="privacyOpen" @click="closePrivacy" class="backdrop position-fixed d-flex justify-content-center align-items-center">
                         <itf-card>
                             <template #header>
-                                <div class="w-100 h-100 border border-danger d-flex justify-content-between align-items-center">
+                                <div class="w-100 h-100 d-flex justify-content-between align-items-center">
                                     <h5 class="m-0">PRIVACY</h5>
                                     <div @click="closePrivacy" class="closeWrapper p-1 border border-dark rounded-circle d-flex justify-content-center align-items-center">
                                         <fa-icon icon="fa-solid fa-close"></fa-icon>
@@ -120,10 +120,10 @@
                 </div>
             </transition>
         </teleport>
+        <footer class="mt-5 px-2 text-center">
+            <small>LOGO by: Majo statt Senf, Licence: https://creativecommons.org/licenses/by-sa/4.0/deed.de</small>
+        </footer>
     </main>
-    <footer class="mt-5 px-2">
-        <small>LOGO by: Majo statt Senf, Licence: https://creativecommons.org/licenses/by-sa/4.0/deed.de</small>
-    </footer>
 </template>
 
 
@@ -338,7 +338,6 @@ header.logoHeader,
     font-family: "Raleway Reg 400";
 }
 @media screen and (min-width: 576px) {
-    header.logoHeader,
     .itfCard {
         width: 350px;
     }
