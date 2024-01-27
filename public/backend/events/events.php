@@ -57,80 +57,70 @@ else if($_SERVER["REQUEST_METHOD"] === "POST")
     $req = json_decode(file_get_contents("php://input"));
     switch($req->task)
     {
-        //################### CHANGES DATA OF A STUDENT:
-        case "edit-student":
-            $affectedRows = editStudent($req->id, $req->email,$req->firstname, $req->lastname, $req->chosengroups);
+        //################### CHANGES DATA OF A EVENT:
+        case "edit-event":
+            $affectedRows = editEvent($req->id,$req->name,$req->fulldate,$req->fulltime,$req->year,$req->month,$req->day,$req->hour,$req->minute,$req->max,$req->trainer,$req->info,$req->groups);
             if(is_int($affectedRows))
             {
-                if($affectedRows === 1)
-                {
-                    $res["success"] = true;
-                } else {
-                    if($affectedRows === 0)
-                    {
-                        $res["reason"] = "no-changes";
-                    } else {
-                        $res["reason"] = "connection-problems";
-                    }
-                }
+                $res["success"] = true;
             }
             else {
                 $res["reason"] = "connection-problems";
             }
             break;
-        //################### VALIDATES DATA USED FOR CAHNGING A STUDENT:
-        case "validate-student-edit":
-            // VALIDATION OF EMAIL
-            $evrimmedEmail = trim($req->email);
-            if($evrimmedEmail === "")
+        //################### VALIDATES DATA USED FOR CHANGING AN EVENT:
+        case "validate-event-edit":
+            // VALIDATION OF NAME
+            $trimmedName = trim($req->name);
+            if($trimmedName === "" || strlen($req->name) > 24)
             {
-                $res["reason"] = "invalid-email-value";
+                $res["reason"] = "invalid-name-value";
                 break;
             }
-            if(strlen($req->email) > 40)
-            {
-                $res["reason"] = "email-too-long";
+            // VALIDATION OF DATETIME
+            // DATETIME FORMAT MUST BE:  0000-00-00T00:00
+            $datetimeregex = '/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/';
+            //      - DATETIME: FORMAT IS RIGHT AND DATE IS NOT IN PAST:
+            if(!isEventInFuture($req) || preg_match($datetimeregex, $req->datetime) !== 1) {
+                $res["reason"] = "invalid-datetime-value";
                 break;
             }
-            if(!filter_var($req->email, FILTER_VALIDATE_EMAIL))
-            {
-                $res["reason"] = "invalid-email-value";
-                break;
-            }
-            $allEmails = getEmailsExeptOwn($req->email, $req->id);
-            if(is_string($allEmails))
+            //      - DATETIME: DATE IS NOT ALREDY BOOKED AT THAT DATE:
+            $doubles = getDoubleEventsExeptOwn($req->fulldate, $req->fulltime, $req->id);
+            if(is_string($doubles))
             {
                 $res["reason"] = "connection-problems";
+                $res["errorpoint"] = "validate-event-edit: if(is_string(doubles))";
                 break;
-            }
-            else {
-                if($allEmails > 0) {
+            } else {
+                if($doubles > 0) {
                     $res["reason"] = "found-double";
                     break;
                 }
             }
-            // VALIDATION OF FIRSTNAME
-            $evrimmedFirstname = trim($req->firstname);
-            if($evrimmedFirstname === "")
+            // VALIDATION OF MAX PARTICIPANTS:
+            if(is_string($req->max) || $req->max < 1)
             {
-                $res["reason"] = "invalid-firstname-value";
+                $res["reason"] = "invalid-max-value";
                 break;
             }
-            if(strlen($req->firstname) > 16)
+            // VALIDATION OF TRAINER:
+            $trainerregex = '/^(no-trainer|\d+)$/';
+            if(!preg_match($trainerregex, $req->trainer))
             {
-                $res["reason"] = "firstname-too-long";
+                $res["reason"] = "invalid-trainer-value";
                 break;
             }
-            // VALIDATION OF LASTNAME
-            $evrimmedLastname = trim($req->lastname);
-            if($evrimmedLastname === "")
+            // VALIDATION OF INFO:
+            if(strlen($req->info) > 256)
             {
-                $res["reason"] = "invalid-lastname-value";
+                $res["reason"] = "invalid-info-value";
                 break;
             }
-            if(strlen($req->lastname) > 32)
+            // VALIDATION OF GROUPS:
+            if(strlen($req->groups) > 256)
             {
-                $res["reason"] = "lastname-too-long";
+                $res["reason"] = "groups-too-long";
                 break;
             }
             $res["success"] = true;

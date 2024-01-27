@@ -156,7 +156,7 @@ onMounted(async () => {
     loadingRoute.value = false;
 });
 /** ADDS A CHECKED VALUE (Bool) TO EVERY GROUP THAT THE STUDENT
- *  ALSO HAVE TO MAKE SURE TO AUTOMATICLY SELECT THE CORRESPONDING
+ *  ALSO HAS TO MAKE SURE TO AUTOMATICLY SELECT THE CORRESPONDING
  *  CHECKBOXES
  * @param {Array} groups        => ALL GROUPS THAT WILL BE groupArray.value LATER
  * @param {Array} sgroups       => ALL GROUPS OF THE STUDENT

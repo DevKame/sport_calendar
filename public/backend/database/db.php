@@ -4,6 +4,74 @@
 
 
 ////////////////////////////////////    EVENT QUERIES  [start]  //////////////////////////////////////
+
+/** CHANGES AN EVENT
+ *  returns
+ * {true | Exeption->getMessage()} => Bool | String */
+function editEvent($id, $name, $fulldate, $fulltime, $year, $month, $day, $hour, $minute, $max, $trainer, $info, $groups) {
+    $con = connect();
+    $query =
+    "UPDATE sport_cal_events
+    SET name = ?,
+    fulldate = ?,
+    fulltime = ?,
+    year = ?,
+    month = ?,
+    day = ?,
+    hour = ?,
+    minute = ?,
+    max = ?,
+    trainer = ?,
+    info = ?,
+    groups = ?
+    WHERE id = ?";
+    try {
+        $stmt = mysqli_prepare($con, $query);
+        mysqli_stmt_bind_param($stmt, "ssssssssisssi", $name, $fulldate, $fulltime, $year, $month, $day, $hour, $minute, $max, $trainer, $info, $groups, $id);
+        mysqli_stmt_execute($stmt);
+        $affectedRows = mysqli_stmt_affected_rows($stmt);
+        mysqli_stmt_free_result($stmt);
+        mysqli_stmt_close($stmt);
+        mysqli_close($con);
+        return $affectedRows;
+    }
+    catch(Exeption $e) {
+        return $e.getMessage();
+    }
+}
+/** FETCHES ALL EXISTENT EVENTS THAT HAVE SAME DATE AND TIME TO CHECK FOR DOUBLES
+ *  IGNORES THE EVENT WITH THE ID $id
+ *  returns
+ * {$totalEvents | Exeption->getMessage()} => int | String */
+function getDoubleEventsExeptOwn($fd, $ft, $id) {
+    $con = connect();
+    $query =
+    "SELECT *
+    FROM sport_cal_events
+    WHERE fulldate = ?
+    AND fulltime = ?
+    AND NOT id = ?";
+    try {
+        $stmt = mysqli_prepare($con, $query);
+        mysqli_stmt_bind_param($stmt, "ssi", $fd, $ft, $id);
+        mysqli_execute($stmt);
+        mysqli_stmt_store_result($stmt);
+        $totalEvents = mysqli_stmt_num_rows($stmt);
+        mysqli_stmt_free_result($stmt);
+        mysqli_stmt_close($stmt);
+        mysqli_close($con);
+        return $totalEvents;
+    }
+    catch(Exeption $e) {
+        mysqli_close($con);
+        return $e->getMessage();
+    }
+
+}
+/** SETS AN EVENT´S TRAINER VALUE BACK TO "no-trainer" FOR EVERY EVENT WHOSE TRAINER
+ *  HAS ID OF $id
+ *  returns
+ * {$affectedRows | Exeption->getMessage()} => int | String */
 function resetTrainerFromSingleEvent($id) {
     $con = connect();
     $query =
@@ -88,7 +156,7 @@ function createEvent($name, $fulldate, $fulltime, $year, $month, $day, $hour, $m
 }
 /** FETCHES ALL EXISTENT EVENTS THAT HAVE SAME DATE AND TIME TO CHECK FOR DOUBLES
  *  returns
- * {$totalEvents | Exeption->getMessage()} => Array | String */
+ * {$totalEvents | Exeption->getMessage()} => int | String */
 function getDoubleEvents($fd, $ft) {
     $con = connect();
     $query =
@@ -113,6 +181,9 @@ function getDoubleEvents($fd, $ft) {
     }
 
 }
+/** SETS THE OLD VALUE OF THE EVENT WITH THE ID $id TO 1
+ *  returns
+ * {$affected | Exeption->getMessage()} => int | String */
 function setEventAsOld($id) {
     $con = connect();
     $query =
@@ -217,7 +288,7 @@ function editTraining($id, $name, $groups) {
 }
 /** CHECKS IF THERE IS A DOUBLICAT NAME DESPITE THE ONE CONNECTED TO THE PROVIDED ID
  *  returns
- * {$totalEmails | Exeption->getMessage()} => int | String */
+ * {$totalDoubles | Exeption->getMessage()} => int | String */
 function getTrainingNameExeptOwn($name, $id) {
     $con = connect();
     $query =
@@ -230,12 +301,12 @@ function getTrainingNameExeptOwn($name, $id) {
         mysqli_stmt_bind_param($stmt, "si", $name, $id);
         mysqli_execute($stmt);
         mysqli_stmt_store_result($stmt);
-        $totalEmails = mysqli_stmt_num_rows($stmt);
+        $totalDoubles = mysqli_stmt_num_rows($stmt);
         mysqli_stmt_free_result($stmt);
         mysqli_stmt_close($stmt);
         
         mysqli_close($con);
-        return $totalEmails;
+        return $totalDoubles;
     }
     catch(Exeption $e) {
         mysqli_close($con);

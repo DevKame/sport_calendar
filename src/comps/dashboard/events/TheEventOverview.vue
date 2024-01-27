@@ -31,7 +31,7 @@
                     :trainer="getTrainerNameFromEventProperties(event.trainer)"
                     :groups="filteredGroups(event.id)"
                     @delete-item="deleteStudent(idx, event.id)"
-                    @edit-item="editStudent(event.id, event.email, event.firstname, event.lastname, filteredGroups(event.id))"></event-item>
+                    @edit-item="editEvent(event, filteredGroups(event.id))"></event-item>
                 </transition-group>
             </div>
             <teleport to="body">
@@ -110,9 +110,10 @@ onMounted(async () => {
     console.table(eventArray.value);
     loadingContent.value = false;
 });
-
+/** DELIVERS A DIFFERENT "trainer" PROP TO <EventItem> DEPENDING ON VALUE OF "t"
+ * @param {String} t            => "no-trainer" | stringified number
+ * @returns {String} result     => "no-trainer" | "You!" | trainer.firstname */
 function getTrainerNameFromEventProperties(t) {
-    console.clear();
     let result = "no-trainer";
     if(t !== "no-trainer")
     {
@@ -125,15 +126,16 @@ function getTrainerNameFromEventProperties(t) {
     }
     return result;
 }
-
+/** CHECKS IF AT LEAST ONE FETCHED EVENT IS OLD
+ *  @returns {Bool}     => RENDERS "Delete old events"- BUTTON IF TRUE */
 const oldEventsExistent = computed(() => {
     return eventArray.value.find(curr => curr.old === 1) !== undefined ?
     true : false;
 });
 /** APPLIES THE ACTUAL GROUP NAMES OF ALL GROUPS THE
- *  STUDENT HAS TO HIS LISTITEM
- * @param {number} id           => ID OF THE STUDENT
- * returns {Array} namedGroups  => ACTUAL GROUPNAMES THAT FIT TO THE STUDENT */
+ *  EVENT HAS TO HIS LISTITEM
+ * @param {number} id               => ID OF THE EVENT
+ * @returns {Array} namedGroups     => ACTUAL GROUPNAMES THAT FIT TO THE EVENT */
 function filteredGroups(id) {
     let student = eventArray.value.find(curr => curr.id === id);
     const studentGroups = JSON.parse(student.groups);
@@ -148,17 +150,20 @@ function filteredGroups(id) {
     return namedGroups;
 }
 
-/** PREPARES STATE WITH NAME AND ID OF TO-BE-EDITED STUDENT AND SWITCHES
- *  TO Edit-Student ROUTE TO ENABLE THE ACTUAL EDITING
- * @param {number} id   => ID OF THE TO-BE-EDITED STUDENT 
- * @param {String} name => NAME OF THE TO-BE-EDITED STUDENT */
-function editStudent(id, email, fn, ln, groups) {
+/** PREPARES STATE WITH NAME AND ID OF TO-BE-EDITED EVENT AND SWITCHES
+ *  TO Edit-Event ROUTE TO ENABLE THE ACTUAL EDITING
+ * @param {number} id   => ID OF THE TO-BE-EDITED EVENT 
+ * @param {String} name => NAME OF THE TO-BE-EDITED EVENT */
+function editEvent(event, groups) {
     if(userRole.value !== "ADMIN" && userRole.value !== "SENIOR-TRAINER") {
         accessInfoActive.value = true;
     }
     else {
-        store.commit("students/prepareStudentForEdit", {email: email, id: id, firstname: fn, lastname: ln, groups: groups});
-        router.push({name: "Edit-Student"});
+        if(event.old === 0)
+        {
+            store.commit("events/prepareEventForEdit", {event: event, groups: groups});
+            router.push({name: "Edit-Event"});
+        }
     }
 }
 
