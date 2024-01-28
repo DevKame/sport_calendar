@@ -14,7 +14,7 @@
                 </div>
             </div>
 
-            <div class="navHolder position-relative d-flex justify-content-center align-items-center ms-auto">
+            <div class="navHolder position-relative d-flex d-lg-none justify-content-center align-items-center ms-auto">
                 <div :class="{opened: navIsOpen}" class="navItemHolder nav-menu position-relative border border-black rounded-circle d-flex justify-content-center align-items-center">
                     <fa-icon icon="fa-solid fa-bars-staggered" size="xl" class="pe-none"></fa-icon>
                 </div>
@@ -396,5 +396,15 @@ async function try_logout() {
     height: 100px;
     box-shadow: 0 2px 10px 1px #333;
     font-family: "Raleway SBold 600";
+}
+@media screen and (min-width: 576px) {
+    .navItemHolder small {
+        font-size: 10px;
+    }
+}
+@media screen and (min-width: 768px) {
+    .navItemHolder small {
+        font-size: 12px;
+    }
 }
 </style>

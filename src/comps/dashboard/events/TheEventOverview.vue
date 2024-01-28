@@ -34,7 +34,7 @@
                     :groups="filteredGroups(event.id)"
                     @delete-item="deleteEvent(idx, event.id)"
                     @edit-item="editEvent(event, filteredGroups(event.id))"
-                    @sign-trainer="signTrainer(event.id)"></event-item>
+                    @sign-trainer="signTrainer(event.id, event.old)"></event-item>
                 </transition-group>
             </div>
             <teleport to="body">
@@ -217,17 +217,21 @@ async function deleteEvent(index, id) {
         }
     }
 }
-/** ASSIGNES THE ID OF CURRENTLY LOGGED TRAINER TO THE EVENT WITH
+/** ASSIGNES THE ID OF CURRENTLY LOGGED TRAINER TO THE NON-OLD EVENT WITH
  *  THE ID eid, RELOADS PAGE AFTER
- * @param {number} eid  => ID OF THE EVENT*/
-async function signTrainer(eid) {
-    let signdata = await store.dispatch("events/post", {task: "assign-trainer-to-event", id: store.getters["auth/userID"], eid: eid});
-    console.table(signdata);
-    if(!signdata.success)
+ * @param {number} eid  => ID OF THE EVENT
+ * @param {number} old  => INDICATOR IF EVENT IS OLD OR NOT (1 or 0) */
+async function signTrainer(eid, old) {
+    if(old === 0)
     {
-        router.replace({name: "Error"});
-    } else {
-        router.go();
+        let signdata = await store.dispatch("events/post", {task: "assign-trainer-to-event", id: store.getters["auth/userID"], eid: eid});
+        console.table(signdata);
+        if(!signdata.success)
+        {
+            router.replace({name: "Error"});
+        } else {
+            router.go();
+        }
     }
 }
 </script>
