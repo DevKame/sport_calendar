@@ -242,6 +242,7 @@ async function signTrainer(eid, old) {
 }
 .itf-delete-old {
     background-image: linear-gradient(to top, #ddd -20%, var(--role-badge), var(--role-badge), #ddd 110%);
+    cursor: pointer;
 }
 .itf-buttons {
     box-shadow: 0 0 10px 1px #333;
