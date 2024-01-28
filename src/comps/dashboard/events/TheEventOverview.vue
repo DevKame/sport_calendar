@@ -1,5 +1,5 @@
 <template>
-    <div @click="overviewClickHandler" class="overflow-x-hidden pt-4 d-flex flex-column justify-content-start align-items-center border border-danger">
+    <div @click="overviewClickHandler" class="overflow-x-hidden pt-4 d-flex flex-column flex-xl-row justify-content-start align-items-center align-items-xl-start border border-danger">
 
             <itf-card :dashboard-card="true">
                 <template #header>
@@ -8,11 +8,11 @@
 
                 <template #body>
                     <div class="w-100 h-100 d-flex justify-content-around align-items-center py-2 bg-prim">
-                        <transition-group tag="div" name="overview-buttons" class="h-100 w-100 d-flex justify-content-around align-items-center">
-                            <router-link :to="{name: 'New-Event'}" key="randomKey" class="px-1 text-black border border-black border-2 rounded-2 itf-new itf-buttons">
+                        <transition-group tag="div" name="overview-buttons" class="flex-xl-column h-100 w-100 d-flex justify-content-around align-items-center">
+                            <router-link :to="{name: 'New-Event'}" key="randomKey" class="px-1 my-xl-2 text-black border border-black border-2 rounded-2 itf-new itf-buttons">
                                 New Event
                             </router-link>
-                            <a  v-if="oldEventsExistent" @click.prevent="deleteAllOlds" class="px-1 btnDeleteOlds text-black border border-black border-2 rounded-2 itf-delete-old itf-buttons">
+                            <a  v-if="oldEventsExistent" @click.prevent="deleteAllOlds" class="px-1 my-xl-2 btnDeleteOlds text-black border border-black border-2 rounded-2 itf-delete-old itf-buttons">
                                 Delete old events
                             </a>
                         </transition-group>
@@ -22,9 +22,9 @@
 
             <ov-load v-if="loadingContent" class="mt-3"></ov-load>
             <transition name="no-content">
-                <h6 class="noContentHeadline text-center mt-3" v-if="noEventsAvailable">There are no events existent. Click "New Event" to create one</h6>
+                <h6 v-if="noEventsAvailable" class="noContentHeadline text-center mt-3">There are no events existent. Click "New Event" to create one</h6>
             </transition>
-            <div v-if="!noEventsAvailable" class="listHolder w-100">
+            <div v-if="!noEventsAvailable" class="listHolder">
                 <transition-group tag="ul" name="content-list" class="eventList p-0" mode="out-in">
                     <event-item
                     v-for="(event, idx) in eventArray"

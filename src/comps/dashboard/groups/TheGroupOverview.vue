@@ -1,5 +1,5 @@
 <template>
-    <div @click="overviewClickHandler" class="groupOverview overflow-x-hidden ps-2 allOverviews d-flex flex-column justify-content-start align-items-center border border-danger">
+    <div @click="overviewClickHandler" class="groupOverview overflow-x-hidden ps-2 allOverviews d-flex flex-column flex-xl-row justify-content-start align-items-center align-items-xl-start border border-danger">
 
             <itf-card :dashboard-card="true">
                 <template #header>
@@ -8,7 +8,7 @@
 
                 <template #body>
                     <div class="w-100 h-100 d-flex justify-content-around align-items-center py-2 bg-prim">
-                        <router-link :to="{name: 'New-Group'}" class="px-1 text-black border border-black border-2 rounded-2 itf-buttons itf-new">
+                        <router-link :to="{name: 'New-Group'}" class="px-1 my-xl-2 text-black border border-black border-2 rounded-2 itf-buttons itf-new">
                             New Group
                         </router-link>
                     </div>
@@ -19,7 +19,7 @@
             <transition name="no-content">
                 <h6 class="noContentHeadline text-center mt-3" v-if="noGroupsAvailable">There are no groups existent. Click "New Group to create one"</h6>
             </transition>
-            <div v-if="!noGroupsAvailable" class="listHolder w-100">
+            <div v-if="!noGroupsAvailable" class="listHolder">
                 <transition-group tag="ul" name="content-list" class="groupList p-0" mode="out-in">
                     <group-item
                     v-for="(group, idx) in groupArray"

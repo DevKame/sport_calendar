@@ -39,4 +39,10 @@ let props = defineProps([
     box-shadow: 0 2px 10px 1px black;
     font-family: "Raleway SBold 600";
 }
+
+@media screen and (min-width: 1200px) {
+    .itfCard {
+        width: 30%;
+    }
+}
 </style>

@@ -1,5 +1,5 @@
 <template>
-    <li class="studentItem my-2 d-flex justify-content-start align-items-center">
+    <li class="studentItem my-2 ps-2 d-flex justify-content-around align-items-center">
         <div @click="toggleMenu" class="toggleOptions position-relative rounded-circle d-flex justify-content-center align-items-center">
             <fa-icon icon="fa-solid fa-gear"></fa-icon>
 

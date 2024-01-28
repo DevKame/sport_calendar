@@ -1,5 +1,5 @@
 <template>
-    <div @click="overviewClickHandler" class="studentOverview overflow-x-hidden px-3 d-flex flex-column justify-content-start align-items-center">
+    <div @click="overviewClickHandler" class="overflow-x-hidden pt-4 d-flex flex-column flex-xl-row justify-content-start align-items-center align-items-xl-start border border-danger">
 
             <itf-card :dashboard-card="true">
                 <template #header>
@@ -8,7 +8,7 @@
 
                 <template #body>
                     <div class="w-100 h-100 d-flex justify-content-around align-items-center py-2 bg-prim">
-                        <router-link :to="{name: 'New-Student'}" class="px-1 text-black border border-black border-2 rounded-2 itf-buttons itf-new">
+                        <router-link :to="{name: 'New-Student'}" class="px-1 my-xl-2 text-black border border-black border-2 rounded-2 itf-buttons itf-new">
                             New Student
                         </router-link>
                     </div>
@@ -19,7 +19,7 @@
             <transition name="no-content">
                 <h6 class="noContentHeadline text-center mt-3" v-if="noStudentsAvailable">There are no students existent. Click "New Student to create one"</h6>
             </transition>
-            <div v-if="!noStudentsAvailable" class="listHolder mt-3">
+            <div v-if="!noStudentsAvailable" class="listHolder">
                 <transition-group tag="ul" name="content-list" class="studentList p-0" mode="out-in">
                     <student-item
                     v-for="(student, idx) in studentArray"
@@ -159,9 +159,6 @@ async function deleteStudent(index, id) {
 }
 .itf-buttons {
     box-shadow: 0 0 10px 1px #333;
-}
-.listHolder {
-    width: 100%;
 }
 .studentList {
     list-style-type: none;

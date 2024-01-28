@@ -1,5 +1,5 @@
 <template>
-    <li class="eventItem my-2 d-flex justify-content-around ps-2 align-items-center">
+    <li class="eventItem my-2 ps-2 d-flex justify-content-around align-items-center">
 
         <div @click="toggleMenu" class="toggleOptions position-relative rounded-circle d-flex justify-content-center align-items-center">
             <fa-icon icon="fa-solid fa-gear"></fa-icon>
@@ -17,17 +17,22 @@
         </div>
 
         <div class="actualListItem ms-3 ps-2 pe-1 py-1">
-            <header @click="detailView = !detailView" class="w-100 h-100 d-flex flex-column justify-content-start align-items-center">
-                <div class="w-100 d-flex justify-content-start align-items-center">
+
+            <header @click="detailView = !detailView" class="w-100 h-100 d-flex flex-column flex-xl-row justify-content-start align-items-center">
+
+                <div class="headerFirstWrapper d-flex justify-content-start align-items-center">
                     <p class="m-0 me-1 fw-bold pe-none">{{ props.event.name }}</p>
                     <p v-if="props.event.old === 1" class="m-0 ms-auto badge bg-role-badge text-black">{{ indicatorForOld }}</p>
                 </div>
-                <div class="w-100 mt-1 d-flex justify-content-start align-items-center">
-                    <p class="m-0 pe-none">{{ props.event.fulldate }}</p>
+
+                <div class="headerSecondWrapper mt-1 d-flex justify-content-start align-items-center">
+                    <p class="m-0 ms-xl-2 pe-none">{{ props.event.fulldate }}</p>
                     <p class="m-0 ms-4 pe-none">{{ props.event.fulltime }}</p>
                     <p @click.stop="fastTrainerSignup" class="m-0 ms-auto badge bg-trainer-badge text-black" :class="{you_badge: trainerIsYou, no_trainer: trainerIsNone}">{{ trainer }}</p>
                 </div>
+
             </header>
+
             <transition name="details">
                 <section v-if="detailView" class="d-flex flex-wrap justify-content-start align-items-center">
                     <hr class="bg-sec w-100 m-0 mt-1" />
@@ -124,6 +129,10 @@ const detailView = ref(false);
 
 
 <style scoped>
+.headerFirstWrapper,
+.headerSecondWrapper {
+    width: 100%;
+}
 .bg-trainer-badge.no_trainer {
     border: 3px solid black;
     background-color: var(--delete);
@@ -195,6 +204,15 @@ button {
 .details-leave-from {
     opacity: 1;
     transform: translate(0, 0);
+}
+
+@media screen and (min-width: 1200px) {
+    .headerFirstWrapper {
+        width: 30%;
+    }
+    .headerSecondWrapper {
+        width: 70%;
+    }
 }
 </style>
 
