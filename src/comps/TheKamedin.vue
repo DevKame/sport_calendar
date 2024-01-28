@@ -32,6 +32,7 @@ p {
 a {
     color: #996913;
     text-decoration: none;
+    font-family: "Ubuntu Med 500";
 }
 
 </style>

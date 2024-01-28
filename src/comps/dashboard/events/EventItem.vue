@@ -1,5 +1,6 @@
 <template>
-    <li class="eventItem my-2 d-flex justify-content-between align-items-center">
+    <li class="eventItem my-2 d-flex justify-content-around ps-2 align-items-center">
+
         <div @click="toggleMenu" class="toggleOptions position-relative rounded-circle d-flex justify-content-center align-items-center">
             <fa-icon icon="fa-solid fa-gear"></fa-icon>
 
@@ -15,16 +16,16 @@
                 
         </div>
 
-        <div class="actualListItem ms-3 px-1 py-1">
+        <div class="actualListItem ms-auto px-1 py-1">
             <header @click="detailView = !detailView" class="w-100 h-100 d-flex flex-column justify-content-start align-items-center">
                 <div class="w-100 d-flex justify-content-start align-items-center">
-                    <p class="m-0 me-1 fw-bold">{{ props.event.name }}</p>
+                    <p class="m-0 me-1 fw-bold pe-none">{{ props.event.name }}</p>
                     <p v-if="props.event.old === 1" class="m-0 ms-auto badge bg-role-badge text-black">{{ indicatorForOld }}</p>
                 </div>
                 <div class="w-100 mt-1 d-flex justify-content-start align-items-center">
-                    <p class="m-0">{{ props.event.fulldate }}</p>
-                    <p class="m-0 ms-4">{{ props.event.fulltime }}</p>
-                    <p class="m-0 ms-auto badge bg-trainer-badge text-black" :class="{you_badge: trainerIsYou, no_trainer: trainerIsNone}">{{ trainer }}</p>
+                    <p class="m-0 pe-none">{{ props.event.fulldate }}</p>
+                    <p class="m-0 ms-4 pe-none">{{ props.event.fulltime }}</p>
+                    <p class="m-0 ms-auto badge bg-trainer-badge text-black pe-none" :class="{you_badge: trainerIsYou, no_trainer: trainerIsNone}">{{ trainer }}</p>
                 </div>
             </header>
             <transition name="details">

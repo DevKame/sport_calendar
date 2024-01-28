@@ -310,8 +310,8 @@ async function try_logout() {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 160%;
-    height: 160%;
+    width: 140%;
+    height: 140%;
     border: 3px solid #444;
     clip-path: polygon(30% 100%, 50% 50%, 90% 100%, 30% 100%);
     border-radius: inherit;

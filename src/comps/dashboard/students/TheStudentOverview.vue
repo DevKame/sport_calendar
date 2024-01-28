@@ -1,5 +1,5 @@
 <template>
-    <div @click="overviewClickHandler" class="studentOverview overflow-x-hidden ps-2 allOverviews d-flex flex-column justify-content-start align-items-center border border-danger">
+    <div @click="overviewClickHandler" class="studentOverview overflow-x-hidden px-3 d-flex flex-column justify-content-start align-items-center">
 
             <itf-card :dashboard-card="true">
                 <template #header>
@@ -19,7 +19,7 @@
             <transition name="no-content">
                 <h6 class="noContentHeadline text-center mt-3" v-if="noStudentsAvailable">There are no students existent. Click "New Student to create one"</h6>
             </transition>
-            <div v-if="!noStudentsAvailable" class="listHolder w-100">
+            <div v-if="!noStudentsAvailable" class="listHolder mt-3">
                 <transition-group tag="ul" name="content-list" class="studentList p-0" mode="out-in">
                     <student-item
                     v-for="(student, idx) in studentArray"
@@ -154,6 +154,9 @@ async function deleteStudent(index, id) {
 </script>
 
 <style scoped>
+.listHolder {
+    width: 100%;
+}
 .studentList {
     list-style-type: none;
 }

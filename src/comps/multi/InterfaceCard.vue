@@ -11,7 +11,7 @@ SLOT NAME="BODY":
 
 
 <template>
-    <div :class="{dashboard_card: props.dashboardCard}" class="itfCard overflow-hidden d-flex flex-column justify-content-start align-items-center rounded-3">
+    <div :class="{dashboard_card: props.dashboardCard}" class="itfCard overflow-hidden mx-auto d-flex flex-column justify-content-start align-items-center rounded-3">
         <header class="p-2 itfHeader bg-sec">
             <slot name="header"></slot>
         </header>
