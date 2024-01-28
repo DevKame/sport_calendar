@@ -4,19 +4,19 @@
         <div @click="toggleMenu" class="toggleOptions position-relative rounded-circle d-flex justify-content-center align-items-center">
             <fa-icon icon="fa-solid fa-gear"></fa-icon>
 
-                <button v-if="menuOn" @click="editItem" class="position-absolute edit-option btn-edit border border-black d-flex justify-content-start align-items-center rounded-pill">
+                <button @click="editItem" :class="{is_outside: menuOn}" class="position-absolute edit-option btn-edit option-buttons border border-black d-flex justify-content-start align-items-center rounded-pill">
                     <fa-icon icon="fa-solid fa-pencil" class="me-2"></fa-icon>
                     EDIT
                 </button>
 
-                <button v-if="menuOn" @click="deleteItem" class="position-absolute delete-option btn-delete border border-black d-flex justify-content-start align-items-center rounded-pill">
+                <button @click="deleteItem" :class="{is_outside: menuOn}" class="position-absolute delete-option btn-delete option-buttons border border-black d-flex justify-content-start align-items-center rounded-pill">
                     <fa-icon icon="fa-solid fa-ban" class="me-2"></fa-icon>
                     DELETE
                 </button>
                 
         </div>
 
-        <div class="actualListItem ms-auto px-1 py-1">
+        <div class="actualListItem ms-3 ps-2 pe-1 py-1">
             <header @click="detailView = !detailView" class="w-100 h-100 d-flex flex-column justify-content-start align-items-center">
                 <div class="w-100 d-flex justify-content-start align-items-center">
                     <p class="m-0 me-1 fw-bold pe-none">{{ props.event.name }}</p>
@@ -131,18 +131,24 @@ header p {
 hr {
     height: 2px;
 }
-.delete-option {
-    z-index: 10;
+.delete-option.is_outside {
     left: 450%;
+    opacity: 1;
+    pointer-events: auto;
 }
-.edit-option {
-    z-index: 10;
+.edit-option.is_outside {
+    opacity: 1;
+    pointer-events: auto;
     left: 200%;
 }
-.edit-option,
-.delete-option {
+.option-buttons {
+    transition: left .3s ease, opacity .3s ease;
     top: 0;
+    left: 0;
+    z-index: 10;
     height: 100%;
+    opacity: 0;
+    pointer-events: none;
 }
 button {
     font-size: 12px;
