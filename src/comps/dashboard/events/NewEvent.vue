@@ -1,8 +1,11 @@
 <template>
     <form @submit.prevent="create_event" @click="clickHandler" :class="{not_clickable: submitInProgress}" class="px-2 pb-4 border border-danger d-flex flex-column justify-content-start align-items-center">
-        <h1 class="me-auto">New event</h1>
+        <div class="w-100 mt-2 d-flex justify-content-between align-items-center">
+            <h1 class="m-0 me-auto">New event</h1>
+            <router-link :to="{name:'Events'}" type="button" class="rounded-2 me-2 px-2">BACK</router-link>
+        </div>
         
-        <div class="inputWrapper d-flex flex-column justify-cotnent-start align-items-center">
+        <div class="inputWrapper mt-3 d-flex flex-column justify-cotnent-start align-items-center">
 
             <div class="d-flex justify-content-between align-items-center">
                 <label for="createName">Name</label>

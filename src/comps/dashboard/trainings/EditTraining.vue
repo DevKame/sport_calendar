@@ -1,8 +1,8 @@
 <template>
     <form @submit.prevent="change_training" @click="clickHandler" :class="{not_clickable: submitInProgress}" class="px-2 border border-danger d-flex flex-column justify-content-start align-items-center">
-        <h1 class="me-auto">Edit training</h1>
+        <h1 class="me-auto mt-2">Edit training</h1>
         
-        <div class="inputWrapper border border-danger d-flex flex-column justify-cotnent-start align-items-center">
+        <div class="inputWrapper mt-3 border border-danger d-flex flex-column justify-cotnent-start align-items-center">
 
             <div class="d-flex justify-content-between align-items-center">
                 <label for="editName">Name</label>

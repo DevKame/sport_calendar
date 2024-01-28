@@ -1,9 +1,9 @@
 <template>
     <ov-load v-if="loadingRoute" class="mt-5"></ov-load>
     <form v-else @submit.prevent="change_trainer" @click="clickHandler" :class="{not_clickable: submitInProgress}" class="px-2 border border-danger d-flex flex-column justify-content-start align-items-center">
-        <h1 class="me-auto">Edit trainer</h1>
+        <h1 class="me-auto mt-2">Edit trainer</h1>
         
-        <div class="inputWrapper border border-danger d-flex flex-column justify-cotnent-start align-items-center">
+        <div class="inputWrapper mt-3 border border-danger d-flex flex-column justify-cotnent-start align-items-center">
 
             <div class="d-flex justify-content-between align-items-center">
                 <label for="editEmail">Email</label>

@@ -1,8 +1,8 @@
 <template>
     <form @submit.prevent="create_student" @click="clickHandler" :class="{not_clickable: submitInProgress}" class="px-2 border border-danger d-flex flex-column justify-content-start align-items-center">
-        <h1 class="me-auto">New student</h1>
+        <h1 class="me-auto mt-2">New student</h1>
         
-        <div class="inputWrapper border border-danger d-flex flex-column justify-cotnent-start align-items-center">
+        <div class="inputWrapper mt-3 border border-danger d-flex flex-column justify-cotnent-start align-items-center">
 
             <div class="d-flex justify-content-between align-items-center">
                 <label for="createEmail">Email</label>
