@@ -25,7 +25,7 @@
                 <div class="w-100 mt-1 d-flex justify-content-start align-items-center">
                     <p class="m-0 pe-none">{{ props.event.fulldate }}</p>
                     <p class="m-0 ms-4 pe-none">{{ props.event.fulltime }}</p>
-                    <p class="m-0 ms-auto badge bg-trainer-badge text-black pe-none" :class="{you_badge: trainerIsYou, no_trainer: trainerIsNone}">{{ trainer }}</p>
+                    <p @click.stop="fastTrainerSignup" class="m-0 ms-auto badge bg-trainer-badge text-black" :class="{you_badge: trainerIsYou, no_trainer: trainerIsNone}">{{ trainer }}</p>
                 </div>
             </header>
             <transition name="details">
@@ -62,6 +62,7 @@ let props = defineProps([
 let emits = defineEmits([
     "delete-item",
     "edit-item",
+    "sign-trainer",
 ]);
 // INDICATES IF THE EDIT MENU IS ON OR OFF
 const menuOn = ref(false);
@@ -107,6 +108,15 @@ function editItem() {
 // RESETS POSSIBLE PREPARED DATA FOR EDITING
 function resetEditEvent() {
     store.commit["events/resetEventDataForEdit"];
+}
+// IF TRAINER IS NONE, TELLS PARENT TO ADJUST TRAINER THAT CLICKED IT TO CORRESPONDING TRAINING
+function fastTrainerSignup() {
+    if(trainerIsNone.value)
+    {
+        emits("sign-trainer");
+    } else {
+        detailView.value = !detailView.value;
+    }
 }
 
 const detailView = ref(false);

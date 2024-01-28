@@ -57,6 +57,15 @@ else if($_SERVER["REQUEST_METHOD"] === "POST")
     $req = json_decode(file_get_contents("php://input"));
     switch($req->task)
     {
+        case "assign-trainer-to-event":
+            $result = assignTrainerIDToEvent($req->id, $req->eid);
+            if(is_string($result))
+            {
+                $res["reason"] = "connection-problems";
+            } else {
+                $res["success"] = true;
+            }
+            break;
         //################### CHANGES DATA OF AN EVENT:
         case "edit-event":
             $affectedRows = editEvent($req->id,$req->name,$req->fulldate,$req->fulltime,$req->year,$req->month,$req->day,$req->hour,$req->minute,$req->max,$req->trainer,$req->info,$req->groups);

@@ -4,6 +4,29 @@
 
 
 ////////////////////////////////////    EVENT QUERIES  [start]  //////////////////////////////////////
+/** CHANGES AN EVENT
+ *  returns
+ * {true | Exeption->getMessage()} => Bool | String */
+function assignTrainerIDToEvent($id, $eid) {
+    $con = connect();
+    $query =
+    "UPDATE sport_cal_events
+    SET trainer = ?
+    WHERE id = ?";
+    try {
+        $stmt = mysqli_prepare($con, $query);
+        mysqli_stmt_bind_param($stmt, "ii", $id, $eid);
+        mysqli_stmt_execute($stmt);
+        $affectedRows = mysqli_stmt_affected_rows($stmt);
+        mysqli_stmt_free_result($stmt);
+        mysqli_stmt_close($stmt);
+        mysqli_close($con);
+        return $affectedRows;
+    }
+    catch(Exeption $e) {
+        return $e.getMessage();
+    }
+}
 /** DELETES AN EVENT BASED ON ITS ID
  *  returns
  * {true | Exeption->getMessage()} => Bool | String */

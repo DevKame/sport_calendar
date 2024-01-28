@@ -33,7 +33,8 @@
                     :trainer="getTrainerNameFromEventProperties(event.trainer)"
                     :groups="filteredGroups(event.id)"
                     @delete-item="deleteEvent(idx, event.id)"
-                    @edit-item="editEvent(event, filteredGroups(event.id))"></event-item>
+                    @edit-item="editEvent(event, filteredGroups(event.id))"
+                    @sign-trainer="signTrainer(event.id)"></event-item>
                 </transition-group>
             </div>
             <teleport to="body">
@@ -148,6 +149,7 @@ function getTrainerNameFromEventProperties(t) {
     }
     return result;
 }
+
 // DETERMINES IF BUTTON FOR DELETING OLD EVENTS SHOULD BE DISPLAYED
 const oldEventsExistent = ref(false);
 function toggleDeleteOldsButton() {
@@ -213,6 +215,20 @@ async function deleteEvent(index, id) {
         else {
             router.replace({name:"Error"});
         }
+    }
+}
+
+async function signTrainer(eid) {
+    console.clear();
+    console.log(store.getters["auth/userID"]);
+    let signdata = await store.dispatch("events/post", {task: "assign-trainer-to-event", id: store.getters["auth/userID"], eid: eid});
+    console.table(signdata);
+    if(!signdata.success)
+    {
+        router.replace({name: "Error"});
+    } else {
+        console.log("Geschafft");
+        router.go();
     }
 }
 </script>
