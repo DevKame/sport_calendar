@@ -217,17 +217,16 @@ async function deleteEvent(index, id) {
         }
     }
 }
-
+/** ASSIGNES THE ID OF CURRENTLY LOGGED TRAINER TO THE EVENT WITH
+ *  THE ID eid, RELOADS PAGE AFTER
+ * @param {number} eid  => ID OF THE EVENT*/
 async function signTrainer(eid) {
-    console.clear();
-    console.log(store.getters["auth/userID"]);
     let signdata = await store.dispatch("events/post", {task: "assign-trainer-to-event", id: store.getters["auth/userID"], eid: eid});
     console.table(signdata);
     if(!signdata.success)
     {
         router.replace({name: "Error"});
     } else {
-        console.log("Geschafft");
         router.go();
     }
 }

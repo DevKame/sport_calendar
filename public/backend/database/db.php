@@ -4,9 +4,9 @@
 
 
 ////////////////////////////////////    EVENT QUERIES  [start]  //////////////////////////////////////
-/** CHANGES AN EVENT
+/** ASSINGES THE TRAINER-ID $id TO THE EVENT WITH THE ID $eid
  *  returns
- * {true | Exeption->getMessage()} => Bool | String */
+ * {$affectedRows | Exeption->getMessage()} => int | String */
 function assignTrainerIDToEvent($id, $eid) {
     $con = connect();
     $query =

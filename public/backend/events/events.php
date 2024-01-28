@@ -57,6 +57,7 @@ else if($_SERVER["REQUEST_METHOD"] === "POST")
     $req = json_decode(file_get_contents("php://input"));
     switch($req->task)
     {
+        //################### ASSIGNS A TRAINER-ID TO AN EVENT:
         case "assign-trainer-to-event":
             $result = assignTrainerIDToEvent($req->id, $req->eid);
             if(is_string($result))
