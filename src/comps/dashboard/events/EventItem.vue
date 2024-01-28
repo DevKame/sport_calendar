@@ -25,7 +25,7 @@
                     <p v-if="props.event.old === 1" class="m-0 ms-auto badge bg-role-badge text-black">{{ indicatorForOld }}</p>
                 </div>
 
-                <div class="headerSecondWrapper mt-1 d-flex justify-content-start align-items-center">
+                <div class="headerSecondWrapper mt-1 pe-xl-3 d-flex justify-content-start align-items-center">
                     <p class="m-0 ms-xl-2 pe-none">{{ props.event.fulldate }}</p>
                     <p class="m-0 ms-4 pe-none">{{ props.event.fulltime }}</p>
                     <p @click.stop="fastTrainerSignup" class="m-0 ms-auto badge bg-trainer-badge text-black" :class="{you_badge: trainerIsYou, no_trainer: trainerIsNone}">{{ trainer }}</p>
