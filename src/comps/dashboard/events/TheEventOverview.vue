@@ -1,5 +1,5 @@
 <template>
-    <div @click="overviewClickHandler" class="pt-4 d-flex flex-column justify-content-start align-items-center border border-danger">
+    <div @click="overviewClickHandler" class="overflow-x-hidden pt-4 d-flex flex-column justify-content-start align-items-center border border-danger">
 
             <itf-card :dashboard-card="true">
                 <template #header>
@@ -9,10 +9,10 @@
                 <template #body>
                     <div class="w-100 h-100 d-flex justify-content-around align-items-center py-2 bg-prim">
                         <transition-group tag="div" name="overview-buttons" class="h-100 w-100 d-flex justify-content-around align-items-center">
-                            <router-link :to="{name: 'New-Event'}" key="randomKey" class="px-1 btn-positive border border-black rounded-2 ">
+                            <router-link :to="{name: 'New-Event'}" key="randomKey" class="px-1 text-black border border-black border-2 rounded-2 itf-new itf-buttons">
                                 New Event
                             </router-link>
-                            <a  v-if="oldEventsExistent" @click.prevent="deleteAllOlds" class="px-1 btnDeleteOlds btn-role-badge border border-black rounded-2 ">
+                            <a  v-if="oldEventsExistent" @click.prevent="deleteAllOlds" class="px-1 btnDeleteOlds text-black border border-black border-2 rounded-2 itf-delete-old itf-buttons">
                                 Delete old events
                             </a>
                         </transition-group>
@@ -218,10 +218,20 @@ async function deleteEvent(index, id) {
 </script>
 
 <style scoped>
+.itf-new {
+    background-image: linear-gradient(to top, #ddd -20%, var(--create), var(--create), #ddd 110%);
+}
+.itf-delete-old {
+    background-image: linear-gradient(to top, #ddd -20%, var(--role-badge), var(--role-badge), #ddd 110%);
+}
+.itf-buttons {
+    box-shadow: 0 0 10px 1px #333;
+}
 .eventList {
     list-style-type: none;
 }
 .noContentHeadline {
+    width: 80%;
     font-family: "Raleway Reg 400";
 }
 .content-list-move {

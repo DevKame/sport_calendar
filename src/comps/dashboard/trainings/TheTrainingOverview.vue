@@ -8,7 +8,7 @@
 
                 <template #body>
                     <div class="w-100 h-100 d-flex justify-content-around align-items-center py-2 bg-prim">
-                        <router-link :to="{name: 'New-Training'}" class="px-1 btn-positive border border-black rounded-2 ">
+                        <router-link :to="{name: 'New-Training'}" class="px-1 text-black border border-black border-2 rounded-2 itf-buttons itf-new">
                             New Training
                         </router-link>
                     </div>
@@ -152,10 +152,17 @@ async function deleteTraining(index, id) {
 </script>
 
 <style scoped>
+.itf-new {
+    background-image: linear-gradient(to top, #ddd -20%, var(--create), var(--create), #ddd 110%);
+}
+.itf-buttons {
+    box-shadow: 0 0 10px 1px #333;
+}
 .trainingList {
     list-style-type: none;
 }
 .noContentHeadline {
+    width: 80%;
     font-family: "Raleway Reg 400";
 }
 .content-list-move {
