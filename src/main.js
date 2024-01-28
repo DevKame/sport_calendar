@@ -40,22 +40,22 @@ import NewEvent             from "./comps/dashboard/events/NewEvent.vue";
 import EditEvent            from "./comps/dashboard/events/EditEvent.vue";
 
 // FONTAWESOME
-import { library } from "@fortawesome/fontawesome-svg-core";
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import { library }              from "@fortawesome/fontawesome-svg-core";
+import { FontAwesomeIcon }      from "@fortawesome/vue-fontawesome";
 
-import { faBarsStaggered } from "@fortawesome/free-solid-svg-icons";
-import { faMicrochip } from "@fortawesome/free-solid-svg-icons";
-import { faClose } from "@fortawesome/free-solid-svg-icons";
-import { faRectangleList } from "@fortawesome/free-regular-svg-icons";
-import { faDumbbell } from "@fortawesome/free-solid-svg-icons";
-import { faPersonChalkboard } from "@fortawesome/free-solid-svg-icons";
-import { faPeopleGroup } from "@fortawesome/free-solid-svg-icons";
-import { faTable } from "@fortawesome/free-solid-svg-icons";
-import { faGear } from "@fortawesome/free-solid-svg-icons";
-import { faPencil } from "@fortawesome/free-solid-svg-icons";
-import { faBan } from "@fortawesome/free-solid-svg-icons";
-import { faUserSlash } from "@fortawesome/free-solid-svg-icons";
-import { faCalendar } from "@fortawesome/free-regular-svg-icons";
+import { faBarsStaggered }      from "@fortawesome/free-solid-svg-icons";
+import { faMicrochip }          from "@fortawesome/free-solid-svg-icons";
+import { faClose }              from "@fortawesome/free-solid-svg-icons";
+import { faRectangleList }      from "@fortawesome/free-regular-svg-icons";
+import { faDumbbell }           from "@fortawesome/free-solid-svg-icons";
+import { faPersonChalkboard }   from "@fortawesome/free-solid-svg-icons";
+import { faPeopleGroup }        from "@fortawesome/free-solid-svg-icons";
+import { faTable }              from "@fortawesome/free-solid-svg-icons";
+import { faGear }               from "@fortawesome/free-solid-svg-icons";
+import { faPencil }             from "@fortawesome/free-solid-svg-icons";
+import { faBan }                from "@fortawesome/free-solid-svg-icons";
+import { faUserSlash }          from "@fortawesome/free-solid-svg-icons";
+import { faCalendar }           from "@fortawesome/free-regular-svg-icons";
 
 library.add(faMicrochip);
 library.add(faClose);
