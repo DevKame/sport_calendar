@@ -1,8 +1,8 @@
 <template>
-    <form @submit.prevent="create_training" @click="clickHandler" :class="{not_clickable: submitInProgress}" class="px-2 border border-danger d-flex flex-column justify-content-start align-items-center">
+    <form @submit.prevent="create_training" @click="clickHandler" :class="{not_clickable: submitInProgress}" class="container-xl px-2 pb-4 ms-xl-3 me-xl-auto border border-danger d-flex flex-column justify-content-start align-items-center">
         <h1 class="me-auto mt-2">New training</h1>
         
-        <div class="inputWrapper mt-3 border border-danger d-flex flex-column justify-cotnent-start align-items-center">
+        <div class="inputWrapper mt-3 border border-danger d-flex flex-column justify-content-start align-items-center">
 
             <div class="d-flex justify-content-between align-items-center">
                 <label for="createName">Name</label>
@@ -19,7 +19,7 @@
             <div class="alertHolder my-2">
                 <transition name="error" mode="out-in">
                     <error-alert v-if="nameError" @close-alert="nameError = false">
-                        <p class="m-0 fw-bold">Enter a none-empty value below 27 characters</p>
+                        <p class="m-0 fw-bold">Enter a none-empty value below 25 characters</p>
                     </error-alert>
                     <error-alert v-else-if="doubleError" @close-alert="connectionError = false">
                         <p class="m-0 fw-bold">A training with that name aleary exists</p>
@@ -36,7 +36,7 @@
                         <label class="fst-italic">optional</label>
                     </div>
 
-                    <div class="checkBoxes px-1 d-flex flex-column justify-content-start align-items-start">
+                    <div class="checkBoxes px-1 d-flex flex-column flex-lg-row flex-lg-wrap justify-content-start align-items-start">
                         <group-checkboxes
                         v-for="group in groupArray"
                         :key="group.id"

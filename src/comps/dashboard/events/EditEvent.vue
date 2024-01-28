@@ -166,7 +166,7 @@
                 <label class="fst-italic optional-label">optional</label>
             </div>
 
-            <div class="checkBoxes px-1 d-flex flex-column justify-content-start align-items-start">
+            <div class="checkBoxes px-1 d-flex flex-column flex-lg-row flex-lg-wrap justify-content-start align-items-start">
                 <group-checkboxes
                 v-for="group in groupArray"
                 :key="group.id"

@@ -6,7 +6,7 @@
 
 EMITS "box-clicked" TO ITS PARENT TO INVOKE ACTIONS REGARDING THIS CHECKBOXES VALUE -->
 <template>
-    <div @click="clickBox" class="cbHolder my-1 px-2 position-relative d-flex justify-content-between align-items-center">
+    <div @click="clickBox" class="cbHolder my-1 mx-lg-2 px-2 position-relative d-flex justify-content-between align-items-center">
         <input @input="emitChange" ref="cbox" type="checkbox" :name="props.id" :id="props.id" class="position-absolute rounded-pill">
         <label :for="props.id" class="position-relative">{{ name }}</label>
     </div>
@@ -60,9 +60,11 @@ input[type="checkbox"]:not(:checked) {
 }
 input[type="checkbox"]:checked {
     background-color: var(--neutral);
+    border: 2px solid black;
 }
 input[type="checkbox"]:checked + label {
     font-weight: bold;
+    color: white;
 }
 input[type="checkbox"]:not(:checked) + label::selection {
     background-color: transparent;
@@ -81,5 +83,10 @@ label {
 .cbHolder {
     min-height: 15px;
     font-size: 12px;
+}
+@media screen and (min-width: 993px) {
+    .cbHolder {
+        font-size: 15px;
+    }
 }
 </style>
