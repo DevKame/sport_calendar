@@ -1,6 +1,6 @@
 <template>
     <div>
-        <header @click="reactToDashboardclick" class="dashboardHeader p-2 d-flex justify-content-start align-items-center bg-sec">
+        <header @click="reactToDashboardclick" class="dashboardHeader p-2 d-flex flex-lg-wrap justify-content-start align-items-center bg-sec">
             
             <div class="imageHolder d-flex justify-content-center align-items-center">
                 <img src="@/assets/img/logos/kaizen-630.png" alt="Kaizen Logo"/>
@@ -75,6 +75,37 @@
                     </div>
                 </transition>
             </div>
+
+            <div class="widenavHolder mt-2 w-100 d-none d-lg-flex justify-content-around align-items-center">
+                    <router-link :to="{name: 'Events'}" class="d-flex justify-content-between align-items-center px-3 py-2 widenavLinks position-relative">
+                        <fa-icon icon="fa-regular fa-rectangle-list" class="me-3"></fa-icon>
+                        <small class="fw-bold">Events</small>
+                    </router-link>
+                    <router-link :to="{name: 'Trainings'}" class="d-flex justify-content-between align-items-center px-3 py-2 widenavLinks position-relative">
+                        <fa-icon icon="fa-solid fa-dumbbell" class="me-3"></fa-icon>
+                        <small class="fw-bold">Trainings</small>
+                    </router-link>
+                    <router-link :to="{name: 'Trainers'}" class="d-flex justify-content-between align-items-center px-3 py-2 widenavLinks position-relative">
+                        <fa-icon icon="fa-solid fa-person-chalkboard" class="me-3"></fa-icon>
+                        <small class="fw-bold">Trainers</small>
+                    </router-link>
+                    <router-link :to="{name: 'Students'}" class="d-flex justify-content-between align-items-center px-3 py-2 widenavLinks position-relative">
+                        <fa-icon icon="fa-solid fa-people-group" class="me-3"></fa-icon>
+                        <small class="fw-bold">Students</small>
+                    </router-link>
+                    <router-link :to="{name: 'Groups'}" class="d-flex justify-content-between align-items-center px-3 py-2 widenavLinks position-relative">
+                        <fa-icon icon="fa-solid fa-table" class="me-3"></fa-icon>
+                        <small class="fw-bold">Groups</small>
+                    </router-link>
+                    <router-link :to="{name: 'Events'}" class="d-flex justify-content-between align-items-center px-3 py-2 widenavLinks position-relative">
+                        <fa-icon icon="fa-regular fa-calendar" class="me-3"></fa-icon>
+                        <small class="fw-bold">Events</small>
+                    </router-link>
+                    <span @click="try_logout" class="d-flex justify-content-between align-items-center px-3 py-2 widenavLinks position-relative widenavLogout">
+                        <fa-icon icon="fa-solid fa-user-slash" class="me-3"></fa-icon>
+                        <small class="fw-bold">Logout</small>
+                    </span>
+            </div>
         </header>
 
         <router-view v-slot="slotProps" @empty-click="clickFromRouterView">
@@ -129,6 +160,52 @@ async function try_logout() {
 
 
 <style scoped>
+.widenavLinks::after {
+    position: absolute;
+    content: "";
+    width: 0;
+    height: 1px;
+    top: 1px;
+    left: 50%;
+    background-color: black;
+    transition: all .5s ease;
+}
+.widenavLinks.widenavLogout::after {
+    background-color: rgb(80, 69, 69);
+}
+.widenavLinks:hover::after {
+    width: 50%;
+    left: 25%;
+}
+.widenavLinks.widenavLogout::after {
+    background-color: firebrick;
+}
+.widenavLinks::before {
+    position: absolute;
+    content: "";
+    width: 0;
+    height: 3px;
+    bottom: 0;
+    left: 50%;
+    background-color: black;
+    transition: all .3s ease;
+}
+.widenavLinks:hover::before {
+    width: 100%;
+    left: 0;
+}
+.widenavLinks.widenavLogout::before {
+    background-color: firebrick;
+}
+.widenavLinks.widenavLogout {
+    color: firebrick;
+    text-decoration: none;
+    cursor: pointer;
+}
+.widenavLinks {
+    color: black;
+    text-decoration: none;
+}
 .sub-routes-enter-from,
 .sub-routes-leave-to {
     opacity: 0;
@@ -406,5 +483,10 @@ async function try_logout() {
     .navItemHolder small {
         font-size: 12px;
     }
+}
+@media screen and (min-width: 992px) {
+.dashboardHeader {
+    height: auto;
+}
 }
 </style>
