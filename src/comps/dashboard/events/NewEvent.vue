@@ -1,5 +1,5 @@
 <template>
-    <form @submit.prevent="create_event" @click="clickHandler" :class="{not_clickable: submitInProgress}" class="container-xl px-2 pb-4 ms-xl-3 me-xl-auto border border-danger d-flex flex-column justify-content-start align-items-center">
+    <form @submit.prevent="create_event" @click="clickHandler" :class="{not_clickable: submitInProgress}" class="container-xl px-2 pb-4 ms-xl-3 me-xl-auto d-flex flex-column justify-content-start align-items-center">
         <div class="w-100 mt-2 d-flex justify-content-between align-items-center">
             <h1 class="m-0 me-auto">New event</h1>
             <router-link :to="{name:'Events'}" type="button" class="rounded-2 me-2 px-2">BACK</router-link>
@@ -161,7 +161,7 @@
         
         <ov-load v-if="loadingGroups"></ov-load>
         <div v-else class="w-100">
-                <div v-if="groupArray.length > 0" class="inputWrapper groupWrapper d-flex flex-column justify-cotnent-start align-items-center">
+                <div v-if="groupArray.length > 0" class="inputWrapper groupWrapper d-flex flex-column justify-content-start align-items-center">
                     <div class="d-flex justify-content-between align-items-center pe-2">
                         <label>Limit to particular group(s)</label>
                         <label class="fst-italic optional-label">optional</label>

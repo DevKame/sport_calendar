@@ -1,5 +1,5 @@
 <template>
-    <div @click="overviewClickHandler" class="groupOverview overflow-x-hidden ps-2 allOverviews d-flex flex-column flex-xl-row justify-content-start align-items-center align-items-xl-start border border-danger">
+    <div @click="overviewClickHandler" class="overflow-x-hidden ps-2 allOverviews d-flex flex-column flex-xl-row justify-content-start align-items-center align-items-xl-start">
 
             <itf-card :dashboard-card="true">
                 <template #header>

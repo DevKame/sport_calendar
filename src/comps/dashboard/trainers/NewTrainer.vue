@@ -1,9 +1,9 @@
 <template>
     <ov-load v-if="contentLoading" class="mt-5"></ov-load>
-    <form v-else @submit.prevent="create_trainer" @click="clickHandler" :class="{not_clickable: submitInProgress}" class="container-xl px-2 pb-4 ms-xl-3 me-xl-auto border border-danger d-flex flex-column justify-content-start align-items-center">
+    <form v-else @submit.prevent="create_trainer" @click="clickHandler" :class="{not_clickable: submitInProgress}" class="container-xl px-2 pb-4 ms-xl-3 me-xl-auto d-flex flex-column justify-content-start align-items-center">
         <h1 class="me-auto mt-2">New trainer</h1>
         
-        <div class="inputWrapper mt-3 border border-danger d-flex flex-column justify-cotnent-start align-items-center">
+        <div class="inputWrapper mt-3 d-flex flex-column justify-content-start align-items-center">
 
             <div class="d-flex justify-content-between align-items-center">
                 <label for="createEmail">Email</label>
@@ -28,7 +28,7 @@
                 </transition>
             </div>
         </div>
-        <div class="inputWrapper border border-danger d-flex flex-column justify-cotnent-start align-items-center">
+        <div class="inputWrapper d-flex flex-column justify-content-start align-items-center">
 
             <div class="d-flex justify-content-between align-items-center">
                 <label for="createFirstname">Firstname</label>
@@ -50,7 +50,7 @@
                 </transition>
             </div>
         </div>
-        <div class="inputWrapper border border-danger d-flex flex-column justify-cotnent-start align-items-center">
+        <div class="inputWrapper d-flex flex-column justify-content-start align-items-center">
 
             <div class="d-flex justify-content-between align-items-center">
                 <label for="createLastname">Lastname</label>
@@ -73,7 +73,7 @@
             </div>
         </div>
         
-        <div class="inputWrapper border border-danger d-flex flex-column justify-cotnent-start align-items-center">
+        <div class="inputWrapper d-flex flex-column justify-content-start align-items-center">
 
             <div class="d-flex justify-content-between align-items-center">
                 <label for="createRole">Role</label>

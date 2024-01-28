@@ -1,8 +1,8 @@
 <template>
-    <form @submit.prevent="edit_group" @click="clickHandler" :class="{not_clickable: submitInProgress}" class="container-xl px-2 pb-4 ms-xl-3 border border-danger d-flex flex-column justify-content-start align-items-center">
+    <form @submit.prevent="edit_group" @click="clickHandler" :class="{not_clickable: submitInProgress}" class="container-xl px-2 pb-4 ms-xl-3 d-flex flex-column justify-content-start align-items-center">
         <h1 class="m-0 me-auto mt-2">Edit group</h1>
         
-        <div class="inputWrapper mt-3 border border-danger d-flex flex-column justify-content-start align-items-center">
+        <div class="inputWrapper mt-3 d-flex flex-column justify-content-start align-items-center">
 
             <div class="d-flex justify-content-between align-items-center">
                 <label for="editName">Name</label>
@@ -40,7 +40,7 @@
         <div class="w-100 mt-3 d-flex justify-content-end align-items-center">
             <form-loading v-if="submitInProgress" class="me-5"></form-loading>
             <router-link :to="{name:'Groups'}" type="button" class="rounded-2 me-2 px-2">BACK</router-link>
-            <input type="submit" value="CREATE" class="btn-sec border border-black rounded-2">
+            <input type="submit" value="SAVE" class="btn-sec border border-black rounded-2">
         </div>
     </form>
 </template>
