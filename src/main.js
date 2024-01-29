@@ -122,25 +122,25 @@ let router = createRouter({
             },
             children:
             [
-                { path: "events", name: "Events", component: TheEventOverview },
-                { path: "newevent", name: "New-Event", component: NewEvent },
-                { path: "editevent", name: "Edit-Event", component: EditEvent },
+                { path: "events", name: "Events", component: TheEventOverview, meta: {trainerrequired: true, logoutRequired: false} },
+                { path: "newevent", name: "New-Event", component: NewEvent, meta: {trainerrequired: true, logoutRequired: false} },
+                { path: "editevent", name: "Edit-Event", component: EditEvent, meta: {trainerrequired: true, logoutRequired: false} },
 
-                { path: "trainings", name: "Trainings", component: TheTrainingOverview },
-                { path: "newtraining", name: "New-Training", component: NewTraining },
-                { path: "edittraining", name: "Edit-Training", component: EditTraining },
+                { path: "trainings", name: "Trainings", component: TheTrainingOverview, meta: {trainerrequired: true, logoutRequired: false} },
+                { path: "newtraining", name: "New-Training", component: NewTraining, meta: {trainerrequired: true, logoutRequired: false} },
+                { path: "edittraining", name: "Edit-Training", component: EditTraining, meta: {trainerrequired: true, logoutRequired: false} },
 
-                { path: "trainers", name: "Trainers", component: TheTrainerOverview },
-                { path: "newtrainer", name: "New-Trainer", component: NewTrainer },
-                { path: "edittrainer", name: "Edit-Trainer", component: EditTrainer },
+                { path: "trainers", name: "Trainers", component: TheTrainerOverview, meta: {trainerrequired: true, logoutRequired: false} },
+                { path: "newtrainer", name: "New-Trainer", component: NewTrainer, meta: {trainerrequired: true, logoutRequired: false} },
+                { path: "edittrainer", name: "Edit-Trainer", component: EditTrainer, meta: {trainerrequired: true, logoutRequired: false} },
 
-                { path: "students", name: "Students", component: TheStudentOverview },
-                { path: "newstudent", name: "New-Student", component: NewStudent },
-                { path: "editstudent", name: "Edit-Student", component: EditStudent },
+                { path: "students", name: "Students", component: TheStudentOverview, meta: {trainerrequired: true, logoutRequired: false} },
+                { path: "newstudent", name: "New-Student", component: NewStudent, meta: {trainerrequired: true, logoutRequired: false} },
+                { path: "editstudent", name: "Edit-Student", component: EditStudent, meta: {trainerrequired: true, logoutRequired: false} },
 
-                { path: "groups", name: "Groups", component: TheGroupOverview },
-                { path: "newgroup", name: "New-Group", component: NewGroup },
-                { path: "editgroup", name: "Edit-Group", component: EditGroup },
+                { path: "groups", name: "Groups", component: TheGroupOverview, meta: {trainerrequired: true, logoutRequired: false} },
+                { path: "newgroup", name: "New-Group", component: NewGroup, meta: {trainerrequired: true, logoutRequired: false} },
+                { path: "editgroup", name: "Edit-Group", component: EditGroup, meta: {trainerrequired: true, logoutRequired: false} },
 
                 { path: "calendar", name: "Calendar", component: TheCal },
             ],
@@ -159,12 +159,25 @@ let router = createRouter({
 router.beforeEach(async (to, _, next) => {
     let nextPara = true;
     let result = await store.dispatch("auth/loggedUserExistent");
+    let userRole = await store.getters["auth/userRole"];
     if(to.meta.loginRequired && !result.logged_user_existent) {
         nextPara = {name: "Start"};
     }
     else if(to.meta.loginRequired && result.logged_user_existent)
     {
-        nextPara = true;
+        if(to.meta.trainerrequired)
+        {
+            if(userRole === "STUDENT")
+            {
+                nextPara = {name: "Calendar"};
+            }
+            else {
+                nextPara = true;
+            }
+        }
+        else {
+            nextPara = true;
+        }
     }
     else if(to.meta.logoutRequired) {
         if(result.logged_user_existent) {

@@ -35,8 +35,6 @@ let props = defineProps([
 ]);
 
 const name = computed(() => {
-    console.log(props.trainers);
-    console.log(props.students);
     return props.event.name;
 });
 const booked = computed(() => {
@@ -56,12 +54,9 @@ const minute = computed(() => {
 });
 const trainer = computed(() => {
     let result = "no trainer";
-    console.log(result);
-    console.log(result);
     if(props.event.trainer !== "no-trainer")
     {
         const trainer = props.trainers.find(curr => curr.id === +props.event.trainer);
-        console.log(trainer);
         result = trainer.firstname;
     }
     return result;

@@ -18,7 +18,7 @@
 </template>
 
 <script setup>
-import { defineProps, computed, ref, onMounted } from 'vue';
+import { defineProps, computed, ref } from 'vue';
 
 import WeekEventitem from './WeekEventitem.vue';
 
@@ -28,9 +28,6 @@ let props = defineProps([
     "trainers",
     "students",
 ]);
-onMounted(() => {
-    console.table(props.dayevents);
-})
 const bodyVisible = ref(true);
 function toggleBody() {
     bodyVisible.value = !bodyVisible.value;

@@ -60,5 +60,6 @@ h5 + div {
     height: 100vh;
     background-color: rgba(0,0,0,.7);
     font-family: "Raleway Reg 400";
+    z-index: 25;
 }
 </style>

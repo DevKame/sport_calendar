@@ -59,6 +59,7 @@ else if($_SERVER["REQUEST_METHOD"] === "POST")
     {
         case "fetch_termine_for_week":
             $allEvents = [];
+            $failedUpdates = 0;
             #// ALL RESULT SOF THE SELECT QUERY.ARRAY WITH ARRAYS OF NULL´s
             foreach($req->daydata as $data)
             {
@@ -66,9 +67,24 @@ else if($_SERVER["REQUEST_METHOD"] === "POST")
                 foreach($fetchedEvents as $eventOrNULL) {
                     if($eventOrNULL !== NULL)
                     {
+                        if(isEventOld($eventOrNULL))
+                        {
+                            $turnToOldResult = setEventAsOld($eventOrNULL["id"]);
+                            if(is_string($turnToOldResult))
+                            {
+                                $failedUpdates++;
+                                break;
+                            } else {
+                                $eventOrNULL["old"] = 1;
+                            }
+                        }
                         $allEvents[] = $eventOrNULL;
                     }
                 }
+            }
+            if($failedUpdates > 0)
+            {
+                $res["reason"] = "connection-problems";
             }
             $res["success"] = true;
             $res["events"] = $allEvents;
