@@ -102,16 +102,20 @@ let router = createRouter({
              *  TO CHECK IF A USER AT ALL IS LOGGED IN. IF IT CAME TO THIS
              *  ROUTE, THAT MEANS THAT A USER IS LOGGED IN. THIS NAV GUARD
              *  FETCHES THIS USER´S DATA AND SETS IT IN VUEX STATE */
-            async beforeEnter(_, _2, next) {
+            async beforeEnter(to, _2, next) {
                 try {
                     let userid = await store.dispatch("auth/getUserIDFromSession");
                     userid = userid.session_id;
                     let userdata = await store.dispatch("auth/get_userdata_from_id", userid);
                     store.commit("setLoggedUser", userdata.logged_user);
-                    next(true);
+                    if(to.meta.trainerrequired && userdata.role === "STUDENT")
+                    {
+                        next({name: "Calendar"});
+                    } else {
+                        next(true);
+                    }
                 }
                 catch(error) {
-                    console.table(error);
                     next({name: "Error"});
                 }
             },
@@ -159,25 +163,9 @@ let router = createRouter({
 router.beforeEach(async (to, _, next) => {
     let nextPara = true;
     let result = await store.dispatch("auth/loggedUserExistent");
-    let userRole = await store.getters["auth/userRole"];
+    // let userRole = await store.getters["auth/userRole"];
     if(to.meta.loginRequired && !result.logged_user_existent) {
         nextPara = {name: "Start"};
-    }
-    else if(to.meta.loginRequired && result.logged_user_existent)
-    {
-        if(to.meta.trainerrequired)
-        {
-            if(userRole === "STUDENT")
-            {
-                nextPara = {name: "Calendar"};
-            }
-            else {
-                nextPara = true;
-            }
-        }
-        else {
-            nextPara = true;
-        }
     }
     else if(to.meta.logoutRequired) {
         if(result.logged_user_existent) {
