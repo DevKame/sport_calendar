@@ -4,6 +4,71 @@
 
 
 ////////////////////////////////////    EVENT QUERIES  [start]  //////////////////////////////////////
+function fetchEventsForWeek($data) {
+    $fetchedTermine = [];
+            $con = connect();
+            $fetchedEventsForDate =  [];
+            $query =
+            "SELECT id,
+            name,
+            day,
+            month,
+            year,
+            hour,
+            minute,
+            max,
+            trainer,
+            info,
+            groups,
+            booked,
+            old,
+            students
+            FROM sport_cal_events
+            WHERE day = ?
+            AND month = ?
+            AND year = ?";
+
+            $requestDay = (string)$data[0];
+            if(strlen($requestDay) === 1)
+            {
+                $requestDay = "0$requestDay";
+            }
+            $requestMonth = (string)$data[1];
+            if(strlen($requestMonth) === 1)
+            {
+                $requestMonth = "0$requestMonth";
+            }
+            $requestYear = (string)$data[2];
+
+            $stmt = mysqli_prepare($con, $query);
+            mysqli_stmt_bind_param($stmt, "sss", $requestDay, $requestMonth, $requestYear);
+            mysqli_stmt_execute($stmt);
+            mysqli_stmt_store_result($stmt);
+            mysqli_stmt_bind_result($stmt, $id, $name, $day, $month, $year, $hour, $minute, $max, $trainer, $info, $groups, $booked, $old, $students);
+            while(mysqli_stmt_fetch($stmt))
+            {
+                $ev = [];
+                $ev["id"] = $id;
+                $ev["name"] = $name;
+                $ev["day"] = $day;
+                $ev["month"] = $month;
+                $ev["year"] = $year;
+                $ev["hour"] = $hour;
+                $ev["minute"] = $minute;
+                $ev["max"] = $max;
+                $ev["trainer"] = $trainer;
+                $ev["info"] = $info;
+                $ev["groups"] = $groups;
+                $ev["booked"] = $booked;
+                $ev["old"] = $old;
+                $ev["students"] = $students;
+                $fetchedEventsForDate[] = $ev;
+            }
+            mysqli_stmt_free_result($stmt);
+            mysqli_stmt_close($stmt);
+            mysqli_close($con);
+            return $fetchedEventsForDate;
+}
 /** ASSINGES THE TRAINER-ID $id TO THE EVENT WITH THE ID $eid
  *  returns
  * {$affectedRows | Exeption->getMessage()} => int | String */

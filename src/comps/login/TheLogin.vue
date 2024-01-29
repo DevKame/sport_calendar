@@ -6,9 +6,9 @@
             <p>Team Calendar</p>
         </header>
 
-        <itf-card>
+        <itf-card class="loginCard">
             <template #header>
-                <div class="d-flex justify-content-start align.items-center">
+                <div class="d-flex justify-content-start align-items-center">
                     <h5 class="m-0">LOGIN</h5>
                 </div>
             </template>
@@ -227,6 +227,9 @@ function toggleInfo() {
 
 
 <style scoped>
+.loginCard {
+    max-width: 400px;
+}
 .backdrop-enter-from {
     opacity: 0;
 }

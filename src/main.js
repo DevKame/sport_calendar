@@ -39,6 +39,8 @@ import EditTraining         from "./comps/dashboard/trainings/EditTraining.vue";
 import NewEvent             from "./comps/dashboard/events/NewEvent.vue";
 import EditEvent            from "./comps/dashboard/events/EditEvent.vue";
 
+import TheCal               from "./comps/calendar/TheCal.vue";
+
 // FONTAWESOME
 import { library }              from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon }      from "@fortawesome/vue-fontawesome";
@@ -56,6 +58,8 @@ import { faPencil }             from "@fortawesome/free-solid-svg-icons";
 import { faBan }                from "@fortawesome/free-solid-svg-icons";
 import { faUserSlash }          from "@fortawesome/free-solid-svg-icons";
 import { faCalendar }           from "@fortawesome/free-regular-svg-icons";
+import { faBackward }           from "@fortawesome/free-solid-svg-icons";
+import { faForward }           from "@fortawesome/free-solid-svg-icons";
 
 library.add(faMicrochip);
 library.add(faClose);
@@ -70,6 +74,8 @@ library.add(faPencil);
 library.add(faBan);
 library.add(faUserSlash);
 library.add(faCalendar);
+library.add(faBackward);
+library.add(faForward);
 
 // ROUTER
 import { createRouter, createWebHistory } from "vue-router";
@@ -135,6 +141,8 @@ let router = createRouter({
                 { path: "groups", name: "Groups", component: TheGroupOverview },
                 { path: "newgroup", name: "New-Group", component: NewGroup },
                 { path: "editgroup", name: "Edit-Group", component: EditGroup },
+
+                { path: "calendar", name: "Calendar", component: TheCal },
             ],
         },
         {

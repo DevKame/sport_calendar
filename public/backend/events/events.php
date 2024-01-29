@@ -57,6 +57,22 @@ else if($_SERVER["REQUEST_METHOD"] === "POST")
     $req = json_decode(file_get_contents("php://input"));
     switch($req->task)
     {
+        case "fetch_termine_for_week":
+            $allEvents = [];
+            #// ALL RESULT SOF THE SELECT QUERY.ARRAY WITH ARRAYS OF NULL´s
+            foreach($req->daydata as $data)
+            {
+                $fetchedEvents = fetchEventsForWeek($data);
+                foreach($fetchedEvents as $eventOrNULL) {
+                    if($eventOrNULL !== NULL)
+                    {
+                        $allEvents[] = $eventOrNULL;
+                    }
+                }
+            }
+            $res["success"] = true;
+            $res["events"] = $allEvents;
+            break;
         //################### ASSIGNS A TRAINER-ID TO AN EVENT:
         case "assign-trainer-to-event":
             $result = assignTrainerIDToEvent($req->id, $req->eid);
