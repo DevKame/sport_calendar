@@ -1,8 +1,8 @@
 <template>
     <ov-load v-if="loadingRoute" class="mt-3"></ov-load>
-    <div v-else @click="overviewClickHandler" class="calendarOverview overflow-x-hidden pt-1 px-3 ms-lg-5 ms-xl-0 d-flex flex-column justify-content-start align-items-center">
-        <section class="cal-interface w-100 d-flex flex-column justify-content-center align-items-center p-2 border border-danger">
-            <div class="w-100 d-flex justify-content-center align-items-center p-1 border border-danger">
+    <div v-else @click="overviewClickHandler" class="calendarOverview overflow-x-hidden pt-1 px-3 ms-lg-5 ms-xxl-0 d-flex flex-column justify-content-start align-items-center">
+        <section class="cal-interface w-100 d-flex flex-column justify-content-center align-items-center p-2">
+            <div class="w-100 d-flex justify-content-center align-items-center p-1">
                 <div @click="changeWeek('prev')" class="week-pre h-100 week-nav d-flex flex-column justify-content-start align-items-center me-3">
                     <fa-icon icon="fa-solid fa-backward" size="xl"></fa-icon>
                 </div>
@@ -20,7 +20,7 @@
             </div>
         </section>
 
-        <div class="weekdayHolder d-flex flex-column justify-content-center align-items-center border border-dark">
+        <div class="weekdayHolder d-flex flex-column flex-xxl-row justify-content-center justify-content-xxl-between align-items-center align-items-xxl-start border border-dark">
             <week-day v-for="day in THIS_WEEK"
             :key="day.getDate()"
             :date="day"
@@ -235,9 +235,12 @@ function fillWeekArray() {
     width: 100%;
 }
 
-@media screen and (min-width: 1200px) {
-.calendarOverview {
-    max-width: unset;
-}
+@media screen and (min-width: 1400px) {
+    .calendarOverview {
+        max-width: unset;
+    }
+    .cal-interface h6 {
+        font-size: 20px;
+    }
 }
 </style>

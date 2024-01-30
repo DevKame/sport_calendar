@@ -1,7 +1,7 @@
 <template>
-    <div class="weekeventitem w-100 bg-trainer-badge rounded-2 overflow-hidden p-1 my-2 d-flex flex-column justify-content-start align-items-start border border-black">
+    <div :class="usableEvent" class="weekeventitem w-100 bg-trainer-badge rounded-2 overflow-hidden p-1 my-2 d-flex flex-column justify-content-start align-items-start border border-black">
                 
-        <div class="w-100 d-flex justify-content-between align-items-center">
+        <div class="w-100 d-flex flex-xxl-column justify-content-between justify-content-xxl-start align-items-center align-items-xxl-start">
             <span class="fw-bold">{{ name }} <span v-if="event.old === 1" class="badge text-black bg-delete border border-black">old</span></span>
             <span :class="{is_free: freeSpaces}" class="totalIndicator fw-bold">{{ booked }} / {{ max }}</span>
         </div>
@@ -11,14 +11,14 @@
             <p class="m-0">Trainer: <span @click="assignTrainer(event.id, event.trainer)" :class="noTrainer" class="badge text-black bg-role-badge border border-dark">{{ trainer }}</span></p>
         </div>
 
-        <div class="w-100 mt-2 d-flex justify-content-between align-items-center">
+        <div class="w-100 mt-2 d-flex flex-xxl-column justify-content-between justify-content-xxl-start align-items-center align-items-xxl-start">
             <button
             v-if="userRole === 'STUDENT'"
             @click="toggleParticipation(event.id)"
             :class="{canSign: signable}"
             class="partakeButton btn-positive border border-black rounded-2">{{ signingtext }}</button>
 
-            <div class="alertHolder overflow-hidden ms-2 d-flex justify-content-center align- items-center">
+            <div class="alertHolder overflow-hidden ms-2 ms-xxl-0 mt-xxl-1 d-flex justify-content-center align-items-center">
                 <transition name="errors" mode="out-in">
                     <error-alert v-if="connectionError" @close-alert="connectionError = false">
                         <p class="m-0 fw-bold">Some connection problems occured. Try later</p>
@@ -65,6 +65,10 @@ let props = defineProps([
     "students",
 ]);
 
+const usableEvent = computed(() => {
+    return props.event.old === 1 ?
+    "too-old-to-click" : "";
+});
 // INDICATES IF USER IS ALREADY PARTAKING OR NOT
 const signable = computed(() => {
     return JSON.parse(props.event.students).find(curr => curr === store.getters["auth/userID"]) === undefined ?
@@ -251,6 +255,10 @@ const userRole = computed(() => {
 </script>
 
 <style scoped>
+.too-old-to-click {
+    opacity: .55;
+    pointer-events: none;
+}
 .clickable_trainer {
     cursor: pointer;
 }
@@ -292,5 +300,22 @@ const userRole = computed(() => {
 .errors-leave-active,
 .errors-enter-active {
     transition: transform.3s ease;
+}
+@media screen and (min-width: 1400px) {
+    .partakeButton {
+        font-size: .8vw;
+    }
+    .weekeventitem {
+        font-size: 12px;
+        font-size: 1vw;
+    }
+    .calendarOverview {
+        max-width: unset;
+    }
+    .alertHolder {
+        flex: unset;
+        height: 50px;
+        width: 100%;
+    }
 }
 </style>
