@@ -261,7 +261,12 @@ else if($_SERVER["REQUEST_METHOD"] === "POST")
             // DATETIME FORMAT MUST BE:  0000-00-00T00:00
             $datetimeregex = '/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/';
             //      - DATETIME: FORMAT IS RIGHT AND DATE IS NOT IN PAST:
-            if(!isEventInFuture($req) || preg_match($datetimeregex, $req->datetime) !== 1) {
+            if(preg_match($datetimeregex, $req->datetime) !== 1)
+            {
+                $res["reason"] = "invalid-datetime-value";
+                break;
+            }
+            if(!isEventInFuture($req)) {
                 $res["reason"] = "invalid-datetime-value";
                 break;
             }

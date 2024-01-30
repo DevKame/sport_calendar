@@ -252,7 +252,13 @@ const createTrainer = ref("no-trainer");
 const createInfo = ref("");
 const chosenGroups = ref("[]");
 
-let splittedDatetime = reactive({});
+let splittedDatetime = reactive({
+    day: "",
+    month: "",
+    year: "",
+    hour: "",
+    minute: "",
+});
 // INDICATORS IF AND WHAT INPUT FIELD HAS AN ERROR
 const nameError = ref(false);
 const datetimeError = ref(false);
@@ -455,6 +461,7 @@ a[type="button"] {
 }
 .inputWrapper {
     width: 100%;
+    overflow: hidden;
 }
 form h1 {
     font-family: "Raleway SBold 600";

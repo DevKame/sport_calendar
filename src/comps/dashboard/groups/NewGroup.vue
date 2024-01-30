@@ -139,6 +139,7 @@ a[type="button"] {
 }
 .inputWrapper {
     width: 100%;
+    overflow: hidden;
 }
 form h1 {
     font-family: "Raleway SBold 600";
