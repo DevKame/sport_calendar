@@ -9,5 +9,8 @@ export default {
     },
     getLoggedUserRole(state) {
         return state.logged_role;
+    },
+    getLoggedUserGroups(state) {
+        return state.logged_groups;
     }
 }

@@ -26,7 +26,8 @@
             :date="day"
             :dayevents="eventsOfDay(day)"
             :trainers="trainerArray"
-            :students="studentArray">
+            :students="studentArray"
+            @students-changed="updateStudentsFromEvent">
             </week-day>
         </div>
 
@@ -44,6 +45,25 @@ let emits = defineEmits([
 ]);
 function overviewClickHandler() {
     emits("empty-click");
+}
+
+function updateStudentsFromEvent(o) {
+    let affectedEvent = weekeventArray.value.find(curr => curr.id === o.eid);
+    let oldstudents = JSON.parse(affectedEvent.students);
+    let newstudents;
+    switch(o.operation) {
+        case "in":
+            affectedEvent.booked++;
+            oldstudents.push(o.sid)
+            newstudents = JSON.stringify(oldstudents);
+            break;
+        case "out":
+            affectedEvent.booked--;
+            oldstudents.splice(oldstudents.indexOf(o.sid), 1)
+            newstudents = JSON.stringify(oldstudents);
+            break;
+    }
+    affectedEvent.students = newstudents;
 }
 
 const store = useStore();

@@ -11,27 +11,31 @@
             <p class="m-0">Trainer: <span class="badge text-black bg-role-badge border border-dark">{{ trainer }}</span></p>
         </div>
 
-        <div class="w-100 d-flex justify-content-between align-items-center">
+        <div class="w-100 mt-2 d-flex justify-content-between align-items-center">
             <button
             v-if="userRole === 'STUDENT'"
             @click="toggleParticipation(event.id)"
             :class="{canSign: signable}"
-            class="partakeButton btn-positive border border-black rounded-2">{{ canSignIn }}</button>
+            class="partakeButton btn-positive border border-black rounded-2">{{ signingtext }}</button>
 
-            <div class="alertHolder ms-2 d-flex justify-content-center align- items-center border border-danger">
+            <div class="alertHolder overflow-hidden ms-2 d-flex justify-content-center align- items-center">
+                <transition name="errors" mode="out-in">
+                    <error-alert v-if="connectionError" @close-alert="connectionError = false">
+                        <p class="m-0 fw-bold">Some connection problems occured. Try later</p>
+                    </error-alert>
 
-                <error-alert v-if="connectionError" @close-alert="connectionError = false">
-                    <p class="m-0 fw-bold">Some connection problems occured. Try later</p>
-                </error-alert>
+                    <error-alert v-else-if="lengthError" @close-alert="lengthError = false">
+                        <p class="m-0 fw-bold">Event is already full</p>
+                    </error-alert>
+                    
+                    <error-alert v-else-if="groupError" @close-alert="groupError = false">
+                        <p class="m-0 fw-bold">This event is for particular groups only</p>
+                    </error-alert>
 
-                <error-alert v-else-if="lengthError" @close-alert="lengthError = false">
-                    <p class="m-0 fw-bold">Some connection problems occured. Try later</p>
-                </error-alert>
-
-                <success-alert v-else-if="signupSuccess" @close-alert="signupSuccess = false">
-                    <p class="m-0 fw-bold">Successfully signed in / out !!</p>
-                </success-alert>
-
+                    <success-alert v-else-if="signupSuccess" @close-alert="signupSuccess = false">
+                        <p class="m-0 fw-bold">Successfully signed in / out !!</p>
+                    </success-alert>
+                </transition>
             </div>
 
         </div>
@@ -46,12 +50,12 @@
 </template>
 
 <script setup>
-import { defineProps, computed, ref } from 'vue';
+import { defineProps, defineEmits, computed, ref } from 'vue';
 import { useStore } from 'vuex';
 
-// let emits = defineEmits([
-//     "signin-success",
-// ])
+let emits = defineEmits([
+    "signin-success",
+]);
 const store = useStore();
 
 let props = defineProps([
@@ -62,19 +66,18 @@ let props = defineProps([
 
 // INDICATES IF USER IS ALREADY PARTAKING OR NOT
 const signable = computed(() => {
-    return JSON.parse(props.event.students).find(curr => curr === store.getters["auth/userID"]) ?
-    false : true;
+    return JSON.parse(props.event.students).find(curr => curr === store.getters["auth/userID"]) === undefined ?
+    true : false;
 })
 //DEPENDING ON IF USER PARTAKES OR NOT, ASSIGNS THE PROPER BUTTON COLOR AND TEXT
-const canSignIn = computed(() => {
-    return JSON.parse(props.event.students).find(curr => curr === store.getters["auth/userID"]) ?
+const signingtext = computed(() => {
+    return JSON.parse(props.event.students).find(curr => curr === store.getters["auth/userID"]) !== undefined ?
     "Sign out" : "Sign In";
 });
 /** RETURNS NAMES OF STUDENTS THAT PARTAKE IN THE PARTICULAR TRAINING
  * @param {JSON String} eventStudents   => ID´s OF PARTAKING STUDENTS
  * @return {Array} parseStudents        => ID, FIRST AND LASTNAME OF STUDENTS */
 function getPartakingStudents(eventStudents) {
-    // console.clear();
     let allStudents = props.students;
     let partakeStudents = JSON.parse(eventStudents);
     let parseStudents = [];
@@ -89,39 +92,72 @@ function getPartakingStudents(eventStudents) {
 // HELPER VARIABLES FOR ERROR DISPLAYING
 const connectionError = ref(false);
 const lengthError = ref(false);
+const groupError = ref(false);
 const signupSuccess = ref(false);
 // RESETS ALL ERRORS
 function resetErrors() {
     connectionError.value = false;
+    lengthError.value = false;
+    groupError.value = false;
+    signupSuccess.value = false;
 }
 /** HANDLES THE UPDATING OF DATA WHEN USER SINGS IN/OUT
  *  AND UPDATES THE CORRESPONDING FRONTEND
  * @param {number} eid                      => EVENT ID */
 async function toggleParticipation(eid) {
     resetErrors();
+    const eventgroups = JSON.parse(props.event.groups);
+    const usergroups = JSON.parse(store.getters.getLoggedUserGroups);
+    let groupsMatch = doesGroupsMatch(eventgroups, usergroups);
+    let spaceMatch = props.event.booked < props.event.max;
+    let operation = "";
     const req =
     {
         eid: eid,
         sid: store.getters["auth/userID"],
     };
-    req.task = signable.value === true ?
-    "signin-student" : "signout-student";
-    console.log(req);
-    let signingdata = await store.dispatch("events/post", req);
-    if(!signingdata.success)
+    if(signable.value)
     {
-        switch(signingdata.reason) {
-            case "connection-problems":
-                connectionError.value = true;
-                break;
-            case "too-long":
-                lengthError.value = true;
-                break;
-        }
+        req.task = "signin-student";
+        operation = "in";
     } else {
-        signupSuccess.value = true;
+        req.task = "signout-student";
+        operation = "out";
     }
-    console.table(signingdata);
+    if(!groupsMatch) {
+        groupError.value = true;
+    }
+    else if(!spaceMatch && operation === "in") {
+        lengthError.value = true;
+    }
+    else {
+        let signingdata = await store.dispatch("events/post", req);
+        if(!signingdata.success)
+        {
+            switch(signingdata.reason) {
+                case "connection-problems":
+                    connectionError.value = true;
+                    break;
+                case "too-long":
+                    lengthError.value = true;
+                    break;
+            }
+        } else {
+            emits("signin-success", {eid: req.eid, sid: req.sid, operation: operation});
+            signupSuccess.value = true;
+        }
+    }
+}
+
+function doesGroupsMatch(e, s) {
+    let wrongs = 0;
+    if(e.length > 0)
+    {
+        for(let g of e) {
+            if(s.indexOf(g) === -1) wrongs++;
+        }
+    }
+    return wrongs === 0;
 }
 
 // DETERMINES IF PARTAKING STUDENTS ARE SHOWN OR NOT
@@ -201,5 +237,21 @@ const userRole = computed(() => {
 .weekeventitem {
     box-shadow: 0 0 5px 1px #333 inset;
     font-family: "Raleway Reg 400";
+}
+.errors-enter-from {
+    transform: translate(-100%, 0);
+}
+.errors-enter-to {
+    transform: translate(0, 0);
+}
+.errors-leave-from {
+    transform: translate(0, 0);
+}
+.errors-leave-to {
+    transform: translate(100%, 0);
+}
+.errors-leave-active,
+.errors-enter-active {
+    transition: transform.3s ease;
 }
 </style>

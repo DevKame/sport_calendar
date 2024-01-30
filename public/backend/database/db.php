@@ -4,14 +4,39 @@
 
 
 ////////////////////////////////////    EVENT QUERIES  [start]  //////////////////////////////////////
-/** ADDS A STUDENT TO AN EVENT
+
+/** REMOVES A STUDENT FROM AN EVENT
  *  returns
  * {true | Exeption->getMessage()} => Bool | String */
-function addStudentToEvent($id, $json) {
+function removeStudent($id, $json) {
     $con = connect();
     $query =
     "UPDATE sport_cal_events
-    SET students = ?
+    SET students = ?,
+    booked = booked - 1
+    WHERE id = ?";
+    try {
+        $stmt = mysqli_prepare($con, $query);
+        mysqli_stmt_bind_param($stmt, "si", $json, $id);
+        mysqli_stmt_execute($stmt);
+        mysqli_stmt_free_result($stmt);
+        mysqli_stmt_close($stmt);
+        mysqli_close($con);
+        return true;
+    }
+    catch(Exeption $e) {
+        return $e.getMessage();
+    }
+}
+/** ADDS A STUDENT TO AN EVENT
+ *  returns
+ * {true | Exeption->getMessage()} => Bool | String */
+function addStudent($id, $json) {
+    $con = connect();
+    $query =
+    "UPDATE sport_cal_events
+    SET students = ?,
+    booked = booked + 1
     WHERE id = ?";
     try {
         $stmt = mysqli_prepare($con, $query);

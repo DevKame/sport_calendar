@@ -10,7 +10,8 @@
             :key="event.id"
             :event="event"
             :trainers="trainers"
-            :students="students">
+            :students="students"
+            @signin-success="handleSigning">
 
             </week-eventitem>
         </div>
@@ -18,7 +19,7 @@
 </template>
 
 <script setup>
-import { defineProps, computed, ref } from 'vue';
+import { defineProps, defineEmits, computed, ref } from 'vue';
 
 import WeekEventitem from './WeekEventitem.vue';
 
@@ -28,6 +29,15 @@ let props = defineProps([
     "trainers",
     "students",
 ]);
+
+let emits = defineEmits([
+    "students-changed",
+])
+
+function handleSigning(o) {
+    emits("students-changed", o);
+}
+
 const bodyVisible = ref(true);
 function toggleBody() {
     bodyVisible.value = !bodyVisible.value;

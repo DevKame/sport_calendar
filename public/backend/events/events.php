@@ -58,15 +58,25 @@ else if($_SERVER["REQUEST_METHOD"] === "POST")
     switch($req->task)
     {
         case "signout-student":
+            $oldstudentsJSON = "";
             $event = fetchEventStudentsByID($req->eid);
             if(is_string($event)) {
                 $res["reason"] = "connection-problems";
                 break;
             }
             else {
-                $res["success"] = true;
-                $res["students"] = $event["students"];
+                $oldstudents = json_decode($event["students"]);
+                $idx = array_search($req->sid, $oldstudents);
+                unset($oldstudents[$idx]);
+                $newstudents = array_values($oldstudents);
+                $newstudentsJSON = json_encode($newstudents);
+                $removeResult = removeStudent($req->eid, $newstudentsJSON);
+                if(is_string($removeResult)) {
+                    $res["reason"] = "connection-problems";
+                    break;
+                }
             }
+            $res["success"] = true;
             break;
         case "signin-student":
             $event = fetchEventStudentsByID($req->eid);
@@ -84,7 +94,7 @@ else if($_SERVER["REQUEST_METHOD"] === "POST")
                     break;
                 }
                 else {
-                    $addResult = addStudentToEvent($req->eid, $newstudents);
+                    $addResult = addStudent($req->eid, $newstudents);
                     if(is_string($addResult)) {
                         $res["reason"] = "connection-problems";
                         break;
