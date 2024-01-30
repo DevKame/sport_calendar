@@ -59,7 +59,7 @@ import { faBan }                from "@fortawesome/free-solid-svg-icons";
 import { faUserSlash }          from "@fortawesome/free-solid-svg-icons";
 import { faCalendar }           from "@fortawesome/free-regular-svg-icons";
 import { faBackward }           from "@fortawesome/free-solid-svg-icons";
-import { faForward }           from "@fortawesome/free-solid-svg-icons";
+import { faForward }            from "@fortawesome/free-solid-svg-icons";
 
 library.add(faMicrochip);
 library.add(faClose);
