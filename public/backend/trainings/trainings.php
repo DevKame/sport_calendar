@@ -43,17 +43,7 @@ else if($_SERVER["REQUEST_METHOD"] === "POST")
             $affectedRows = editTraining($req->id, $req->name, $req->chosengroups);
             if(is_int($affectedRows))
             {
-                if($affectedRows === 1)
-                {
-                    $res["success"] = true;
-                } else {
-                    if($affectedRows === 0)
-                    {
-                        $res["reason"] = "no-changes";
-                    } else {
-                        $res["reason"] = "connection-problems";
-                    }
-                }
+                $res["success"] = true;
             }
             else {
                 $res["reason"] = "connection-problems";

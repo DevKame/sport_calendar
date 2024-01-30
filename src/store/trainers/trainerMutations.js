@@ -10,7 +10,6 @@ export default {
         moduleState.trainerrole_edit = data.role;
     },
     // SETS THE Edit-Trainer VALUES BACK TO null
-    //TODO: WATCH THIS METHOD IN TRAINERS:
     resetTrainerDataForEdit(moduleState) {
         moduleState.traineremail_edit = null;
         moduleState.trainerID_edit = null;

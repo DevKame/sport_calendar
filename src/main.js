@@ -102,7 +102,7 @@ let router = createRouter({
              *  TO CHECK IF A USER AT ALL IS LOGGED IN. IF IT CAME TO THIS
              *  ROUTE, THAT MEANS THAT A USER IS LOGGED IN. THIS NAV GUARD
              *  FETCHES THIS USER´S DATA AND SETS IT IN VUEX STATE */
-            async beforeEnter(to, _2, next) {
+            async beforeEnter(_, _2, next) {
                 try {
                     let userid = await store.dispatch("auth/getUserIDFromSession");
                     userid = userid.session_id;
@@ -123,23 +123,98 @@ let router = createRouter({
             [
                 { path: "events", name: "Events", component: TheEventOverview, meta: {trainerrequired: true, logoutRequired: false} },
                 { path: "newevent", name: "New-Event", component: NewEvent, meta: {trainerrequired: true, logoutRequired: false} },
-                { path: "editevent", name: "Edit-Event", component: EditEvent, meta: {trainerrequired: true, logoutRequired: false} },
+                {
+                    path: "editevent",
+                    name: "Edit-Event",
+                    component: EditEvent,
+                    meta: {trainerrequired: true, logoutRequired: false},
+                    beforeEnter(to, from, next) {
+                        let nextPara = {name: "Events"};
+                        console.clear();
+                        console.log("from.name:", from.name);
+                        console.log("to.name:", to.name);
+                        if(from.name === "Events") {
+                            nextPara = true;
+                        }
+                        next(nextPara);
+                    }
+                },
 
                 { path: "trainings", name: "Trainings", component: TheTrainingOverview, meta: {trainerrequired: true, logoutRequired: false} },
                 { path: "newtraining", name: "New-Training", component: NewTraining, meta: {trainerrequired: true, logoutRequired: false} },
-                { path: "edittraining", name: "Edit-Training", component: EditTraining, meta: {trainerrequired: true, logoutRequired: false} },
+                {
+                    path: "edittraining",
+                    name: "Edit-Training",
+                    component: EditTraining,
+                    meta: {trainerrequired: true, logoutRequired: false},
+                    beforeEnter(to, from, next) {
+                        let nextPara = {name: "Trainings"};
+                        console.clear();
+                        console.log("from.name:", from.name);
+                        console.log("to.name:", to.name);
+                        if(from.name === "Trainings") {
+                            nextPara = true;
+                        }
+                        next(nextPara);
+                    }
+                },
 
                 { path: "trainers", name: "Trainers", component: TheTrainerOverview, meta: {trainerrequired: true, logoutRequired: false} },
                 { path: "newtrainer", name: "New-Trainer", component: NewTrainer, meta: {trainerrequired: true, logoutRequired: false} },
-                { path: "edittrainer", name: "Edit-Trainer", component: EditTrainer, meta: {trainerrequired: true, logoutRequired: false} },
+                {
+                    path: "edittrainer",
+                    name: "Edit-Trainer",
+                    component: EditTrainer,
+                    meta: {trainerrequired: true, logoutRequired: false},
+                    beforeEnter(to, from, next) {
+                        let nextPara = {name: "Trainers"};
+                        console.clear();
+                        console.log("from.name:", from.name);
+                        console.log("to.name:", to.name);
+                        if(from.name === "Trainers") {
+                            nextPara = true;
+                        }
+                        next(nextPara);
+                    }
+                },
 
                 { path: "students", name: "Students", component: TheStudentOverview, meta: {trainerrequired: true, logoutRequired: false} },
                 { path: "newstudent", name: "New-Student", component: NewStudent, meta: {trainerrequired: true, logoutRequired: false} },
-                { path: "editstudent", name: "Edit-Student", component: EditStudent, meta: {trainerrequired: true, logoutRequired: false} },
+                {
+                    path: "editstudent",
+                    name: "Edit-Student",
+                    component: EditStudent,
+                    meta: {trainerrequired: true, logoutRequired: false},
+                    beforeEnter(to, from, next) {
+                        let nextPara = {name: "Students"};
+                        console.clear();
+                        console.log("from.name:", from.name);
+                        console.log("to.name:", to.name);
+                        if(from.name === "Students") {
+                            nextPara = true;
+                        }
+                        next(nextPara);
+                    }
+                },
 
                 { path: "groups", name: "Groups", component: TheGroupOverview, meta: {trainerrequired: true, logoutRequired: false} },
                 { path: "newgroup", name: "New-Group", component: NewGroup, meta: {trainerrequired: true, logoutRequired: false} },
-                { path: "editgroup", name: "Edit-Group", component: EditGroup, meta: {trainerrequired: true, logoutRequired: false} },
+                {
+                    path: "editgroup",
+                    name: "Edit-Group",
+                    component: EditGroup,
+                    meta: {trainerrequired: true, logoutRequired: false},
+                    beforeEnter(to, from, next) {
+                        let nextPara = {name: "Groups"};
+                        console.clear();
+                        console.log("from.name:", from.name);
+                        console.log("to.name:", to.name);
+                        if(from.name === "Groups") {
+                            nextPara = true;
+                        }
+                        next(nextPara);
+                    }
+                },
 
                 { path: "calendar", name: "Calendar", component: TheCal },
             ],

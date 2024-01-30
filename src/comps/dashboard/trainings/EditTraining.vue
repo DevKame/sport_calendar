@@ -220,14 +220,6 @@ async function change_training() {
     submitInProgress.value = false;
 
 }
-//TODO: When i dont change anything and click "SAVE" i get "connection error"
-
-//TODO:
-/** When beeing on Edit-* Route, it only works if you directly
- *  came from the corresponding overview. If user refreshes or enters
- *  route manually, the needed vuex state wont be set. Thats why:
- *  set nav guard that redirects if Edit-* Routes are not invoked from
- *  an overview (FOR EVERY TOPIC(GROUPS/STUDENTS/etc)) */
 </script>
 
 <style scoped>

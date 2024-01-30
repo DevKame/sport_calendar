@@ -131,7 +131,6 @@ async function deleteTrainer(index, id) {
             {
                 router.push({name: "Error"});
             }
-            //TODO: needs to update all events where this trainer was signed in
         }
         else {
             router.replace({name:"Error"});
