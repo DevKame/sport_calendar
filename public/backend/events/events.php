@@ -57,7 +57,45 @@ else if($_SERVER["REQUEST_METHOD"] === "POST")
     $req = json_decode(file_get_contents("php://input"));
     switch($req->task)
     {
-        case "fetch_termine_for_week":
+        case "signout-student":
+            $event = fetchEventStudentsByID($req->eid);
+            if(is_string($event)) {
+                $res["reason"] = "connection-problems";
+                break;
+            }
+            else {
+                $res["success"] = true;
+                $res["students"] = $event["students"];
+            }
+            break;
+        case "signin-student":
+            $event = fetchEventStudentsByID($req->eid);
+            if(is_string($event)) {
+                $res["reason"] = "connection-problems";
+                break;
+            }
+            else {
+                $oldstudents = json_decode($event["students"]);
+                $oldstudents[] = $req->sid;
+                $newstudents = json_encode($oldstudents);
+                if(strlen($newstudents) > 256)
+                {
+                    $res["reason"] = "too-long";
+                    break;
+                }
+                else {
+                    $addResult = addStudentToEvent($req->eid, $newstudents);
+                    if(is_string($addResult)) {
+                        $res["reason"] = "connection-problems";
+                        break;
+                    }
+                }
+
+                $res["success"] = true;
+            }
+            break;
+        // FETCHES ALL EVENTS FOR A SPECIFIC WEEK:
+        case "fetch_events_for_week":
             $allEvents = [];
             $failedUpdates = 0;
             #// ALL RESULT SOF THE SELECT QUERY.ARRAY WITH ARRAYS OF NULL´s

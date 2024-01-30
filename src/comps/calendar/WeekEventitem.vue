@@ -11,10 +11,30 @@
             <p class="m-0">Trainer: <span class="badge text-black bg-role-badge border border-dark">{{ trainer }}</span></p>
         </div>
 
-        <button
-        v-if="userRole === 'STUDENT'"
-        :class="{canSign: signable}"
-        class="partakeButton btn-positive border border-black rounded-2">{{ canSignIn }}</button>
+        <div class="w-100 d-flex justify-content-between align-items-center">
+            <button
+            v-if="userRole === 'STUDENT'"
+            @click="toggleParticipation(event.id)"
+            :class="{canSign: signable}"
+            class="partakeButton btn-positive border border-black rounded-2">{{ canSignIn }}</button>
+
+            <div class="alertHolder ms-2 d-flex justify-content-center align- items-center border border-danger">
+
+                <error-alert v-if="connectionError" @close-alert="connectionError = false">
+                    <p class="m-0 fw-bold">Some connection problems occured. Try later</p>
+                </error-alert>
+
+                <error-alert v-else-if="lengthError" @close-alert="lengthError = false">
+                    <p class="m-0 fw-bold">Some connection problems occured. Try later</p>
+                </error-alert>
+
+                <success-alert v-else-if="signupSuccess" @close-alert="signupSuccess = false">
+                    <p class="m-0 fw-bold">Successfully signed in / out !!</p>
+                </success-alert>
+
+            </div>
+
+        </div>
 
         <p v-if="infoAvailable" class="fst-italic">{{ info }}</p>
         <h6 v-if="atLeastOneStudent" @click="toggleStudentVisibility" class="fw-bold border border-black rounded-2 w-100 p-1 mt-2 mb-1">Partaking students:</h6>
@@ -29,6 +49,9 @@
 import { defineProps, computed, ref } from 'vue';
 import { useStore } from 'vuex';
 
+// let emits = defineEmits([
+//     "signin-success",
+// ])
 const store = useStore();
 
 let props = defineProps([
@@ -37,15 +60,19 @@ let props = defineProps([
     "students",
 ]);
 
+// INDICATES IF USER IS ALREADY PARTAKING OR NOT
 const signable = computed(() => {
     return JSON.parse(props.event.students).find(curr => curr === store.getters["auth/userID"]) ?
     false : true;
 })
+//DEPENDING ON IF USER PARTAKES OR NOT, ASSIGNS THE PROPER BUTTON COLOR AND TEXT
 const canSignIn = computed(() => {
     return JSON.parse(props.event.students).find(curr => curr === store.getters["auth/userID"]) ?
     "Sign out" : "Sign In";
 });
-
+/** RETURNS NAMES OF STUDENTS THAT PARTAKE IN THE PARTICULAR TRAINING
+ * @param {JSON String} eventStudents   => ID´s OF PARTAKING STUDENTS
+ * @return {Array} parseStudents        => ID, FIRST AND LASTNAME OF STUDENTS */
 function getPartakingStudents(eventStudents) {
     // console.clear();
     let allStudents = props.students;
@@ -59,11 +86,50 @@ function getPartakingStudents(eventStudents) {
     }
     return parseStudents;
 }
+// HELPER VARIABLES FOR ERROR DISPLAYING
+const connectionError = ref(false);
+const lengthError = ref(false);
+const signupSuccess = ref(false);
+// RESETS ALL ERRORS
+function resetErrors() {
+    connectionError.value = false;
+}
+/** HANDLES THE UPDATING OF DATA WHEN USER SINGS IN/OUT
+ *  AND UPDATES THE CORRESPONDING FRONTEND
+ * @param {number} eid                      => EVENT ID */
+async function toggleParticipation(eid) {
+    resetErrors();
+    const req =
+    {
+        eid: eid,
+        sid: store.getters["auth/userID"],
+    };
+    req.task = signable.value === true ?
+    "signin-student" : "signout-student";
+    console.log(req);
+    let signingdata = await store.dispatch("events/post", req);
+    if(!signingdata.success)
+    {
+        switch(signingdata.reason) {
+            case "connection-problems":
+                connectionError.value = true;
+                break;
+            case "too-long":
+                lengthError.value = true;
+                break;
+        }
+    } else {
+        signupSuccess.value = true;
+    }
+    console.table(signingdata);
+}
 
+// DETERMINES IF PARTAKING STUDENTS ARE SHOWN OR NOT
 const showStudents = ref(false);
 function toggleStudentVisibility() {
     showStudents.value = !showStudents.value;
 }
+// RETURNS THE RELEVANT DATA TO DISPLAY OUT OF THE PROVIDED EVENT PROP
 const name = computed(() => {
     return props.event.name;
 });
@@ -97,12 +163,14 @@ const infoAvailable = computed(() => {
 const info = computed(() => {
     return props.event.info;
 });
-
+/** INDICATES IF AT LEAST ONE STUDENT IS PARTAKING
+ *  @return {Bool} */
 const atLeastOneStudent = computed(() => {
     return props.event.booked > 0;
 });
 
-
+/** RETURNS USER ROLE
+ *  @return {String} => STUDENT, TRAINER, SENIO-TRAINER OR ADMIN */
 const userRole = computed(() => {
     return store.getters.getLoggedUserRole;
 });
@@ -111,6 +179,9 @@ const userRole = computed(() => {
 </script>
 
 <style scoped>
+.alertHolder {
+    flex: 1;
+}
 .partakeButton.canSign {
     background-image: linear-gradient(to top, #ddd -20%, var(--create), var(--create), #ddd 110%);
 }

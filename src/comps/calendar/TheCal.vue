@@ -123,7 +123,7 @@ async function getEventsForWeek(w) {
     let daydata = [];
     let req =
     {
-        task: "fetch_termine_for_week",
+        task: "fetch_events_for_week",
     };
     for(let d of w) {
         daydata.push([d.getDate(), d.getMonth() + 1, d.getFullYear()]);

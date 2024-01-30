@@ -4,6 +4,62 @@
 
 
 ////////////////////////////////////    EVENT QUERIES  [start]  //////////////////////////////////////
+/** ADDS A STUDENT TO AN EVENT
+ *  returns
+ * {true | Exeption->getMessage()} => Bool | String */
+function addStudentToEvent($id, $json) {
+    $con = connect();
+    $query =
+    "UPDATE sport_cal_events
+    SET students = ?
+    WHERE id = ?";
+    try {
+        $stmt = mysqli_prepare($con, $query);
+        mysqli_stmt_bind_param($stmt, "si", $json, $id);
+        mysqli_stmt_execute($stmt);
+        mysqli_stmt_free_result($stmt);
+        mysqli_stmt_close($stmt);
+        mysqli_close($con);
+        return true;
+    }
+    catch(Exeption $e) {
+        return $e.getMessage();
+    }
+}
+/** FETCHES AN EVENT WITH ONLY ITS STUDENTS
+ *  returns
+ * {$event | Exeption->getMessage()} => Array | String */
+function fetchEventStudentsByID($id) {
+    $con = connect();
+    $event;
+    $query =
+    "SELECT students
+    FROM sport_cal_events
+    WHERE id = ?";
+    $stmt = mysqli_prepare($con, $query);
+    try {
+        mysqli_stmt_bind_param($stmt, "i", $id);
+        mysqli_execute($stmt);
+        mysqli_stmt_bind_result($stmt, $students);
+        mysqli_stmt_store_result($stmt);
+        while(mysqli_stmt_fetch($stmt)) {
+            $event =
+            [
+                "students" => $students,
+            ];
+        }
+        mysqli_stmt_free_result($stmt);
+        mysqli_stmt_close($stmt);
+        mysqli_close($con);
+        return $event;
+    }
+    catch(Exeption $e) {
+        mysqli_close($con);
+        return $e->getMessage();
+    }
+
+}
+/** FETCHES ALL EVENTS FROM A SPECIFIC DAY */
 function fetchEventsForWeek($data) {
     $fetchedTermine = [];
             $con = connect();
