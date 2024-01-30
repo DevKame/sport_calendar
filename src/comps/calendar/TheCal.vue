@@ -1,6 +1,6 @@
 <template>
     <ov-load v-if="loadingRoute" class="mt-3"></ov-load>
-    <div v-else @click="overviewClickHandler" class="overflow-x-hidden pt-1 px-3 d-flex flex-column justify-content-start align-items-center">
+    <div v-else @click="overviewClickHandler" class="calendarOverview overflow-x-hidden pt-1 px-3 ms-lg-5 ms-xl-0 d-flex flex-column justify-content-start align-items-center">
         <section class="cal-interface w-100 d-flex flex-column justify-content-center align-items-center p-2 border border-danger">
             <div class="w-100 d-flex justify-content-center align-items-center p-1 border border-danger">
                 <div @click="changeWeek('prev')" class="week-pre h-100 week-nav d-flex flex-column justify-content-start align-items-center me-3">
@@ -74,7 +74,6 @@ function updateStudentsFromEvent(o) {
     affectedEvent.students = newstudents;
 }
 const weekHeadline = computed(() => {
-    console.clear();
     let firstday = THIS_WEEK.value[0];
     let lastday = THIS_WEEK.value[6];
     let part1 = firstday.toLocaleDateString("de-DE", {
@@ -87,9 +86,6 @@ const weekHeadline = computed(() => {
         month: "2-digit",
         year: "numeric",
     });
-    console.log(firstday);
-    console.log(part1);
-    console.log(lastday);
 
     return part1 + " - " + part2;
 })
@@ -224,6 +220,9 @@ function fillWeekArray() {
 </script>
 
 <style scoped>
+.calendarOverview {
+    max-width: 700px;
+}
 .week-nav {
     cursor: pointer;
 }
@@ -234,5 +233,11 @@ function fillWeekArray() {
 }
 .weekdayHolder {
     width: 100%;
+}
+
+@media screen and (min-width: 1200px) {
+.calendarOverview {
+    max-width: unset;
+}
 }
 </style>

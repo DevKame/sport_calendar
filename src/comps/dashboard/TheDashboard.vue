@@ -152,7 +152,6 @@ const userRole = computed(() => {
 
 
 async function try_logout() {
-    console.log("Dahboard.vue try_logout:");
     await store.dispatch("auth/try_logout");
     router.replace({name: "Start"});
 }

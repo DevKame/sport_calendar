@@ -162,11 +162,22 @@ router.beforeEach(async (to, _, next) => {
     if(to.meta.loginRequired && !result.logged_user_existent) {
         nextPara = {name: "Start"};
     }
-    else if(to.meta.logoutRequired) {
-        if(result.logged_user_existent) {
-            nextPara = {name: "Dashboard"};
+    else if(to.meta.logoutRequired && result.logged_user_existent) {
+        nextPara = {name: "Dashboard"};
+    }
+    else if(to.meta.loginRequired && to.meta.trainerrequired) {
+        if(!result.logged_user_existent)
+        {
+            nextPara = {name: "Start"};
         } else {
-            nextPara = true;
+            let id = await store.dispatch("auth/getUserIDFromSession");
+            let user = await store.dispatch("auth/get_userdata_from_id", id.session_id);
+            if(user.logged_user.role === "STUDENT")
+            {
+                nextPara = {name: "Calendar"};
+            } else {
+                nextPara = true;
+            }
         }
     }
     next(nextPara);

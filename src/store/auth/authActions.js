@@ -2,7 +2,6 @@
 
 export default {
     async try_logout(context) {
-        console.log("auth/try_logout:");
         await fetch(context.state.API_AUTH, {
             method: "post",
             headers: {"Content-Type": "application/json"},
