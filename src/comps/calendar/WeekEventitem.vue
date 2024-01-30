@@ -8,7 +8,7 @@
 
         <div class="w-100 mt-2 d-flex justify-content-between align-items-center">
             <p class="m-0">{{ hour }}:{{ minute }}</p>
-            <p class="m-0">Trainer: <span class="badge text-black bg-role-badge border border-dark">{{ trainer }}</span></p>
+            <p class="m-0">Trainer: <span @click="assignTrainer(event.id, event.trainer)" :class="noTrainer" class="badge text-black bg-role-badge border border-dark">{{ trainer }}</span></p>
         </div>
 
         <div class="w-100 mt-2 d-flex justify-content-between align-items-center">
@@ -55,6 +55,7 @@ import { useStore } from 'vuex';
 
 let emits = defineEmits([
     "signin-success",
+    "trainer-assigned",
 ]);
 const store = useStore();
 
@@ -101,16 +102,32 @@ function resetErrors() {
     groupError.value = false;
     signupSuccess.value = false;
 }
+/** ASSIGNS A TRAINER ID TO AN EVENT
+ * @param {number} eid  => EVENT ID
+ * @param {number} tid  => TRAINER ID */
+async function assignTrainer(eid, tid) {
+    if(store.getters.getLoggedUserRole !== "STUDENT" && tid === "no-trainer")
+    {
+        const req = {
+            task: "assign-trainer",
+            eid: eid,
+            tid: (store.getters["auth/userID"]).toString(),
+        };
+        let assigndata = await store.dispatch("events/post", req);
+        if(!assigndata.success) {
+            connectionError.value = true;
+        } else {
+            emits("trainer-assigned", {eid: eid, tid: req.tid});
+        }
+    }
+}
 /** HANDLES THE UPDATING OF DATA WHEN USER SINGS IN/OUT
  *  AND UPDATES THE CORRESPONDING FRONTEND
  * @param {number} eid                      => EVENT ID */
 async function toggleParticipation(eid) {
     resetErrors();
-    const eventgroups = JSON.parse(props.event.groups);
-    const usergroups = JSON.parse(store.getters.getLoggedUserGroups);
-    let groupsMatch = doesGroupsMatch(eventgroups, usergroups);
-    let spaceMatch = props.event.booked < props.event.max;
     let operation = "";
+    // PREPARES REQUEST OBJECT DEPENDING IF ITS A SIGN IN OR OUT
     const req =
     {
         eid: eid,
@@ -124,12 +141,19 @@ async function toggleParticipation(eid) {
         req.task = "signout-student";
         operation = "out";
     }
+    // MAKE SURE USER GROUPS MATCH EVENT GROUPS
+    const eventgroups = JSON.parse(props.event.groups);
+    const usergroups = JSON.parse(store.getters.getLoggedUserGroups);
+    let groupsMatch = doesGroupsMatch(eventgroups, usergroups);
+    let spaceMatch = props.event.booked < props.event.max;
     if(!groupsMatch) {
         groupError.value = true;
     }
+    // MAKE SURE THERE IS ENOUGH SPACE WITHIN THE EVENT
     else if(!spaceMatch && operation === "in") {
         lengthError.value = true;
     }
+    // INVOKES THE ACTUAL REQUESTS TO BACKEND
     else {
         let signingdata = await store.dispatch("events/post", req);
         if(!signingdata.success)
@@ -143,12 +167,16 @@ async function toggleParticipation(eid) {
                     break;
             }
         } else {
+            // EMITS CHANGE OF PROVIDED DATA
             emits("signin-success", {eid: req.eid, sid: req.sid, operation: operation});
             signupSuccess.value = true;
         }
     }
 }
-
+/** CHECKS IF THE STUDENT GROUPS FULLY MATCH WITH THE EVENT GROUPS
+ * @param {number[]} e  => GROUPS OF THE EVENT
+ * @param {number[]} s  => GROUPS OF THE STUDENT
+ * @return {Bool} */
 function doesGroupsMatch(e, s) {
     let wrongs = 0;
     if(e.length > 0)
@@ -193,6 +221,14 @@ const trainer = computed(() => {
     }
     return result;
 });
+const noTrainer = computed(() => {
+    let result = "";
+    if(props.event.trainer === "no-trainer")
+    {
+        result = "clickable_trainer";
+    }
+    return result;
+});
 const infoAvailable = computed(() => {
     return props.event.info.trim() !== "";
 })
@@ -215,6 +251,9 @@ const userRole = computed(() => {
 </script>
 
 <style scoped>
+.clickable_trainer {
+    cursor: pointer;
+}
 .alertHolder {
     flex: 1;
 }

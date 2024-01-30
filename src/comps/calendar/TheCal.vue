@@ -8,7 +8,7 @@
                 </div>
                 
                 <div class="h-100">
-                    <h6 class="m-0">13.01.2023 - 19.01.2023</h6>
+                    <h6 class="m-0">{{ weekHeadline }}</h6>
                 </div>
 
                 <div @click="changeWeek('next')" class="week-next h-100 week-nav d-flex flex-column justify-content-start align-items-center ms-3">
@@ -27,7 +27,8 @@
             :dayevents="eventsOfDay(day)"
             :trainers="trainerArray"
             :students="studentArray"
-            @students-changed="updateStudentsFromEvent">
+            @students-changed="updateStudentsFromEvent"
+            @trainer-assigned="handleTrainerAssignment">
             </week-day>
         </div>
 
@@ -35,7 +36,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref, defineEmits } from "vue";
+import { onMounted, ref, defineEmits, computed } from "vue";
 import { useStore } from "vuex";
 
 import WeekDay from "./WeekDay.vue";
@@ -46,7 +47,14 @@ let emits = defineEmits([
 function overviewClickHandler() {
     emits("empty-click");
 }
-
+// CHANGES THE PROVIDED PROPS AFTER UPDATIUNG DATA WITHIN BACKEND
+function handleTrainerAssignment(data) {
+    const affectedEvent = weekeventArray.value.find(curr => curr.id === data.eid);
+    affectedEvent.trainer = data.tid;
+}
+/** AFTER SIGNING IN OR OUT OF AN EVENT, THE PROVIDED PROPS NEED TO BE CHANGED
+ *  SO THEY CAN BE DISPLAYED CORRECTLY BY <WeekEventitem>
+ * @param {object} o    => CONTAING THE NEW DATA FOR CHANGES */
 function updateStudentsFromEvent(o) {
     let affectedEvent = weekeventArray.value.find(curr => curr.id === o.eid);
     let oldstudents = JSON.parse(affectedEvent.students);
@@ -65,6 +73,26 @@ function updateStudentsFromEvent(o) {
     }
     affectedEvent.students = newstudents;
 }
+const weekHeadline = computed(() => {
+    console.clear();
+    let firstday = THIS_WEEK.value[0];
+    let lastday = THIS_WEEK.value[6];
+    let part1 = firstday.toLocaleDateString("de-DE", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+    });
+    let part2 = lastday.toLocaleDateString("de-DE", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+    });
+    console.log(firstday);
+    console.log(part1);
+    console.log(lastday);
+
+    return part1 + " - " + part2;
+})
 
 const store = useStore();
 
@@ -105,7 +133,8 @@ onMounted(async () => {
     loadingRoute.value = false;
 });
 
-
+/** CHANGES TODAY AND THIS_WEEK DEPENDANT ON "val"
+ * @param {String} val  => "next" | "prev" | undefined */
 function changeWeek(val) {
     switch(val) {
         case "next":
@@ -195,6 +224,9 @@ function fillWeekArray() {
 </script>
 
 <style scoped>
+.week-nav {
+    cursor: pointer;
+}
 .todaysWeekButton {
     background-image: linear-gradient(to top, #ddd -20%, var(--role-badge), var(--role-badge), #ddd 110%);
     box-shadow: 0 0 5px 1px #333;

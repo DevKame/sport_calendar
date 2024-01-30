@@ -11,7 +11,8 @@
             :event="event"
             :trainers="trainers"
             :students="students"
-            @signin-success="handleSigning">
+            @signin-success="handleSigning"
+            @trainer-assigned="handleTrainerAssignment">
 
             </week-eventitem>
         </div>
@@ -32,16 +33,21 @@ let props = defineProps([
 
 let emits = defineEmits([
     "students-changed",
-])
-
-function handleSigning(o) {
-    emits("students-changed", o);
+    "trainer-assigned",
+]);
+// REDIRECTS CHANGE OF THE PROVIDED EVENT DATA TO <TheCal>
+function handleSigning(data) {
+    emits("students-changed", data);
 }
-
+function handleTrainerAssignment(data) {
+    emits("trainer-assigned", data);
+}
+// TOGGLES VISIBILITY OF WEEKDAY BODIES
 const bodyVisible = ref(true);
 function toggleBody() {
     bodyVisible.value = !bodyVisible.value;
 }
+// RETURNS THE RELEVANT WEEKDAY DATA TO DISPLAY OUT OF THE WEEKARRAY
 const weekday = computed(() => {
     return props.date.toLocaleDateString("en-US", {
         weekday: "long",

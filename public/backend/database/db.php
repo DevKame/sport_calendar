@@ -4,7 +4,28 @@
 
 
 ////////////////////////////////////    EVENT QUERIES  [start]  //////////////////////////////////////
-
+/** ASSIGNS A TRAINER TO AN EVENT
+ *  returns
+ * {true | Exeption->getMessage()} => Bool | String */
+function assignTrainer($eid, $tid) {
+    $con = connect();
+    $query =
+    "UPDATE sport_cal_events
+    SET trainer = ?
+    WHERE id = ?";
+    try {
+        $stmt = mysqli_prepare($con, $query);
+        mysqli_stmt_bind_param($stmt, "si", $tid, $eid);
+        mysqli_stmt_execute($stmt);
+        mysqli_stmt_free_result($stmt);
+        mysqli_stmt_close($stmt);
+        mysqli_close($con);
+        return true;
+    }
+    catch(Exeption $e) {
+        return $e.getMessage();
+    }
+}
 /** REMOVES A STUDENT FROM AN EVENT
  *  returns
  * {true | Exeption->getMessage()} => Bool | String */

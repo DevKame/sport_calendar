@@ -57,6 +57,15 @@ else if($_SERVER["REQUEST_METHOD"] === "POST")
     $req = json_decode(file_get_contents("php://input"));
     switch($req->task)
     {
+        case "assign-trainer":
+            $assignResult = assignTrainer($req->eid, $req->tid);
+            if(is_string($assignResult)) {
+                $res["reason"] = "connection-problems";
+                break;
+            }
+            $res["success"] = true;
+            break;
+        //##########################################SIGNS OUT A STUDENT
         case "signout-student":
             $oldstudentsJSON = "";
             $event = fetchEventStudentsByID($req->eid);
@@ -78,6 +87,7 @@ else if($_SERVER["REQUEST_METHOD"] === "POST")
             }
             $res["success"] = true;
             break;
+        //#######################################SIGNS IN A STUDENT
         case "signin-student":
             $event = fetchEventStudentsByID($req->eid);
             if(is_string($event)) {
@@ -104,7 +114,7 @@ else if($_SERVER["REQUEST_METHOD"] === "POST")
                 $res["success"] = true;
             }
             break;
-        // FETCHES ALL EVENTS FOR A SPECIFIC WEEK:
+        //##################### FETCHES ALL EVENTS FOR A SPECIFIC WEEK:
         case "fetch_events_for_week":
             $allEvents = [];
             $failedUpdates = 0;
