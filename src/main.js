@@ -108,12 +108,7 @@ let router = createRouter({
                     userid = userid.session_id;
                     let userdata = await store.dispatch("auth/get_userdata_from_id", userid);
                     store.commit("setLoggedUser", userdata.logged_user);
-                    if(to.meta.trainerrequired && userdata.role === "STUDENT")
-                    {
-                        next({name: "Calendar"});
-                    } else {
-                        next(true);
-                    }
+                    next(true);
                 }
                 catch(error) {
                     next({name: "Error"});
