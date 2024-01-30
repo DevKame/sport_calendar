@@ -190,7 +190,6 @@ function editEvent(event, groups) {
         }
     }
 }
-
 /** DELETES THE CHOSEN EVENT USING HIS ID AND REMOVES THE CORRESPONDING DOM
  * @param {number} index    => ON WHAT IDX IS THE LIST ELEMENT
  * @param {number} id       => ID OF THE EVENT */
