@@ -1,12 +1,12 @@
 <template>
     <ov-load v-if="loadingRoute" class="mt-5"></ov-load>
-    <form v-else @submit.prevent="change_event" @click="clickHandler" :class="{not_clickable: submitInProgress}" class="container-xl px-2 pb-4 ms-xl-3 me-xl-auto d-flex flex-column justify-content-start align-items-center">
+    <form v-else @submit.prevent="change_event" @click="clickHandler" :class="{not_clickable: submitInProgress}" class="px-2 pb-4 ms-xl-5 me-xl-auto d-flex flex-column justify-content-start align-items-center">
         <div class="w-100 mt-2 d-flex justify-content-between align-items-center">
             <h1 class="m-0 me-auto">Edit event</h1>
             <router-link :to="{name:'Events'}" type="button" class="rounded-2 me-2 px-2">BACK</router-link>
         </div>
         
-        <div class="inputWrapper mt-3 d-flex flex-column justify-cotnent-start align-items-center">
+        <div class="inputWrapper mt-3 d-flex flex-column justify-content-start align-items-center">
 
             <div class="d-flex justify-content-between align-items-center">
                 <label for="createName">Name</label>
@@ -32,7 +32,7 @@
                 </transition>
             </div>
         </div>
-        <div class="inputWrapper d-flex flex-column justify-cotnent-start align-items-center">
+        <div class="inputWrapper d-flex flex-column justify-content-start align-items-center">
 
             <div class="d-flex justify-content-between align-items-center pe-2">
                 <label for="">Pre-defined training</label>
@@ -54,7 +54,7 @@
 
         </div>
 
-        <div class="inputWrapper mt-5 d-flex flex-column justify-cotnent-start align-items-center">
+        <div class="inputWrapper mt-5 d-flex flex-column justify-content-start align-items-center">
 
             <div class="d-flex justify-content-between align-items-center">
                 <label for="createDatetime">Date and time</label>
@@ -79,7 +79,7 @@
             </div>
         </div>
         
-        <div class="inputWrapper d-flex flex-column justify-cotnent-start align-items-center">
+        <div class="inputWrapper d-flex flex-column justify-content-start align-items-center">
 
             <div class="d-flex justify-content-between align-items-center">
                 <label for="createMax">Max. participants</label>
@@ -102,7 +102,7 @@
             </div>
         </div>
         
-        <div class="inputWrapper d-flex flex-column justify-cotnent-start align-items-center">
+        <div class="inputWrapper d-flex flex-column justify-content-start align-items-center">
 
             <div class="d-flex justify-content-between align-items-center pe-2">
                 <label for="createTrainer">Trainer</label>
@@ -133,7 +133,7 @@
             </div>
         </div>
         
-        <div class="inputWrapper d-flex flex-column justify-cotnent-start align-items-center">
+        <div class="inputWrapper d-flex flex-column justify-content-start align-items-center">
 
             <div class="d-flex justify-content-between align-items-center pe-2">
                 <label for="createInfo">Information</label>
@@ -160,13 +160,13 @@
             </div>
         </div>
         
-        <div v-if="groupArray.length > 0" class="inputWrapper groupWrapper d-flex flex-column justify-cotnent-start align-items-center">
+        <div v-if="groupArray.length > 0" class="inputWrapper groupWrapper d-flex flex-column justify-content-start align-items-center">
             <div class="d-flex justify-content-between align-items-center pe-2">
                 <label>Limit to particular group(s)</label>
                 <label class="fst-italic optional-label">optional</label>
             </div>
 
-            <div class="checkBoxes px-1 d-flex flex-column flex-lg-row flex-lg-wrap justify-content-start align-items-start">
+            <div class="checkBoxes px-1 d-flex flex-column flex-md-row flex-md-wrap justify-content-start align-items-start">
                 <group-checkboxes
                 v-for="group in groupArray"
                 :key="group.id"
@@ -505,6 +505,7 @@ form h1 {
 }
 form {
     width: 100%;
+    max-width: 700px;
     font-family: "Raleway Reg 400";
 }
 .error-enter-from {

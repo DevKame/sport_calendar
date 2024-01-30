@@ -1,6 +1,6 @@
 <template>
     <ov-load v-if="loadingRoute" class="mt-5"></ov-load>
-    <form v-else @submit.prevent="change_trainer" @click="clickHandler" :class="{not_clickable: submitInProgress}" class="container-xl px-2 pb-4 ms-xl-3 me-xl-auto d-flex flex-column justify-content-start align-items-center">
+    <form v-else @submit.prevent="change_trainer" @click="clickHandler" :class="{not_clickable: submitInProgress}" class="px-2 pb-4 ms-xl-5 me-xl-auto d-flex flex-column justify-content-start align-items-center">
         <h1 class="me-auto mt-2">Edit trainer</h1>
         
         <div class="inputWrapper mt-3 d-flex flex-column justify-content-start align-items-center">
@@ -291,6 +291,7 @@ form h1 {
 }
 form {
     width: 100%;
+    max-width: 700px;
     font-family: "Raleway Reg 400";
 }
 .error-enter-from {

@@ -1,8 +1,8 @@
 <template>
-    <form @submit.prevent="create_group" @click="clickHandler" :class="{not_clickable: submitInProgress}" class="container-xl px-2 pb-4 ms-xl-3 d-flex flex-column justify-content-start align-items-center">
+    <form @submit.prevent="create_group" @click="clickHandler" :class="{not_clickable: submitInProgress}" class="px-2 pb-4 ms-xl-5 d-flex flex-column justify-content-start align-items-center">
         <h1 class="m-0 me-auto mt-2">New group</h1>
         
-        <div class="inputWrapper mt-3 d-flex flex-column justify-content-start align-items-center">
+        <div class="inputWrapper mt-5 d-flex flex-column justify-content-start align-items-center">
 
             <div class="d-flex justify-content-between align-items-center">
                 <label for="createName">Name</label>
@@ -145,6 +145,7 @@ form h1 {
 }
 form {
     width: 100%;
+    max-width: 700px;
     font-family: "Raleway Reg 400";
 }
 .error-enter-from {

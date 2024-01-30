@@ -6,7 +6,7 @@
 
 EMITS "box-clicked" TO ITS PARENT TO INVOKE ACTIONS REGARDING THIS CHECKBOXES VALUE -->
 <template>
-    <div @click="clickBox" class="cbHolder my-1 mx-lg-2 px-2 position-relative d-flex justify-content-between align-items-center">
+    <div @click="clickBox" class="cbHolder my-1 mx-md-2 px-2 position-relative d-flex justify-content-between align-items-center">
         <input @input="emitChange" ref="cbox" type="checkbox" :name="props.id" :id="props.id" class="position-absolute rounded-pill">
         <label :for="props.id" class="position-relative">{{ name }}</label>
     </div>
