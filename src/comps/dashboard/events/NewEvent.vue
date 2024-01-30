@@ -413,6 +413,8 @@ async function create_event() {
             createName.value = "";
             createDatetime.value = "";
             createMax.value = 0;
+            eventTrainingInput.value.value = "no-trainer";
+            eventTrainerInput.value.value = "no-trainer";
             createTrainer.value = "no-trainer";
             chosenGroups.value = "[]";
             creationSuccess.value = true;
