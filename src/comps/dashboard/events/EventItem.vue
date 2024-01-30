@@ -68,6 +68,7 @@ let emits = defineEmits([
     "delete-item",
     "edit-item",
     "sign-trainer",
+    "trainer-signup-fast",
 ]);
 // INDICATES IF THE EDIT MENU IS ON OR OFF
 const menuOn = ref(false);
@@ -116,7 +117,7 @@ function resetEditEvent() {
 }
 // IF TRAINER IS NONE, TELLS PARENT TO ADJUST TRAINER THAT CLICKED IT TO CORRESPONDING TRAINING
 function fastTrainerSignup() {
-    if(trainerIsNone.value)
+    if(props.event.trainer === "no-trainer")
     {
         emits("sign-trainer");
     } else {

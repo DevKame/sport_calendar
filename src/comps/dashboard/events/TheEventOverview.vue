@@ -224,13 +224,20 @@ async function deleteEvent(index, id) {
 async function signTrainer(eid, old) {
     if(old === 0)
     {
-        let signdata = await store.dispatch("events/post", {task: "assign-trainer-to-event", id: store.getters["auth/userID"], eid: eid});
+        let req =
+        {
+            task: "assign-trainer-to-event",
+            id: store.getters["auth/userID"],
+            eid: eid,
+        };
+        let signdata = await store.dispatch("events/post", req);
         console.table(signdata);
         if(!signdata.success)
         {
             router.replace({name: "Error"});
         } else {
-            router.go();
+            let affectedEvent = eventArray.value.find(curr => curr.id === req.eid);
+            affectedEvent.trainer = (req.id).toString();
         }
     }
 }
