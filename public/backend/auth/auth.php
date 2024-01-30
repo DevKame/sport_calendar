@@ -32,19 +32,18 @@ if($_SERVER["REQUEST_METHOD"] === "GET")
 else if($_SERVER["REQUEST_METHOD"] === "POST")
 {
     $req = json_decode(file_get_contents("php://input"));
-    require("../database/db.php");
+    require("../database/general.php");
     switch($req->task)
     {
         //############# FETCHES USER ID OUT OF $_SESSION["kame-sportcal-logged-user"]:
         case "try-logout":
-            // var_dump($_SESSION["kame-sportcal-logged-user"]);
             session_unset();
             session_destroy();
-            // var_dump($_SESSION["kame-sportcal-logged-user"]);
             break;
         //############# FETCHES USER ID OUT OF $_SESSION["kame-sportcal-logged-user"]:
         case "get-userid-from-session":
             $res["session_id"] = $_SESSION["kame-sportcal-logged-user"];
+            $res["success"] = true;
             break;
         //######################################## RETURNS USERDATA FROM USER ID:
         case "get-userdata-from-id":

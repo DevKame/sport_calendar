@@ -81,7 +81,7 @@ const groupNameInput = ref();
 // UN-DISPLAYS POTENTIAL ERRORS
 function resetErrors() {
     nameError.value = false;
-    noChangeError.value = true;
+    noChangeError.value = false;
     doubleError.value = false;
     connectionError.value = false;
     editionSuccess.value = false;

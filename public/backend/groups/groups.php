@@ -15,7 +15,8 @@ header("Access-Control-Allow-Headers: Content-Type");
 header("Access-Control-Allow-Credentials: true");
 header("Content-Type: application/json");
 
-require("../database/db.php");
+require("../database/general.php");
+require("../database/db_groups.php");
 
 //################################################# HANDLES GET REQUESTS:
 // RETURNS Boolean INDICATING IF A USER IS LOGGED IN
