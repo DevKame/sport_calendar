@@ -306,8 +306,7 @@ const userRole = computed(() => {
         font-size: .8vw;
     }
     .weekeventitem {
-        font-size: 12px;
-        font-size: 1vw;
+        font-size: clamp(16px, 1vw, 18px);
     }
     .calendarOverview {
         max-width: unset;

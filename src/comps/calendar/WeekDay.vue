@@ -1,6 +1,6 @@
 <template>
     <div class="weekDay mx-xxl-1 d-flex flex-column justify-content-start align-items-center rounded-2 overflow-hidden my-2 border border-black border-3">
-        <div @click="toggleBody" class="weekdayHeader py-1 px-2 px-xxl-1 bg-sec justify-content-start align-items-center">
+        <div @click="toggleBody" class="weekdayHeader  py-1 px-2 px-xxl-1 bg-sec justify-content-start align-items-center">
             <h5 class="m-0">{{ weekday }},<br class="d-none d-xxl-block"> {{ day }}.{{ month }}.{{ year }}</h5>
         </div>
 
