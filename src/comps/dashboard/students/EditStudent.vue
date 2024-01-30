@@ -92,7 +92,10 @@
             <div class="alertHolder my-2">
                 <transition name="error" mode="out-in">
                     <error-alert v-if="connectionError" @close-alert="connectionError = false">
-                        <p class="m-0 fw-bold">We have issues connecting to our data. Try again later. We have issues connecting to our data. Try again later.</p>
+                        <p class="m-0 fw-bold">We have issues connecting to our data. Try again later.</p>
+                    </error-alert>
+                    <error-alert v-else-if="groupError" @close-alert="connectionError = false">
+                        <p class="m-0 fw-bold">Too much groups. Choose less please</p>
                     </error-alert>
                     <error-alert v-else-if="noChangeError" @close-alert="noChangeError = false">
                         <p class="m-0 fw-bold">You made no changes</p>
@@ -182,6 +185,7 @@ const emailError = ref(false);
 const noChangeError = ref(false);
 const firstnameError = ref(false);
 const lastnameError = ref(false);
+const groupError = ref(false);
 const doubleError = ref(false);
 const connectionError = ref(false);
 const creationSuccess = ref(false);
@@ -210,6 +214,7 @@ function resetErrors() {
     noChangeError.value = false;
     firstnameError.value = false;
     lastnameError.value = false;
+    groupError.value = false;
     doubleError.value = false;
     connectionError.value = false;
     creationSuccess.value = false;
@@ -250,6 +255,9 @@ async function change_student() {
             case "invalid-lastname-value":
             case "lastname-too-long":
                 lastnameError.value = true;
+                break;
+            case "groups-too-long":
+                groupError.value = true;
                 break;
         }
     }

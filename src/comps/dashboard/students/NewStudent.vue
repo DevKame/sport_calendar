@@ -92,10 +92,13 @@
                     <div class="alertHolder my-2">
                         <transition name="error" mode="out-in">
                             <error-alert v-if="connectionError" @close-alert="connectionError = false">
-                                <p class="m-0 fw-bold">We have issues connecting to our data. Try again later. We have issues connecting to our data. Try again later.</p>
+                                <p class="m-0 fw-bold">We have issues connecting to our data. Try again later.</p>
+                            </error-alert>
+                            <error-alert v-else-if="groupError" @close-alert="connectionError = false">
+                                <p class="m-0 fw-bold">Too much groups. Choose less please</p>
                             </error-alert>
                             <success-alert v-else-if="creationSuccess" @close-alert="creationSuccess = false">
-                                <p class="m-0 fw-bold">Group succefully created</p>
+                                <p class="m-0 fw-bold">Student succefully created</p>
                             </success-alert>
                         </transition>
                     </div>
@@ -150,6 +153,7 @@ const emailError = ref(false);
 const firstnameError = ref(false);
 const lastnameError = ref(false);
 const doubleError = ref(false);
+const groupError = ref(false);
 const connectionError = ref(false);
 const creationSuccess = ref(false);
 // REFERENCE TO DOM ELEMENTS TO RESET AFTER SUCCESSFULL CREATION
@@ -177,6 +181,7 @@ function resetErrors() {
     firstnameError.value = false;
     lastnameError.value = false;
     doubleError.value = false;
+    groupError.value = false;
     connectionError.value = false;
     creationSuccess.value = false;
 }
@@ -212,6 +217,9 @@ async function create_student() {
             case "invalid-lastname-value":
             case "lastname-too-long":
                 lastnameError.value = true;
+                break;
+            case "groups-too-long":
+                groupError.value = true;
                 break;
         }
     }

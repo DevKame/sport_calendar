@@ -125,6 +125,12 @@ else if($_SERVER["REQUEST_METHOD"] === "POST")
                 $res["reason"] = "lastname-too-long";
                 break;
             }
+            // VALIDATION OF GROUPS
+            if(strlen($req->chosengroups) > 256)
+            {
+                $res["reason"] = "groups-too-long";
+                break;
+            }
             $res["success"] = true;
             break;
         //################### DELETES A STUDENT BASED ON ITS ID:
@@ -202,6 +208,11 @@ else if($_SERVER["REQUEST_METHOD"] === "POST")
             if(strlen($req->lastname) > 32)
             {
                 $res["reason"] = "lastname-too-long";
+                break;
+            }
+            if(strlen($req->chosengroups) > 256)
+            {
+                $res["reason"] = "groups-too-long";
                 break;
             }
             $res["success"] = true;

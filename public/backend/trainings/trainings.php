@@ -60,7 +60,6 @@ else if($_SERVER["REQUEST_METHOD"] === "POST")
                 break;
             }
             // VALIDATION OF GROUPS
-            //TODO: ADD THIS GROUP LENGTH CHECK TO STUDENTS TOO
             if(strlen($req->chosengroups) > 256)
             {
                 $res["reason"] = "groups-too-long";
@@ -125,7 +124,6 @@ else if($_SERVER["REQUEST_METHOD"] === "POST")
                 break;
             }
             // VALIDATION OF GROUPS
-            //TODO: ADD THIS GROUP LENGTH CHECK TO STUDENTS TOO
             if(strlen($req->chosengroups) > 256)
             {
                 $res["reason"] = "groups-too-long";

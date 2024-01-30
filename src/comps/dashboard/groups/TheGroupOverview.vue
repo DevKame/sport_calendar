@@ -95,7 +95,6 @@ function editGroup(id, name) {
         router.push({name: "Edit-Group"});
     }
 }
-//TODO: When deleting group, update TRAININGS and EVENTS too
 /** DELETES THE CHOSEN GROUP USING ITS ID AND REMOVES THE CORRESPONDING DOM
  * @param {number} index    => ON WHAT IDX IS THE LIST ELEMENT
  * @param {number} id       => ID OF THE GROUP */
