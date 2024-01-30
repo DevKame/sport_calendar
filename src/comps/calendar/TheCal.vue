@@ -132,7 +132,8 @@ onMounted(async () => {
 
 /** CHANGES TODAY AND THIS_WEEK DEPENDANT ON "val"
  * @param {String} val  => "next" | "prev" | undefined */
-function changeWeek(val) {
+async function changeWeek(val) {
+    loadingRoute.value = true;
     switch(val) {
         case "next":
             TODAY.value.setDate(TODAY.value.getDate() + 7);
@@ -144,7 +145,10 @@ function changeWeek(val) {
             TODAY.value = new Date();
     }
     THIS_WEEK.value.length = 0;
+    weekeventArray.value.length = 0;
     fillWeekArray();
+    weekeventArray.value = await getEventsForWeek(THIS_WEEK.value);
+    loadingRoute.value = false;
 }
 /** FILTERS THE EVENTS FOR THE PARTICULAR DAY day OUT OF ALL FETCHED EVENTS
  *  AND RETURNS THEM AS ARRAY
