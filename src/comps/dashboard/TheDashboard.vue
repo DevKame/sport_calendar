@@ -133,6 +133,7 @@ function reactToDashboardclick(e) {
         navIsOpen.value = false;
     }
 }
+
 const roleBasedMargin = computed(() => {
     return userRole.value !== "STUDENT" ?
     "" : "ms-auto";
