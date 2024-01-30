@@ -47,6 +47,7 @@ let emits = defineEmits([
 function overviewClickHandler() {
     emits("empty-click");
 }
+
 // CHANGES THE PROVIDED PROPS AFTER UPDATIUNG DATA WITHIN BACKEND
 function handleTrainerAssignment(data) {
     const affectedEvent = weekeventArray.value.find(curr => curr.id === data.eid);
