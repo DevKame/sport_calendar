@@ -19,7 +19,7 @@
                     <fa-icon icon="fa-solid fa-bars-staggered" size="xl" class="pe-none"></fa-icon>
                 </div>
                 <transition name="events">
-                    <div v-if="navIsOpen" class="navItemHolder bg-prim nav-events border border-black rounded-circle d-flex justify-content-center align-items-center">
+                    <div v-if="navIsOpen && userRole !== 'STUDENT'" class="navItemHolder bg-prim nav-events border border-black rounded-circle d-flex justify-content-center align-items-center">
                         <router-link :to="{name: 'Events'}" class="d-flex flex-column justify-content-start align-items-center">
                             <fa-icon icon="fa-regular fa-rectangle-list" class="pe-none"></fa-icon>
                             <small class="fw-bold">Events</small>
@@ -27,7 +27,7 @@
                     </div>
                 </transition>
                 <transition name="trainings">
-                    <div v-if="navIsOpen" class="navItemHolder bg-prim nav-trainings border border-black rounded-circle d-flex justify-content-center align-items-center">
+                    <div v-if="navIsOpen && userRole !== 'STUDENT'" class="navItemHolder bg-prim nav-trainings border border-black rounded-circle d-flex justify-content-center align-items-center">
                         <router-link :to="{name: 'Trainings'}" class="d-flex flex-column justify-content-start align-items-center">
                             <fa-icon icon="fa-solid fa-dumbbell" class="pe-none"></fa-icon>
                             <small class="fw-bold">Trainings</small>
@@ -35,7 +35,7 @@
                     </div>
                 </transition>
                 <transition name="trainers">
-                    <div v-if="navIsOpen" class="navItemHolder bg-prim nav-trainers border border-black rounded-circle d-flex justify-content-center align-items-center">
+                    <div v-if="navIsOpen && userRole !== 'STUDENT'" class="navItemHolder bg-prim nav-trainers border border-black rounded-circle d-flex justify-content-center align-items-center">
                         <router-link :to="{name: 'Trainers'}" class="d-flex flex-column justify-content-start align-items-center">
                             <fa-icon icon="fa-solid fa-person-chalkboard" class="pe-none"></fa-icon>
                             <small class="fw-bold">Trainers</small>
@@ -43,7 +43,7 @@
                     </div>
                 </transition>
                 <transition name="students">
-                    <div v-if="navIsOpen" class="navItemHolder bg-prim nav-students border border-black rounded-circle d-flex justify-content-center align-items-center">
+                    <div v-if="navIsOpen && userRole !== 'STUDENT'" class="navItemHolder bg-prim nav-students border border-black rounded-circle d-flex justify-content-center align-items-center">
                         <router-link :to="{name: 'Students'}" class="d-flex flex-column justify-content-start align-items-center">
                             <fa-icon icon="fa-solid fa-people-group" class="pe-none"></fa-icon>
                             <small class="fw-bold">Students</small>
@@ -51,7 +51,7 @@
                     </div>
                 </transition>
                 <transition name="groups">
-                    <div v-if="navIsOpen" class="navItemHolder bg-prim nav-groups border border-black rounded-circle d-flex justify-content-center align-items-center">
+                    <div v-if="navIsOpen && userRole !== 'STUDENT'" class="navItemHolder bg-prim nav-groups border border-black rounded-circle d-flex justify-content-center align-items-center">
                         <router-link :to="{name: 'Groups'}" class="d-flex flex-column justify-content-start align-items-center">
                             <fa-icon icon="fa-solid fa-table" class="pe-none"></fa-icon>
                             <small class="fw-bold">Groups</small>
@@ -59,7 +59,7 @@
                     </div>
                 </transition>
                 <transition name="calendar">
-                    <div v-if="navIsOpen" class="navItemHolder bg-sec nav-calendar border border-black rounded-circle d-flex justify-content-center align-items-center">
+                    <div v-if="navIsOpen && userRole !== 'STUDENT'" class="navItemHolder bg-sec nav-calendar border border-black rounded-circle d-flex justify-content-center align-items-center">
                         <router-link :to="{name: 'Calendar'}" class="d-flex flex-column justify-content-start align-items-center">
                             <fa-icon icon="fa-regular fa-calendar" class="pe-none"></fa-icon>
                             <small class="fw-bold">Calendar</small>
@@ -77,31 +77,31 @@
             </div>
 
             <div class="widenavHolder mt-2 w-100 d-none d-lg-flex justify-content-around align-items-center">
-                    <router-link :to="{name: 'Events'}" class="d-flex justify-content-between align-items-center px-3 py-2 widenavLinks position-relative">
+                    <router-link :to="{name: 'Events'}" :class="roleBasedDisplay" class="justify-content-between align-items-center px-3 py-2 widenavLinks position-relative">
                         <fa-icon icon="fa-regular fa-rectangle-list" class="me-3"></fa-icon>
                         <small class="fw-bold">Events</small>
                     </router-link>
-                    <router-link :to="{name: 'Trainings'}" class="d-flex justify-content-between align-items-center px-3 py-2 widenavLinks position-relative">
+                    <router-link :to="{name: 'Trainings'}" :class="roleBasedDisplay" class="justify-content-between align-items-center px-3 py-2 widenavLinks position-relative">
                         <fa-icon icon="fa-solid fa-dumbbell" class="me-3"></fa-icon>
                         <small class="fw-bold">Trainings</small>
                     </router-link>
-                    <router-link :to="{name: 'Trainers'}" class="d-flex justify-content-between align-items-center px-3 py-2 widenavLinks position-relative">
+                    <router-link :to="{name: 'Trainers'}" :class="roleBasedDisplay" class="justify-content-between align-items-center px-3 py-2 widenavLinks position-relative">
                         <fa-icon icon="fa-solid fa-person-chalkboard" class="me-3"></fa-icon>
                         <small class="fw-bold">Trainers</small>
                     </router-link>
-                    <router-link :to="{name: 'Students'}" class="d-flex justify-content-between align-items-center px-3 py-2 widenavLinks position-relative">
+                    <router-link :to="{name: 'Students'}" :class="roleBasedDisplay" class="justify-content-between align-items-center px-3 py-2 widenavLinks position-relative">
                         <fa-icon icon="fa-solid fa-people-group" class="me-3"></fa-icon>
                         <small class="fw-bold">Students</small>
                     </router-link>
-                    <router-link :to="{name: 'Groups'}" class="d-flex justify-content-between align-items-center px-3 py-2 widenavLinks position-relative">
+                    <router-link :to="{name: 'Groups'}" :class="roleBasedDisplay" class="justify-content-between align-items-center px-3 py-2 widenavLinks position-relative">
                         <fa-icon icon="fa-solid fa-table" class="me-3"></fa-icon>
                         <small class="fw-bold">Groups</small>
                     </router-link>
-                    <router-link :to="{name: 'Calendar'}" class="d-flex justify-content-between align-items-center px-3 py-2 widenavLinks position-relative">
+                    <router-link :to="{name: 'Calendar'}" :class="roleBasedDisplay" class="justify-content-between align-items-center px-3 py-2 widenavLinks position-relative">
                         <fa-icon icon="fa-regular fa-calendar" class="me-3"></fa-icon>
-                        <small class="fw-bold">Events</small>
+                        <small class="fw-bold">Calendar</small>
                     </router-link>
-                    <span @click="try_logout" class="d-flex justify-content-between align-items-center px-3 py-2 widenavLinks position-relative widenavLogout">
+                    <span @click="try_logout" :class="roleBasedMargin" class="d-flex justify-content-between align-items-center px-3 py-2 widenavLinks position-relative widenavLogout">
                         <fa-icon icon="fa-solid fa-user-slash" class="me-3"></fa-icon>
                         <small class="fw-bold">Logout</small>
                     </span>
@@ -133,6 +133,14 @@ function reactToDashboardclick(e) {
         navIsOpen.value = false;
     }
 }
+const roleBasedMargin = computed(() => {
+    return userRole.value !== "STUDENT" ?
+    "" : "ms-auto";
+});
+const roleBasedDisplay = computed(() => {
+    return userRole.value !== "STUDENT" ?
+    "d-flex" : "d-none";
+})
 const navIsOpen = ref(false);
 function toggleNavOpen() {
     navIsOpen.value = !navIsOpen.value;
@@ -228,19 +236,19 @@ async function try_logout() {
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, 850%);
+    transform: translate(-50%, 100%);
 }
 .nav-calendar {
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, 725%);
+    transform: translate(-50%, 225%);
 }
 .nav-groups {
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, 600%);
+    transform: translate(-50%, 350%);
 }
 .nav-students {
     position: absolute;
@@ -252,19 +260,19 @@ async function try_logout() {
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, 350%);
+    transform: translate(-50%, 600%);
 }
 .nav-trainings {
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, 225%);
+    transform: translate(-50%, 725%);
 }
 .nav-events {
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, 100%);
+    transform: translate(-50%, 850%);
 }
 .logout-enter-from,
 .logout-leave-to {
@@ -278,7 +286,7 @@ async function try_logout() {
     opacity: 1;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, 850%);
+    transform: translate(-50%, 100%);
 }
 .calendar-enter-from,
 .calendar-leave-to {
@@ -292,7 +300,7 @@ async function try_logout() {
     opacity: 1;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, 725%);
+    transform: translate(-50%, 225%);
 }
 .groups-enter-from,
 .groups-leave-to {
@@ -306,7 +314,7 @@ async function try_logout() {
     opacity: 1;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, 600%);
+    transform: translate(-50%, 350%);
 }
 .students-enter-from,
 .students-leave-to {
@@ -334,7 +342,7 @@ async function try_logout() {
     opacity: 1;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, 350%);
+    transform: translate(-50%, 600%);
 }
 .trainings-enter-from,
 .trainings-leave-to {
@@ -348,7 +356,7 @@ async function try_logout() {
     opacity: 1;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, 225%);
+    transform: translate(-50%, 725%);
 }
 .events-enter-from,
 .events-leave-to {
@@ -378,7 +386,7 @@ async function try_logout() {
     opacity: 1;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, 100%);
+    transform: translate(-50%, 850%);
 }
 .nav-menu::after {
     content: "";
