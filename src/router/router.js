@@ -4,32 +4,32 @@
 import { createRouter, createWebHistory } from "vue-router";
 
 
-import TheError             from "../comps/error/TheError.vue";
+const TheError              = () => import("../comps/error/TheError.vue");
 
-import TheLogin             from "../comps/login/TheLogin.vue";
-import TheDashboard         from "../comps/dashboard/TheDashboard.vue";
+const TheLogin              = () => import("../comps/login/TheLogin.vue");
+const TheDashboard          = () => import("../comps/dashboard/TheDashboard.vue");
 
-import TheGroupOverview     from "../comps/dashboard/groups/TheGroupOverview.vue";
-import NewGroup             from "../comps/dashboard/groups/NewGroup.vue";
-import EditGroup            from "../comps/dashboard/groups/EditGroup.vue";
+const TheGroupOverview      = () => import("../comps/dashboard/groups/TheGroupOverview.vue");
+const NewGroup              = () => import("../comps/dashboard/groups/NewGroup.vue");
+const EditGroup             = () => import("../comps/dashboard/groups/EditGroup.vue");
 
-import TheStudentOverview   from "../comps/dashboard/students/TheStudentOverview.vue";
-import NewStudent           from "../comps/dashboard/students/NewStudent.vue";
-import EditStudent          from "../comps/dashboard/students/EditStudent.vue";
+const TheStudentOverview    = () => import("../comps/dashboard/students/TheStudentOverview.vue");
+const NewStudent            = () => import("../comps/dashboard/students/NewStudent.vue");
+const EditStudent           = () => import("../comps/dashboard/students/EditStudent.vue");
 
-import TheTrainerOverview   from "../comps/dashboard/trainers/TheTrainerOverview.vue";
-import NewTrainer           from "../comps/dashboard/trainers/NewTrainer.vue";
-import EditTrainer          from "../comps/dashboard/trainers/EditTrainer.vue";
+const TheTrainerOverview    = () => import("../comps/dashboard/trainers/TheTrainerOverview.vue");
+const NewTrainer            = () => import("../comps/dashboard/trainers/NewTrainer.vue");
+const EditTrainer           = () => import("../comps/dashboard/trainers/EditTrainer.vue");
 
-import TheTrainingOverview  from "../comps/dashboard/trainings/TheTrainingOverview.vue";
-import NewTraining          from "../comps/dashboard/trainings/NewTraining.vue";
-import EditTraining         from "../comps/dashboard/trainings/EditTraining.vue";
+const TheTrainingOverview   = () => import("../comps/dashboard/trainings/TheTrainingOverview.vue");
+const NewTraining           = () => import("../comps/dashboard/trainings/NewTraining.vue");
+const EditTraining          = () => import("../comps/dashboard/trainings/EditTraining.vue");
 
-import TheEventOverview     from "../comps/dashboard/events/TheEventOverview.vue";
-import NewEvent             from "../comps/dashboard/events/NewEvent.vue";
-import EditEvent            from "../comps/dashboard/events/EditEvent.vue";
+const TheEventOverview      = () => import("../comps/dashboard/events/TheEventOverview.vue");
+const NewEvent              = () => import("../comps/dashboard/events/NewEvent.vue");
+const EditEvent             = () => import("../comps/dashboard/events/EditEvent.vue");
 
-import TheCal               from "../comps/calendar/TheCal.vue";
+const TheCal                = () => import("../comps/calendar/TheCal.vue");
 
 // VUEX STORE
 import store from "../store/rootStore.js";

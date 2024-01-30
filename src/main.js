@@ -7,14 +7,19 @@ import "./assets/styles/classes.css";
 import "./assets/styles/resets.css";
 import "./assets/fonts/fonts.css";
 
+
+import { createApp, defineAsyncComponent } from 'vue'
+import App from './App.vue'
+
+
 // CUSTOM COMPS
-import TheKamedin           from "./comps/TheKamedin.vue";
-import InterfaceCard        from "./comps/multi/InterfaceCard.vue";
-import ErrorAlert           from "./comps/multi/alerts/ErrorAlert.vue";
-import SuccessAlert         from "./comps/multi/alerts/SuccessAlert.vue";
-import OverviewLoading      from "./comps/multi/OverviewLoading.vue";
-import FormLoading          from "./comps/multi/FormLoading.vue";
-import InfoBox              from "./comps/dashboard/shared/InfoBox.vue";
+const TheKamedin        = defineAsyncComponent(() => import("./comps/TheKamedin.vue"));
+const InterfaceCard     = defineAsyncComponent(() => import("./comps/multi/InterfaceCard.vue"));
+const ErrorAlert        = defineAsyncComponent(() => import("./comps/multi/alerts/ErrorAlert.vue"));
+const SuccessAlert      = defineAsyncComponent(() => import("./comps/multi/alerts/SuccessAlert.vue"));
+const OverviewLoading   = defineAsyncComponent(() => import("./comps/multi/OverviewLoading.vue"));
+const FormLoading       = defineAsyncComponent(() => import("./comps/multi/FormLoading.vue"));
+const InfoBox           = defineAsyncComponent(() => import("./comps/dashboard/shared/InfoBox.vue"));
 
 
 // FONTAWESOME
@@ -36,8 +41,6 @@ import router from "./router/router.js";
 // STORE:
 import store from "./store/rootStore.js";
 
-import { createApp } from 'vue'
-import App from './App.vue'
 
 const app = createApp(App);
 app.component("the-kamedin", TheKamedin);
