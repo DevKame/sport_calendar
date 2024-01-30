@@ -63,6 +63,14 @@ a {
     font-size: 12px;
     font-family: "Raleway Reg 400";
 }
+.toggleOptions .option-buttons.edit-option {
+    background-image: linear-gradient(to top, #fff -20%, var(--edit-dark), var(--edit-dark), #fff 110%);
+    box-shadow: 0 0 1px 1px #999 inset;
+}
+.toggleOptions .option-buttons.delete-option {
+    background-image: linear-gradient(to top, #fff -20%, var(--delete), var(--delete), #fff 110%);
+    box-shadow: 0 0 1px 1px #999 inset;
+}
 
 @media screen and (min-width: 1200px) {
     .dashboard_card {
