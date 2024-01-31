@@ -31,6 +31,8 @@ const EditEvent             = () => import("../comps/dashboard/events/EditEvent.
 
 const TheCal                = () => import("../comps/calendar/TheCal.vue");
 
+const NotFound              = () => import("../comps/error/NotFound.vue");
+
 // VUEX STORE
 import store from "../store/rootStore.js";
 
@@ -178,7 +180,12 @@ let router = createRouter({
             path: "/error",
             name: "Error",
             component: TheError,
-        }
+        },
+        {
+            path: "/:notFound(.*)",
+            name: "Notfound",
+            component: NotFound,
+        },
     ],
 });
 /** MAKES SURE TO ACCESS PORTECTED ROUTES ONLY IF LOGGED IN AND REDIRECTS
