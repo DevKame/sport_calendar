@@ -20,7 +20,7 @@
             </div>
         </section>
 
-        <div class="weekdayHolder d-flex flex-column flex-xxl-row justify-content-center justify-content-xxl-between align-items-center align-items-xxl-start border border-dark">
+        <div class="weekdayHolder d-flex flex-column flex-xxl-row justify-content-center justify-content-xxl-between align-items-center align-items-xxl-start">
             <week-day v-for="day in THIS_WEEK"
             :key="day.getDate()"
             :date="day"

@@ -62,6 +62,9 @@ function resetEditGroup() {
 
 
 <style scoped>
+.groupItem {
+    font-family: "Raleway Reg 400";
+}
 .delete-option.is_outside {
     left: 450%;
     opacity: 1;
