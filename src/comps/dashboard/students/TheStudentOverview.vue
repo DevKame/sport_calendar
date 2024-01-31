@@ -201,4 +201,9 @@ async function deleteStudent(index, id) {
     opacity: 1;
     transform: translate(0, 0);
 }
+@media screen and (min-width: 1200px) {
+    .noContentHeadline {
+        width: 60%;
+    }
+}
 </style>

@@ -314,4 +314,10 @@ async function signTrainer(eid, old) {
     transform: translate(100%, 0);
     opacity: 0;
 }
+
+@media screen and (min-width: 1200px) {
+    .noContentHeadline {
+        width: 60%;
+    }
+}
 </style>
