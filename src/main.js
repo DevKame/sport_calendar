@@ -54,4 +54,4 @@ app.component("fa-icon", FontAwesomeIcon);
 
 app.use(store);
 app.use(router);
-app.mount('#app')
+app.mount('#app');
