@@ -9,6 +9,74 @@ function connect() {
     $db =       "kame_apps";
     return mysqli_connect($host, $user, $pw, $db);
 }
+/** UPDATES THE STUDENTS ENTRY OF AN EVENT BASED ON ITS ID WITH
+ *  A JSON STRING CONTAINING THE NEW STUDENTS STRING
+ *  returns
+ *  {true/false | Exeption->getMessage()}     => Bool | String
+*/
+function updateEventStudents($id, $students, $booked) {
+    $con = connect();
+    $query =
+    "UPDATE sport_cal_EVENTS
+    SET
+    students = ?,
+    booked = ?
+    WHERE id = ?";
+    try {
+        $stmt = mysqli_prepare($con, $query);
+        mysqli_stmt_bind_param($stmt, "sii", $students, $booked, $id);
+        mysqli_stmt_execute($stmt);
+        $affected = mysqli_stmt_affected_rows($stmt);
+        mysqli_stmt_close($stmt);
+        mysqli_close($con);
+        return $affected === 0 ? false : true;
+    }
+    catch(Exeption $e) {
+        mysqli_close($con);
+        return $e->getMessage();
+    }
+}
+/** FETCHES THE ID AND STUDENTS OF ALL EVENTS:
+ *  returns
+ * {$students | Exeption->getMessage()} => Array | String */
+function getAllEventStudents() {
+    $con = connect();
+    $events = [];
+    $query =
+    "SELECT
+    id,
+    students
+    FROM sport_cal_events";
+    $stmt = mysqli_prepare($con, $query);
+    try {
+        mysqli_execute($stmt);
+        mysqli_stmt_bind_result($stmt, $id, $students);
+        mysqli_stmt_store_result($stmt);
+        $totalEvents = mysqli_stmt_num_rows($stmt);
+        if($totalEvents === 0) {
+            mysqli_stmt_free_result($stmt);
+            mysqli_stmt_close($stmt);
+        }
+        else {
+            while(mysqli_stmt_fetch($stmt)) {
+                $events[] =
+                [
+                    "id" => $id,
+                    "students" => $students,
+                ];
+            }
+            mysqli_stmt_free_result($stmt);
+            mysqli_stmt_close($stmt);
+        }
+        mysqli_close($con);
+        return $events;
+    }
+    catch(Exeption $e) {
+        mysqli_close($con);
+        return $e->getMessage();
+    }
+
+}
 /** UPDATES THE GROUPS ENTRY OF AN EVENT BASED ON ITS ID WITH
  *  A JSON STRING CONTAINING THE NEW GROUP STRING
  *  returns

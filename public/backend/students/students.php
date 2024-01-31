@@ -38,6 +38,54 @@ else if($_SERVER["REQUEST_METHOD"] === "POST")
     $req = json_decode(file_get_contents("php://input"));
     switch($req->task)
     {
+        //################### REMOVES A DELETED STUDENT FROM ALL POSSIBLE EVENTS:
+        case "update-event-students":
+            $allEvents = getAllEventStudents();
+            if(is_string($allEvents))
+            {
+                $res["reason"] = "connection-problems";
+                break;
+            } else {
+                // SELECT KEIN FEHLER
+                $failedUpdates = 0;
+                foreach($allEvents as $event)
+                {
+                    $students = json_decode($event["students"]);
+                    $idx = array_search($req->sid, $students);
+                    if(is_int($idx))
+                    {
+                        //STUDENT ID WAS FOUND IN STUDENTS
+                        unset($students[$idx]);
+                        $students = array_values($students);
+                        $newbooked = count($students);
+                        $newJSONStudentString = json_encode($students);
+                        $updateResult = updateEventStudents($event["id"], $newJSONStudentString, $newbooked);
+                        if(!is_bool($updateResult))
+                        {
+                            // UPDATING THREW EXEPTION
+                            $failedUpdates++;
+                            break;
+                        }
+                        else {
+                            // UPDATE DIDNT THREW EXEPTION
+                            if(!$updateResult)
+                            {
+                                // UPDATE WASNT SUCCESSFULL
+                                $failedUpdates++;
+                                break;
+                            }
+                        }
+                        
+                    }
+                }
+                if($failedUpdates === 0)
+                {
+                    $res["success"] = true;
+                } else {
+                    $res["reason"] = "connection-problems";
+                }
+            }
+            break;
         //################### FETCHES ONLY ALL STUDENTS (ONLY NAME AND ID):
         case "get-name-and-id":
             $students = getStudentNameAndID();

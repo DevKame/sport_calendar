@@ -145,6 +145,16 @@ async function deleteStudent(index, id) {
             {
                 noStudentsAvailable.value = true;
             }
+            const updatedStudentsOfEventREQ =
+            {
+                task: "update-event-students",
+                sid: id,
+            };
+            const updateeventstudentsdata = await store.dispatch("students/post", updatedStudentsOfEventREQ);
+            if(!updateeventstudentsdata.success)
+            {
+                router.push({name: "Error"});
+            }
         }
         else {
             router.replace({name:"Error"});

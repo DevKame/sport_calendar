@@ -40,7 +40,6 @@ function sorted(events) {
     });
 }
 onMounted(() => {
-    console.clear();
     if(innerWidth > 1399)
     {
         bodyVisible.value = true;

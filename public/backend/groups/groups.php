@@ -38,7 +38,7 @@ else if($_SERVER["REQUEST_METHOD"] === "POST")
     $req = json_decode(file_get_contents("php://input"));
     switch($req->task)
     {
-        //################### REMOVES A DELETED GROUP FROM ALL POSSIBLE TRAININGS:
+        //################### REMOVES A DELETED GROUP FROM ALL POSSIBLE EVENT:
         case "update-event-groups":
             $allEvents = getAllEventGroups();
             if(is_string($allEvents))
